@@ -1,5 +1,5 @@
 ---
-title: Reference Interaction Model for Challenge-Response-based Remote Attestation 
+title: Reference Interaction Model for Challenge-Response-based Remote Attestation
 abbrev: RAIM
 docname: draft-birkholz-reference-ra-interaction-model-latest
 wg: TBD
@@ -35,14 +35,11 @@ author:
 
 normative:
   RFC2119:
-#  RFC4949:
 
 informative:
   I-D.birkholz-attestation-terminology: rats
-#  I-D.ietf-sacm-terminology: sacmterm
-#  RFC7519: jwt 
 
---- abstract 
+--- abstract
 
 This document is intended to illustrate and remediate the impedance mismatch of terms related to
 remote attestation procedures used in different domains today. New terms defined by this document
