@@ -50,7 +50,7 @@ beyond.
 
 # Introduction
 
-Remote attestation procedures (RATS) are a combination of activities, in which a Verifier creates assertions about claims of integrity about the characteristics of other system entities by the appraisal of corresponding signed claim sets (evidence). In this document, a reference interaction model for a generic challenge-response-based remote attestation procedure is provided. The minimum set of components, roles and information elements that have to be conveyed between Verifier and Attestor are defined as a standard reference to derive more complex RATS from.
+Remote attestation procedures (RATS) are a combination of activities, in which a Verifier creates assertions about claims of integrity and about the characteristics of other system entities by the appraisal of corresponding signed claim sets (evidence). In this document, a reference interaction model for a generic challenge-response-based remote attestation procedure is provided. The minimum set of components, roles and information elements that have to be conveyed between Verifier and Attestor are defined as a standard reference to derive more complex RATS from.
 
 ## Requirements notation
 
@@ -61,11 +61,11 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 
 # Disambiguation
 
-The term "Remote Attestation" is a common expression and often associated with certain properties. The term "Remote" in this context does not necessarily refer to a remote system entitiy in the scope of network topologies or the Internet. It rather refers to a decoupled system or different computing contexts, which also could be present localy as components of a composite device. Examples include: a Trusted Execution Environment (TEE), Baseboard Management Controllers (BMCs), as well as other phyiscal or logical protected execution environements.
+The term "Remote Attestation" is a common expression and often associated with certain properties. The term "Remote" in this context does not necessarily refer to a remote system entitiy in the scope of network topologies or the Internet. It rather refers to a decoupled system or different computing context, which also could be present locally as components of a composite device. Examples include: a Trusted Execution Environment (TEE), Baseboard Management Controllers (BMCs), as well as other phyiscal or logical protected/isolated execution environements.
 
 # Scope
 
-This document focusses on a generic interaction model between Verifiers and Attestors. Complementary processes, functions and activities that are required for a complete semantic binding of RATS are not in scope. Examples include: Identity establishment or key enrollment/revocation.
+This document focuses on a generic interaction model between Verifiers and Attestors. Complementary processes, functions and activities that are required for a complete semantic binding of RATS are not in scope. Examples include: identity establishment, key enrollment, and revocation. Furthermore, any processes and activities that go beyond carrying out the remote attestation process are out of scope. For instance, using the result or claim of a remote attestation that is emitted by the Verifier, such as triggering remediation actions and recovery processes, as well as the remediation actions and recovery processes themselves, are out of scope.
 
 # Component Roles
 
@@ -77,7 +77,7 @@ Attestor:
 
 Verifier:
 
-: The role that designates the system entity that is the appraiser of the evidence provided by the Attestor. A system entity that is the consumer of evidence takes on the role of a Verifier.
+: The role that designates the system entity and that is the appraiser of evidence provided by the Attestor. A system entity that is the consumer of evidence takes on the role of a Verifier.
 
 # Prerequisites
 
@@ -87,11 +87,11 @@ Identity:
 
 Shared Secret:
 
-: A Shared Secret between the Verifier and the Attestor. This secret MUST be established between the two entities before a RA procedure can take place. How this shared secret is established is out of scope of this reference model.
+: A Shared Secret between the Verifier and the Attestor. This secret MUST be established between the two entities before a remote attestation procedure can take place. How this Shared Secret is established is out of scope for this reference model.
 
 # Remote Attestation Interaction Model
 
-This section defines the information elements that have to be conveyed via a protocol enabling the conveyance of evidence between Verifier and Attestor, as well as the in the interaction model of a generic challange/response scheme.
+This section defines the information elements that have to be conveyed via a protocol, enabling the conveyance of evidence between Verifier and Attestor, as well as the interaction model for a generic challange-response scheme.
 
 ## Information Elements
 
@@ -99,33 +99,31 @@ Nonce:
 
 : mandatory
 
-: The Nonce (number used once) is a number intended to be unique and intended to be effectivly infeasible to guess. In this reference interaction model it MUST be provided by the Verifier and MUST be used as a proof of freshness wrt to conveyed evidence ensuring that the result of an attestation activity was created recently (i.e. triggered by the challange emitted by the Verifier). As such the Nonce MUST be part of the signed claimed set that composes the attestation evidence send by the Attestor to the Verifier.
+: The Nonce (number used once) is a number intended to be unique and intended to be effectiviely infeasible to guess. In this reference interaction model it MUST be provided by the Verifier and MUST be used as a proof of freshness, with respect to conveyed evidence ensuring that the result of an attestation activity was created recently (i.e. triggered by the challange emitted by the Verifier). As such, the Nonce MUST be part of the signed claim set that composes the attestation evidence sent by the Attestor to the Verifier.
 
-Shared Secret Identifier:
+Shared Secret ID:
 
 : mandatory
 
-: An identifier that MUST be associated with the shared secret, which is used to sign the attestation evidence claim set.
+: An identifier that MUST be associated with the Shared Secret which is used to sign the attestation evidence claim set.
 
 Attestation Evidence:
 
 : mandatory
 
-: The signed minimal claim set that is required to euaable integrity proofing of the corresponding Attestor's characteritics. Examples of claims included in attestation evidence are claims about sensor data, policies that are active on the system entity, versions of a platform's composite firmware, currently running software instance, routing tables, or information about a local time source. Attestation evidence must be cryptographically bound to the Nonce provided by the
-Verifier, the Identity of the Attestee, as well as to the Shared
-Secret identified by the Shared Secret ID.
+: The signed minimal claim set that is required to enable integrity proving of the corresponding characteritics of the Attestor. Examples of claims included in attestation evidence are claims about sensor data, policies that are active on the system entity, versions of a platform's composite firmware, running software, routing tables, or information about a local time source. Attestation evidence must be cryptographically bound to the Verifier-provided Nonce, the Identity of the Attestor, as well as to the Shared Secret identified by the Shared Secret ID.
 
-Requested Evidence:
+Additional Info:
 
 : optional
 
-: An Attestor MAY provide several additional information or metadata that are relevant to the apraisal conducted be the Verifier in order to proof correctness of the integrity claims created by the Attestor. Usually, all information associated with the signed claim set that is available to the Attestor SHOULD be conveyed if additional evidence is requested. This additional information can be composed as complementary signed claim sets or can be encapsulated claim sets in the signed claim set that composes the evidence about integrity. This information element is option to enable a minimum size of evidence that MUST be conveyed to the Verifier.
+: An Attestor MAY provide additional information or metadata that are relevant to the appraisal conducted by the Verifier in order to prove correctness of the integrity claims created by the Attestor. Usually, all information associated with the signed claim set that is available to the Attestor SHOULD be conveyed. This additional information can be composed as complementary signed claim sets or can be encapsulated claim sets in the signed claim set that composes the evidence about integrity. This information element is optional in order to enable a Verifier to request additional information. An Attestor MAY decide whether or not to provide that additional information or not. In either case, all additional information MUST be cryptographically bound to the signed claim set. An example for additional information that a Verifier can request from an Attestor are (signed) Reference Integrity Measurements (RIMs).
 
 Identity:
 
 : mandatory
 
-: A statement about a distinguishable Attestor made by an entity without accompanying evidence of its validity, used as proof of the identity of the Attestor.
+: A statement about a distinguishable Attestor made by an entity without accompanying evidence of its validity, used as proof of identity.
 
 # Interaction Model
 
@@ -135,7 +133,7 @@ The following sequence diagram illustrates the reference remote attestation proc
 
   [Attestor]                                               [Verifier]
       |                                                         |
-      | <-------- Nonce, Shared Secret ID, [Requested Evidence] |
+      | <------------ Nonce, Shared Secret ID, [Additonal Info] |
       |                                                         |
     Collect Integrity Claims                                    |
       |                                                         |
@@ -148,9 +146,9 @@ The following sequence diagram illustrates the reference remote attestation proc
 
 ~~~~
 
-The remote attestation procedure is initiated by the Verifier, sending an attestation request to the Attestor. The attestion request consists of a Nonce, a Shared Secret ID, and an optional Requested Evidence part. The Nonce guarantees attestation freshness. The Shared Secret ID selects the shared secret the Attestor is requested to sign its response with. The Requested Evidence part is optional to down the scope of received evidence, if required. E.g., the Verifier is only interested in particular information about the Attestee.
+The remote attestation procedure is initiated by the Verifier, sending an attestation request to the Attestor. The attestion request consists of a Nonce, a Shared Secret ID, and an optional Additonal Info part. The Nonce guarantees attestation freshness. The Shared Secret ID selects the shared secret the Attestor is requested to sign its response with. The Additional Info part is optional in order to narrow down or increase the scope of received evidence, if required. For example, the Verifier is only interested in particular information about the Attestor, such as whether the device booted up in a known state, and not include information about all currently running software.
 
-The Attestee, after receiving the attestation request, collects the corresponding integrity claimes to compose the evidence the Verfier requested — or, in case the verifier did not include Requested Evidence information, the Attestor collects all information that can be used as complementary claims in the scope of the semantics of the remote attestation procedure. After that, the Attestor signes th Evidence with the Shared Secret including the Nonce and the Identity information, and sends the output back to the Verifier. Important at this point is that the Nonce as well as the Identity information must be cryptographically bound to the signature, i.e. it is not required for them to be present in plaintext. Furthermore, those information can be part of the signature after a one-way function (e.g. a hash function) was applied to them. There is also a possibility to scramble the Nonce or Identity with other known information to both the Verifier and Attestee. A prominent example is the IP address of the Attestor that usually is known by the Attestor as well as the Verifier. This extra information can be used to scramble the Nonce in order to counter a certain type of relay attacks. As soon as the Verifier receives the attestation evidence data, it appraises the signed evidence, the Identity as well as the claims in the claim set, e.g. by comparing it to known (good), expected reference claims (e.g. a Reference Integrity Measurement Manifest), or evaluating it in other ways. The final output, also referred to as Attestation Result, is a new claim about properties of the Attestor, i.e. whether it is a trusted system or not.
+The Attestor, after receiving the attestation request, collects the corresponding integrity claims to compose the evidence the Verfier requested—or, in case the Verifier did not include any Additional Info, the Attestor collects all information that can be used as complementary claims in the scope of the semantics of the remote attestation procedure. After that, the Attestor signes the Evidence with the Shared Secret including the Nonce and the Identity information, and sends the output back to the Verifier. Important at this point is that the Nonce as well as the Identity information must be cryptographically bound to the signature, i.e. it is not required for them to be present in plaintext. For instance, those information can be part of the signature after a one-way function (e.g. a hash function) was applied to them. There is also a possibility to scramble the Nonce or Identity with other information that is known to both the Verifier and Attestor. A prominent example is the IP address of the Attestor that usually is known by the Attestor as well as the Verifier. This extra information can be used to scramble the Nonce in order to counter a certain type of relay attacks. As soon as the Verifier receives the attestation evidence data, it appraises the signed evidence, the Identity as well as the claims in the claim set. This process is application-specific and can be done by e.g. comparing the claim set to known (good), expected reference claims, such as a Reference Integrity Measurement Manifest (RIMs), or evaluating it in other ways. The final output, also referred to as Attestation Result, is a new claim about properties of the Attestor, i.e. whether or not it is compliant to the policies, or even "trusted".
 
 # Further Context
 
@@ -158,15 +156,15 @@ Depending on the use cases to cover there may be additional requirements.
 
 ## Confidentiality
 
-Use confidential communication to exchange attestation information. This requirement usually is present when communication happens over insecure channels, such as the public Internet. Speaking of a suitable communcation protocol, TLS is a good candidate. In private networks, such as carrier management networks, it must be evaluated that.... [to be continued]
+Use confidential communication to exchange attestation information. This requirement usually is present when communication happens over insecure channels, such as the public Internet. Speaking of a suitable communcation protocol, TLS is a good candidate. In private networks, such as carrier management networks, it must be evaluated whether or not the transport medium is considered confidential.
 
 ## Mutual Authentication
 
-In particular use cases mutual authentication may be desireable in such a way that a Verifier also needs to proof its identity to the Attestor instead of only the Attestor proving its identity to the Verifier.
+In particular use cases mutual authentication may be desireable in such a way that a Verifier also needs to prove its identity to the Attestor instead of only the Attestor proving its identity to the Verifier.
 
 ## Hardware-Enforcement/Support
 
-HSM, Shielded Secrets, TEE, etc.
+In particular use cases hardware support can be desirable. Depending on the requirements those can be secure storage of cryptographic keys, crypto accelerators, or protected or isolated execution environments. Well-known technologies are Hardware Security Modules (HSM), Physical Unclonable Functions (PUFs), Shielded Secrets, Trusted Executions Environments (TEEs), etc.
 
 #  Security Considerations
 
@@ -178,6 +176,6 @@ Maybe.
 
 #  Change Log
 
-No changes yet.
+2018-03-13 (Michael Eckel): Reviewed. Fixed grammar and typos. Rephrased and added some text.
 
 --- back
