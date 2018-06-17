@@ -41,10 +41,8 @@ informative:
 
 --- abstract
 
-This document is intended to illustrate and remediate the impedance mismatch of terms related to
-remote attestation procedures used in different domains today. New terms defined by this document
-provide a consolidated basis to support future work on attestation procedures in the IETF and
-beyond.
+This document defines an interaction model for a basic remote attestation procedure.
+Additionally, the required information elements are illustrated.
 
 --- middle
 
