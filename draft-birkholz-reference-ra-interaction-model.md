@@ -59,7 +59,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 
 # Disambiguation
 
-The term "Remote Attestation" is a common expression and often associated with certain properties. The term "Remote" in this context does not necessarily refer to a remote system entitiy in the scope of network topologies or the Internet. It rather refers to a decoupled system or different computing context, which also could be present locally as components of a composite device. Examples include: a Trusted Execution Environment (TEE), Baseboard Management Controllers (BMCs), as well as other phyiscal or logical protected/isolated execution environements.
+The term "Remote Attestation" is a common expression and often associated with certain properties. The term "Remote" in this context does not necessarily refer to a remote system entity in the scope of network topologies or the Internet. It rather refers to a decoupled system or different computing context, which also could be present locally as components of a composite device. Examples include: a Trusted Execution Environment (TEE), Baseboard Management Controllers (BMCs), as well as other physical or logical protected/isolated execution environments.
 
 # Scope
 
@@ -89,7 +89,7 @@ Shared Secret:
 
 # Remote Attestation Interaction Model
 
-This section defines the information elements that have to be conveyed via a protocol, enabling the conveyance of evidence between Verifier and Attestor, as well as the interaction model for a generic challange-response scheme.
+This section defines the information elements that have to be conveyed via a protocol, enabling the conveyance of evidence between Verifier and Attestor, as well as the interaction model for a generic challenge-response scheme.
 
 ## Information Elements
 
@@ -97,7 +97,7 @@ Nonce:
 
 : mandatory
 
-: The Nonce (number used once) is a number intended to be unique and intended to be effectiviely infeasible to guess. In this reference interaction model it MUST be provided by the Verifier and MUST be used as a proof of freshness, with respect to conveyed evidence ensuring that the result of an attestation activity was created recently (i.e. triggered by the challange emitted by the Verifier). As such, the Nonce MUST be part of the signed claim set that composes the attestation evidence sent by the Attestor to the Verifier.
+: The Nonce (number used once) is a number intended to be unique and intended to be effectively infeasible to guess. In this reference interaction model it MUST be provided by the Verifier and MUST be used as a proof of freshness, with respect to conveyed evidence ensuring that the result of an attestation activity was created recently (i.e. triggered by the challenge emitted by the Verifier). As such, the Nonce MUST be part of the signed claim set that composes the attestation evidence sent by the Attestor to the Verifier.
 
 Shared Secret ID:
 
@@ -109,7 +109,7 @@ Attestation Evidence:
 
 : mandatory
 
-: The signed minimal claim set that is required to enable integrity proving of the corresponding characteritics of the Attestor. Examples of claims included in attestation evidence are claims about sensor data, policies that are active on the system entity, versions of a platform's composite firmware, running software, routing tables, or information about a local time source. Attestation evidence must be cryptographically bound to the Verifier-provided Nonce, the Identity of the Attestor, as well as to the Shared Secret identified by the Shared Secret ID.
+: The signed minimal claim set that is required to enable integrity proving of the corresponding characteristics of the Attestor. Examples of claims included in attestation evidence are claims about sensor data, policies that are active on the system entity, versions of a platform's composite firmware, running software, routing tables, or information about a local time source. Attestation evidence must be cryptographically bound to the Verifier-provided Nonce, the Identity of the Attestor, as well as to the Shared Secret identified by the Shared Secret ID.
 
 Additional Info:
 
@@ -144,9 +144,9 @@ The following sequence diagram illustrates the reference remote attestation proc
 
 ~~~~
 
-The remote attestation procedure is initiated by the Verifier, sending an attestation request to the Attestor. The attestion request consists of a Nonce, a Shared Secret ID, and an optional Additonal Info part. The Nonce guarantees attestation freshness. The Shared Secret ID selects the shared secret the Attestor is requested to sign its response with. The Additional Info part is optional in order to narrow down or increase the scope of received evidence, if required. For example, the Verifier is only interested in particular information about the Attestor, such as whether the device booted up in a known state, and not include information about all currently running software.
+The remote attestation procedure is initiated by the Verifier, sending an attestation request to the Attestor. The attestation request consists of a Nonce, a Shared Secret ID, and an optional Additional Info part. The Nonce guarantees attestation freshness. The Shared Secret ID selects the shared secret the Attestor is requested to sign its response with. The Additional Info part is optional in order to narrow down or increase the scope of received evidence, if required. For example, the Verifier is only interested in particular information about the Attestor, such as whether the device booted up in a known state, and not include information about all currently running software.
 
-The Attestor, after receiving the attestation request, collects the corresponding integrity claims to compose the evidence the Verfier requested—or, in case the Verifier did not include any Additional Info, the Attestor collects all information that can be used as complementary claims in the scope of the semantics of the remote attestation procedure. After that, the Attestor signes the Evidence with the Shared Secret including the Nonce and the Identity information, and sends the output back to the Verifier. Important at this point is that the Nonce as well as the Identity information must be cryptographically bound to the signature, i.e. it is not required for them to be present in plaintext. For instance, those information can be part of the signature after a one-way function (e.g. a hash function) was applied to them. There is also a possibility to scramble the Nonce or Identity with other information that is known to both the Verifier and Attestor. A prominent example is the IP address of the Attestor that usually is known by the Attestor as well as the Verifier. This extra information can be used to scramble the Nonce in order to counter a certain type of relay attacks. As soon as the Verifier receives the attestation evidence data, it appraises the signed evidence, the Identity as well as the claims in the claim set. This process is application-specific and can be done by e.g. comparing the claim set to known (good), expected reference claims, such as a Reference Integrity Measurement Manifest (RIMs), or evaluating it in other ways. The final output, also referred to as Attestation Result, is a new claim about properties of the Attestor, i.e. whether or not it is compliant to the policies, or even "trusted".
+The Attestor, after receiving the attestation request, collects the corresponding integrity claims to compose the evidence the Verifier requested—or, in case the Verifier did not include any Additional Info, the Attestor collects all information that can be used as complementary claims in the scope of the semantics of the remote attestation procedure. After that, the Attestor signs the Evidence with the Shared Secret including the Nonce and the Identity information, and sends the output back to the Verifier. Important at this point is that the Nonce as well as the Identity information must be cryptographically bound to the signature, i.e. it is not required for them to be present in plain-text. For instance, those information can be part of the signature after a one-way function (e.g. a hash function) was applied to them. There is also a possibility to scramble the Nonce or Identity with other information that is known to both the Verifier and Attestor. A prominent example is the IP address of the Attestor that usually is known by the Attestor as well as the Verifier. This extra information can be used to scramble the Nonce in order to counter a certain type of relay attacks. As soon as the Verifier receives the attestation evidence data, it appraises the signed evidence, the Identity as well as the claims in the claim set. This process is application-specific and can be done by e.g. comparing the claim set to known (good), expected reference claims, such as a Reference Integrity Measurement Manifest (RIMs), or evaluating it in other ways. The final output, also referred to as Attestation Result, is a new claim about properties of the Attestor, i.e. whether or not it is compliant to the policies, or even "trusted".
 
 # Further Context
 
@@ -154,11 +154,11 @@ Depending on the use cases to cover there may be additional requirements.
 
 ## Confidentiality
 
-Use confidential communication to exchange attestation information. This requirement usually is present when communication happens over insecure channels, such as the public Internet. Speaking of a suitable communcation protocol, TLS is a good candidate. In private networks, such as carrier management networks, it must be evaluated whether or not the transport medium is considered confidential.
+Use confidential communication to exchange attestation information. This requirement usually is present when communication happens over insecure channels, such as the public Internet. Speaking of a suitable communication protocol, TLS is a good candidate. In private networks, such as carrier management networks, it must be evaluated whether or not the transport medium is considered confidential.
 
 ## Mutual Authentication
 
-In particular use cases mutual authentication may be desireable in such a way that a Verifier also needs to prove its identity to the Attestor instead of only the Attestor proving its identity to the Verifier.
+In particular use cases mutual authentication may be desirable in such a way that a Verifier also needs to prove its identity to the Attestor instead of only the Attestor proving its identity to the Verifier.
 
 ## Hardware-Enforcement/Support
 
@@ -170,10 +170,10 @@ There are always some.
 
 #  Acknowledgements
 
-Maybe.
+Very likely.
 
 #  Change Log
 
-2018-03-13 (Michael Eckel): Reviewed. Fixed grammar and typos. Rephrased and added some text.
+Initial draft -00
 
 --- back
