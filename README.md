@@ -1,6 +1,6 @@
-#  Reference Interaction Model for Challenge-Response-based Remote Attestation
+# Reference Interaction Model for Challenge-Response-based Remote Attestation
 
-This is the working area for the individual Internet-Draft, " Reference Interaction Model for Challenge-Response-based Remote Attestation".
+This is the working area for the individual Internet-Draft, "Reference Interaction Model for Challenge-Response-based Remote Attestation".
 
 * [Editor's Copy](https://ietf-rats.github.io/draft-birkholz-reference-ra-interaction-model/#go.draft-birkholz-reference-ra-interaction-model.html)
 * [Individual Draft](https://tools.ietf.org/html/draft-birkholz-reference-ra-interaction-model)
