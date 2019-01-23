@@ -129,39 +129,41 @@ The following sequence diagram illustrates the reference remote attestation proc
 
 ~~~~
 
-     [Attester]                                               [Verifier]
-         |                                                         |
-         | <---requestAttestation(nonce, secretID, claimSelection) |
-         |                                                         |
-         | ---+                                                    |
-       +-+-+  | collectClaims(claimSelection)                      |
-       |   |<-+                                                    |
-       |   |--+                                                    |
-       +-+-+  | claimSet                                           |
-         | <--+                                                    |
-         |                                                         |
-         | ---+                                                    |
-       +-+-+  | signClaims(claims, nonce, secretID, identity)      |
-       |   |<-+                                                    |
-       |   |--+                                                    |
-       +-+-+  | signedEvidence                                     |
-         | <--+                                                    |
-         |                                                         |
-         | returnResult(evidence, signature, identity)i----------> |
-         |                                                         |
-         |                                                    +--- |
-         |     appraise(evidence, signature, identity, nonce) |  +-+-+
-         |                                                    +->|   |
-         |                                                    +--|   |
-         |                                    appraisalResult |  +-+-+
-         |                                                    +--> |
-         |                                                         |
+[Attester]                                                 [Verifier]
+    |                                                           |
+    |                                                          +++
+   +++ <-- requestAttestation(nonce, secretID, claimSelection) | |
+   | |                                                         | |
+   | | ---+                                                    | |
+   |+++   | collectClaims(claimSelection)                      | |
+   || | <-+                                                    | |
+   || | --+                                                    | |
+   |+++   | claims                                             | |
+   | | <--+                                                    | |
+   | |                                                         | |
+   | | ---+                                                    | |
+   |+++   | signEvidence(claims, secretID, nonce, identity)    | |
+   || | <-+                                                    | |
+   || | --+                                                    | |
+   |+++   | evidence, signature                                | |
+   | | <--+                                                    | |
+   | |                                                         | |
+   | | evidence, signature, identity ------------------------> | |
+   +++                                                         | |
+    |                                                     +--- | |
+    |     appraise(evidence, signature, identity, nonce)  |   +++|
+    |                                                     +-> | ||
+    |                                                     +-- | ||
+    |                                     appraisalResult |   +++|
+    |                                                     +--> | |
+    |                                                          +++
+    |                                                           |
 
 ~~~~
 
-The remote attestation procedure is initiated by the Verifier, sending an attestation request to the Attester. The attestation request consists of a Nonce, a Shared Secret ID, and an optional Additional Info part. The Nonce guarantees attestation freshness. The Shared Secret ID selects the shared secret the Attester is requested to sign its response with. The Additional Info part is optional in order to narrow down or increase the scope of received evidence, if required. For example, the Verifier is only interested in particular information about the Attester, such as whether the device booted up in a known state, and not include information about all currently running software.
+The remote attestation procedure is initiated by the Verifier, sending an attestation request to the Attester. The attestation request consists of a once, a secret ID, and a claim selection. The nonce guarantees attestation freshness. The secret ID selects the secret the Attester is requested to sign the evidence with. The claim selection narrows down or increases the amount of received evidence, if required. If the claim selection is empty, then by default all evidence that is available on the Attestor's system SHOULD be signed and returned. For example, the Verifier is only interested in particular information about the Attester, such as whether the device booted up in a known state, and not include information about all currently running software.
 
-The Attester, after receiving the attestation request, collects the corresponding integrity claims to compose the evidence the Verifier requested—or, in case the Verifier did not include any Additional Info, the Attester collects all information that can be used as complementary claims in the scope of the semantics of the remote attestation procedure. After that, the Attester signs the Evidence with the Shared Secret including the Nonce and the Identity information, and sends the output back to the Verifier. Important at this point is that the Nonce as well as the Identity information must be cryptographically bound to the signature, i.e. it is not required for them to be present in plain-text. For instance, those information can be part of the signature after a one-way function (e.g. a hash function) was applied to them. There is also a possibility to scramble the Nonce or Identity with other information that is known to both the Verifier and Attester. A prominent example is the IP address of the Attester that usually is known by the Attester as well as the Verifier. This extra information can be used to scramble the Nonce in order to counter a certain type of relay attacks. As soon as the Verifier receives the attestation evidence data, it appraises the signed evidence, the Identity as well as the claims in the claim set. This process is application-specific and can be done by e.g. comparing the claim set to known (good), expected reference claims, such as a Reference Integrity Measurement Manifest (RIMs), or evaluating it in other ways. The final output, also referred to as Attestation Result, is a new claim about properties of the Attester, i.e. whether or not it is compliant to the policies, or even "trusted".
+The Attester, after receiving the attestation request, collects the corresponding claims to compose the evidence the Verifier requested—or, in case the Verifier did not provide a claim selection, the Attester collects all information that can be used as complementary claims in the scope of the semantics of the remote attestation procedure. After that, the Attester signs the evidence with the secret identified by the secret ID, including the nonce and the identity information. Then the Attestor sends the output back to the Verifier. Important at this point is that the nonce as well as the identity information must be cryptographically bound to the signature, i.e. it is not required for them to be present in plain text. For instance, those information can be part of the signature after a one-way function (e.g. a hash function) was applied to them. There is also a possibility to scramble the nonce or identity with other information that is known to both the Verifier and Attester. A prominent example is the IP address of the Attester that usually is known by the Attester as well as the Verifier. This extra information can be used to scramble the Nonce in order to counter certain types of relay attacks. As soon as the Verifier receives the evidence, it appraises it, including the verification of the signature, the identity, the nonce, and the claims included in the evidence. This process is application-specific and can be done by e.g. comparing the claims to known (good), expected reference claims, such as Reference Integrity Measurement Manifests (RIMMs), or evaluating it in other ways. The final output, the appraisal result (also referred to as attestation result), is a new claim about properties of the Attester, i.e. whether or not it is compliant to policies, or even can be "trusted".
 
 # Further Context
 
