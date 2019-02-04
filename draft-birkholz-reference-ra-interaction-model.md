@@ -128,36 +128,21 @@ Identity:
 The following sequence diagram illustrates the reference remote attestation procedure defined by this document.
 
 ~~~~
-
-[Attester]                                                  [Verifier]
-    |                                                            |
-    |                                                           +++
-   +++ <--- requestAttestation(nonce, secretID, claimSelection) | |
-   | |                                                          | |
-   | | ---+                                                     | |
-   |+++   | collectClaims(claimSelection)                       | |
-   || | <-+                                                     | |
-   || | --+                                                     | |
-   |+++   | claims                                              | |
-   | | <--+                                                     | |
-   | |                                                          | |
-   | | ---+                                                     | |
-   |+++   | signEvidence(claims, secretID, nonce, identity)     | |
-   || | <-+                                                     | |
-   || | --+                                                     | |
-   |+++   | evidence, signature                                 | |
-   | | <--+                                                     | |
-   | |                                                          | |
-   | | evidence, signature, identity -------------------------> | |
-   +++                                                          | |
-    |                                                      +--- | |
-    |      appraise(evidence, signature, identity, nonce)  |   +++|
-    |                                                      +-> | ||
-    |                                                      +-- | ||
-    |                                      appraisalResult |   +++|
-    |                                                      +--> | |
-    |                                                           +++
-    |                                                            |
+[Attester]                                                [Verifier]
+    |                                                          |
+    | <--- requestAttestation(nonce, secretID, claimSelection) |
+    |                                                          |
+ collectClaims(claimSelection)                                 |
+    | ===> claims                                              |
+    |                                                          |
+ signEvidence(claims, secretID, nonce, identity)               |
+    | ===> evidence, signature                                 |
+    |                                                          |
+    | evidence, signature, identity -------------------------> |
+    |                                                          |
+    |                 appraise(evidence, signature, identity, nonce)
+    |                                     appraisalResult <=== |
+    |                                                          |
 
 ~~~~
 
