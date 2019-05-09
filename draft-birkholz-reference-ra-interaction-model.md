@@ -93,49 +93,49 @@ This section defines the information elements that have to be conveyed via a pro
 
 ## Information Elements
 
-Attester Identity (`attesterIdentity`):
+Attester Identity ('attesterIdentity'):
 
 : *mandatory*
 
 : A statement about a distinguishable Attester made by an entity without accompanying evidence of its validity, used as proof of identity.
 
-Authentication Secret ID (`authSecID`):
+Authentication Secret ID ('authSecID'):
 
 : *mandatory*
 
 : An identifier that MUST be associated with the Authentication Secret which is used to sign evidence.
 
-Nonce (`nonce`):
+Nonce ('nonce'):
 
 : *mandatory*
 
 : The Nonce (number used once) is intended to be unique and practically infeasible to guess. In this reference interaction model the Nonce MUST be provided by the Verifier and MUST be used as proof of freshness. With respect to conveyed evidence, it ensures the result of an attestation activity to be created recently, e. g. sent or derived by the challenge from the Verifier. As such, the Nonce MUST be part of the signed Attestation Evidence that is sent from the Attester to the Verifier.
 
-Claims (`claims`):
+Claims ('claims'):
 
 : *mandatory*
 
 : Claims represent characteristics of an Attester. They are required for proving the integrity of an Attester. Examples are claims about sensor data, policies that are active on the system entity, versions of composite firmware of a platform, running software, routing tables, or information about a local time source.
 
-Reference Claims (`refClaims`)
+Reference Claims ('refClaims')
 
 : *mandatory*
 
 : Reference Claims are used to verify the claims received from an Attester in an attestation verification process. For example, Reference Claims MAY be Reference Integrity Measurements (RIMs) or claims that are implicitly trusted because they are signed by a trusted authority. RIMs represent (trusted) claim about the intended platform operational state of the Attester.
 
-Claim Selection (`claimSelection`):
+Claim Selection ('claimSelection'):
 
 : *optional*
 
 : An Attester MAY provide a selection of claims in order to reduce or increase retrieved claims to those that are relevant to the conducted appraisal. Usually, all available claims that are available to the Attester SHOULD be conveyed. The Claim Selection MAY be composed as complementary signed claims or MAY be encapsulated claims in the signed Attestation Evidence. An Attester MAY decide whether or not to provide all requested claims or not. An example for a claim selection is a Verifier requesting (signed) RIMs from an Attester.
 
-(Signed) Attestation Evidence (`evidence`):
+(Signed) Attestation Evidence ('evidence'):
 
 : *mandatory*
 
 : Attestation Evidence consists of the Authentication Secret ID that identifies an Authentication Secret, the Attester Identity, the Claims, and the Verifier-provided Nonce. Attestation Evidence MUST cryptographically bind all of those elements. The Attestation Evidence MUST be signed by the Authentication Secret. The Authentication Secret MUST be trusted by the Verifier as authoritative.
 
-Attestation Result (`attestationResult`):
+Attestation Result ('attestationResult'):
 
 : *mandatory*
 
