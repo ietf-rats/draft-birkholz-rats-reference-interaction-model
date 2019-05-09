@@ -129,7 +129,7 @@ Claim Selection ('claimSelection'):
 
 : An Attester MAY provide a selection of claims in order to reduce or increase retrieved claims to those that are relevant to the conducted appraisal. Usually, all available claims that are available to the Attester SHOULD be conveyed. The Claim Selection MAY be composed as complementary signed claims or MAY be encapsulated claims in the signed Attestation Evidence. An Attester MAY decide whether or not to provide all requested claims or not. An example for a claim selection is a Verifier requesting (signed) RIMs from an Attester.
 
-(Signed) Attestation Evidence ('evidence'):
+(Signed) Attestation Evidence ('signedAttestationEvidence'):
 
 : *mandatory*
 
@@ -158,7 +158,7 @@ signAttestationEvidence(authSecID, attesterIdentity, claims, nonce) |
     |                                                               |
     | signedAttestationEvidence ----------------------------------> |
     |                                                               |
-    |                verifyAttestationEvidence(signedEvidence, refClaims)
+    |     verifyAttestationEvidence(signedAttestationEvidence, refClaims)
     |                                          attestationResult <= |
     |                                                               |
 
