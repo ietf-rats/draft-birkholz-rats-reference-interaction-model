@@ -148,7 +148,7 @@ The following sequence diagram illustrates the reference remote attestation proc
 ~~~~
 [Attester]                                                      [Verifier]
     |                                                               |
-    | <--- requestAttestation(nonce, authSecID, claimSelection)     |
+    | <------- requestAttestation(nonce, authSecID, claimSelection) |
     |                                                               |
 collectClaims(claimSelection)                                       |
     | => claims                                                     |
