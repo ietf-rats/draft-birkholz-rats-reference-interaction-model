@@ -48,7 +48,7 @@ Additionally, the required information elements are illustrated.
 
 # Introduction
 
-Remote attestation procedures (RATS) are a combination of activities, in which a Verifier creates assertions about claims of integrity and about characteristics of other system entities by the appraisal of corresponding signed claims (evidence). In this document, a reference interaction model for a generic challenge-response-based remote attestation procedure is provided. The minimum set of components, roles and information elements that have to be conveyed between Verifier and Attester are defined as a standard reference to derive more complex RATS from.
+Remote attestation procedures (RATS) are a combination of activities, in which a Verifier creates assertions about assertions of integrity and about characteristics of other system entities by the appraisal of corresponding signed assertions (evidence). In this document, a reference interaction model for a generic challenge-response-based remote attestation procedure is provided. The minimum set of components, roles and information elements that have to be conveyed between Verifier and Attester are defined as a standard reference to derive more complex RATS from.
 
 ## Requirements notation
 
@@ -81,11 +81,15 @@ Verifier:
 
 Attester Identity:
 
-: An Attester MUST possess an Identity, enabling a Verifier to identify the Attester. This Identity MUST be part of the signed claims (attestation evidence) that the Attester conveys to the Verifier. An Identity MAY be a unique identity or it MAY be included in a zero-knowledge proof (ZKP) or be part of a group signature.
+Attestation Authenticity:
+
+: An Attestation MUST be authentic.
+
+: An attestation, in order to be authentic, MAY This Identity MUST be part of the signed assertions (attestation evidence) that the Attester conveys to the Verifier. An Identity MAY be a unique identity or it MAY be included in a zero-knowledge proof (ZKP) or be part of a group signature.
 
 Authentication Secret:
 
-: An Authentication Secret MUST be present on the Attester. The Attester MUST sign claims with that Authentication Secret, proving the authenticity of the claims. The Authentication Secret MUST be established before a remote attestation procedure can take place. How it is established is out of scope for this reference model.
+: An Authentication Secret MUST be present on the Attester. The Attester MUST sign assertions with that Authentication Secret, proving the authenticity of the assertions. The Authentication Secret MUST be established before a remote attestation procedure can take place. How it is established is out of scope for this reference model.
 
 # Remote Attestation Interaction Model
 
@@ -111,29 +115,29 @@ Nonce ('nonce'):
 
 : The Nonce (number used once) is intended to be unique and practically infeasible to guess. In this reference interaction model the Nonce MUST be provided by the Verifier and MUST be used as proof of freshness. With respect to conveyed evidence, it ensures the result of an attestation activity to be created recently, e. g. sent or derived by the challenge from the Verifier. As such, the Nonce MUST be part of the signed Attestation Evidence that is sent from the Attester to the Verifier.
 
-Claims ('claims'):
+Assertions ('assertions'):
 
 : *mandatory*
 
-: Claims represent characteristics of an Attester. They are required for proving the integrity of an Attester. Examples are claims about sensor data, policies that are active on the system entity, versions of composite firmware of a platform, running software, routing tables, or information about a local time source.
+: Assertions represent characteristics of an Attester. They are required for proving the integrity of an Attester. Examples are assertions about sensor data, policies that are active on the system entity, versions of composite firmware of a platform, running software, routing tables, or information about a local time source.
 
-Reference Claims ('refClaims')
+Reference Assertions ('refAssertions')
 
 : *mandatory*
 
-: Reference Claims are used to verify the claims received from an Attester in an attestation verification process. For example, Reference Claims MAY be Reference Integrity Measurements (RIMs) or claims that are implicitly trusted because they are signed by a trusted authority. RIMs represent (trusted) claim about the intended platform operational state of the Attester.
+: Reference Assertions are used to verify the assertions received from an Attester in an attestation verification process. For example, Reference Assertions MAY be Reference Integrity Measurements (RIMs) or assertions that are implicitly trusted because they are signed by a trusted authority. RIMs represent (trusted) assertions about the intended platform operational state of the Attester.
 
-Claim Selection ('claimSelection'):
+Assertion Selection ('assertionSelection'):
 
 : *optional*
 
-: An Attester MAY provide a selection of claims in order to reduce or increase retrieved claims to those that are relevant to the conducted appraisal. Usually, all available claims that are available to the Attester SHOULD be conveyed. The Claim Selection MAY be composed as complementary signed claims or MAY be encapsulated claims in the signed Attestation Evidence. An Attester MAY decide whether or not to provide all requested claims or not. An example for a claim selection is a Verifier requesting (signed) RIMs from an Attester.
+: An Attester MAY provide a selection of assertions in order to reduce or increase retrieved assertions to those that are relevant to the conducted appraisal. Usually, all available assertions that are available to the Attester SHOULD be conveyed. The Assertion Selection MAY be composed as complementary signed assertions or MAY be encapsulated assertions in the signed Attestation Evidence. An Attester MAY decide whether or not to provide all requested assertions or not. An example for an Assertion Selection is a Verifier requesting (signed) RIMs from an Attester.
 
 (Signed) Attestation Evidence ('signedAttestationEvidence'):
 
 : *mandatory*
 
-: Attestation Evidence consists of the Authentication Secret ID that identifies an Authentication Secret, the Attester Identity, the Claims, and the Verifier-provided Nonce. Attestation Evidence MUST cryptographically bind all of those elements. The Attestation Evidence MUST be signed by the Authentication Secret. The Authentication Secret MUST be trusted by the Verifier as authoritative.
+: Attestation Evidence consists of the Authentication Secret ID that identifies an Authentication Secret, the Attester Identity, the Assertions, and the Verifier-provided Nonce. Attestation Evidence MUST cryptographically bind all of those elements. The Attestation Evidence MUST be signed by the Authentication Secret. The Authentication Secret MUST be trusted by the Verifier as authoritative.
 
 Attestation Result ('attestationResult'):
 
@@ -148,29 +152,29 @@ The following sequence diagram illustrates the reference remote attestation proc
 ~~~~
 [Attester]                                                      [Verifier]
     |                                                               |
-    | <------- requestAttestation(nonce, authSecID, claimSelection) |
+    | <--- requestAttestation(nonce, authSecID, assertionSelection) |
     |                                                               |
-collectClaims(claimSelection)                                       |
-    | => claims                                                     |
+collectAssertions(assertionSelection)                               |
+    | => assertions                                                     |
     |                                                               |
-signAttestationEvidence(authSecID, attesterIdentity, claims, nonce) |
+signAttestationEvidence(authSecID, assertions, nonce)               |
     | => signedAttestationEvidence                                  |
     |                                                               |
     | signedAttestationEvidence ----------------------------------> |
     |                                                               |
-    |     verifyAttestationEvidence(signedAttestationEvidence, refClaims)
+    | verifyAttestationEvidence(signedAttestationEvidence, refAssertions)
     |                                          attestationResult <= |
     |                                                               |
 
 ~~~~
 
-The remote attestation procedure is initiated by the Verifier, sending an attestation request to the Attester. The attestation request consists of a Nonce, a Authentication Secret ID, and a Claim Selection. The Nonce guarantees attestation freshness. The Authentication Secret ID selects the secret with which the Attester is requested to sign the Attestation Evidence. The Claim Selection narrows down or increases the amount of received Claims, if required. If the Claim Selection is empty, then by default all claims that are available on the system of the Attester SHOULD be signed and returned as Attestation Evidence. For example, a Verifier may only be interested in particular information about the Attester, such as proof of with which BIOS and firmware it booted up, and not include information about all currently running software.
+The remote attestation procedure is initiated by the Verifier, sending an attestation request to the Attester. The attestation request consists of a Nonce, a Authentication Secret ID, and an Assertion Selection. The Nonce guarantees attestation freshness. The Authentication Secret ID selects the secret with which the Attester is requested to sign the Attestation Evidence. The Assertions Selection narrows down or increases the amount of received Assertions, if required. If the Assertions Selection is empty, then by default all assertions that are available on the system of the Attester SHOULD be signed and returned as Attestation Evidence. For example, a Verifier may only be interested in particular information about the Attester, such as proof of with which BIOS and firmware it booted up, and not include information about all currently running software.
 
-The Attester, after receiving the attestation request, collects the corresponding Claims to compose the Attestation Evidence that the Verifier requested—or, in case the Verifier did not provide a Claim Selection, the Attester collects all information that can be used as complementary Claims in the scope of the semantics of the remote attestation procedure. After that, the Attester produces Attestation Evidence by signing the Attester Identity, the Claims, and the Nonce with the Authentication Secret identified by the Authentication Secret ID. Then the Attester sends the signed Attestation Evidence back to the Verifier.
+The Attester, after receiving the attestation request, collects the corresponding Assertions to compose the Attestation Evidence that the Verifier requested—or, in case the Verifier did not provide an Assertions Selection, the Attester collects all information that can be used as complementary Assertions in the scope of the semantics of the remote attestation procedure. After that, the Attester produces Attestation Evidence by signing the Attester Identity, the Assertions, and the Nonce with the Authentication Secret identified by the Authentication Secret ID. Then the Attester sends the signed Attestation Evidence back to the Verifier.
 
-Important at this point is that Claims, the Nonce as well as the Attester Identity information MUST be cryptographically bound to the signature of the Attestation Evidence. It is not required for them to be present in plain text, though. Cryptographic blinding MAY be used at this point. For further reference see [Security and Privacy Considerations](#security-and-privacy-considerations)
+Important at this point is that Assertions, the Nonce as well as the Attester Identity information MUST be cryptographically bound to the signature of the Attestation Evidence. It is not required for them to be present in plain text, though. Cryptographic blinding MAY be used at this point. For further reference see [Security and Privacy Considerations](#security-and-privacy-considerations)
 
-As soon as the Verifier receives the signed Attestation Evidence, it verifies the signature, the Attester Identity, the Nonce, and the Claims. This process is application-specific and can be carried out by, e. g., comparing the Claims to known (good), expected Reference Claims, such as Reference Integrity Measurements (RIMs), or evaluating it in other ways. The final output of the Verifier is the Attestation Result. It constitutes a new claim about properties and characteristics of the Attester, i. e. whether or not it is compliant to policies, or even can be "trusted".
+As soon as the Verifier receives the signed Attestation Evidence, it verifies the signature, the Attester Identity, the Nonce, and the Assertions. This process is application-specific and can be carried out by, e. g., comparing the Assertions to known (good), expected Reference Assertions, such as Reference Integrity Measurements (RIMs), or evaluating it in other ways. The final output of the Verifier is the Attestation Result. It constitutes an new assertion about properties and characteristics of the Attester, i. e. whether or not it is compliant to policies, or even can be "trusted".
 
 # Further Context
 
@@ -209,5 +213,8 @@ Very likely.
   - Integrated comments from Ned Smith (Intel)
   - Reorganized sections and 
   - Updated interaction model
+
+- Changes from version 02 to version 03:
+  - Replaced "claims" with "assertions"
 
 --- back
