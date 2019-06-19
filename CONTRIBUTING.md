@@ -20,12 +20,12 @@ subject to a Simplified BSD License) in Contributions.
 ## Other Resources
 
 Discussion of this work occurs on the
-[reference working group mailing list](https://mailarchive.ietf.org/arch/browse/reference/)
-([subscribe](https://www.ietf.org/mailman/listinfo/reference)).  In addition to
-contributions in github, you are encouraged to participate in discussions there.
+[rats working group mailing list](https://mailarchive.ietf.org/arch/browse/rats/)
+([subscribe](https://www.ietf.org/mailman/listinfo/rats)).  In addition to
+contributions in GitHub, you are encouraged to participate in discussions there.
 
 **Note**: Some working groups adopt a policy whereby substantive discussion of
 technical issues needs to occur on the mailing list.
 
 You might also like to familiarize yourself with other
-[working group documents](https://datatracker.ietf.org/wg/reference/documents/).
+[working group documents](https://datatracker.ietf.org/wg/rats/documents/).

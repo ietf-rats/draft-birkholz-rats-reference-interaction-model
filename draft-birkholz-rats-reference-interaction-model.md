@@ -1,7 +1,7 @@
 ---
 title: Reference Interaction Model for Challenge-Response-based Remote Attestation
 abbrev: RAIM
-docname: draft-birkholz-reference-ra-interaction-model-latest
+docname: draft-birkholz-rats-reference-interaction-model-latest
 wg: TBD
 stand_alone: true
 ipr: trust200902
@@ -25,11 +25,11 @@ author:
   country: Germany
 - ins: M. Eckel
   name: Michael Eckel
-  org: Huawei Technologies
-  abbrev: Huawei
-  email: michael.eckel@huawei.com
-  street: Feldbergstrasse 78
-  code: '64293'
+  org: Fraunhofer SIT
+  abbrev: Fraunhofer SIT
+  email: henk.birkholz@sit.fraunhofer.de
+  street: Rheinstrasse 75
+  code: '64295'
   city: Darmstadt
   country: Germany
 
