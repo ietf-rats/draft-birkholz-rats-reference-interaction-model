@@ -211,10 +211,54 @@ Very likely.
 
 - Changes from version 01 to version 02:
   - Integrated comments from Ned Smith (Intel)
-  - Reorganized sections and 
+  - Reorganized sections and
   - Updated interaction model
 
 - Changes from version 02 to version 03:
   - Replaced "claims" with "assertions"
+  - Added proof-of-concept CDDL for CBOR via CoAP based on a TPM 2.0 quote operation
 
 --- back
+
+# CDDL Specification for a simple CoAP Challenge/Response Interaction
+
+The following CDDL specification is an examplary proof-of-concept to illustrate a potential implementation of the Reference Interaction Model. The transfer protocol used is CoAP using the FETCH operation. The actual resource operated on can be empty. Both the Challenge Message and the Response Message are exchanged via the FETCH Request and FETCH Response body.
+
+In this example, the root-of-trust for reporting primitive operation "quote" is provided by a TPM 2.0.
+
+~~~~ CDDL
+
+RAIM-Bodies = CoAP-FETCH-Body / CoAP-FETCH-Response-Body
+
+CoAP-FETCH-Body = [ hello: bool, ; if true, the AK-Cert is conveyed
+                    nonce: bytes,
+                    pcr-selection: [ + [ tcg-hash-alg-id: uint .size 2, ; TPM2_ALG_ID
+                                         [ + pcr: uint .size 1 ],
+                                       ]
+                                   ],
+                  ]
+
+CoAP-FETCH-Response-Body = [ attestation-evidence: TPMS_ATTEST-quote,
+                             tpm-native-signature: bytes,
+                             ? ak-cert: bytes, ; attestation key certificate
+                           ]
+
+TPMS_ATTEST-quote = [ qualifiediSigner: uint .size 2, ;TPM2B_NAME
+                      TPMS_CLOCK_INFO,
+                      firmwareVersion: uint .size 8
+                      quote-responses: [ * [ pcr: uint .size 1,
+                                             + [ pcr-value: bytes,
+                                                 ? hash-alg-id: uint .size 2,
+                                               ],
+                                           ],
+                                         ? pcr-digest: bytes,
+                                       ],
+                    ]
+
+TPMS_CLOCK_INFO = [ clock: uint .size 8,
+                    resetCounter: uint .size 4,
+                    restartCounter: uint .size 4,
+                    save: bool,
+                  ]
+
+~~~~
