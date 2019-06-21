@@ -2,7 +2,7 @@
 title: Reference Interaction Model for Challenge-Response-based Remote Attestation
 abbrev: RAIM
 docname: draft-birkholz-rats-reference-interaction-model-latest
-wg: TBD
+wg: RATS Working Group
 stand_alone: true
 ipr: trust200902
 area: Security
@@ -27,7 +27,7 @@ author:
   name: Michael Eckel
   org: Fraunhofer SIT
   abbrev: Fraunhofer SIT
-  email: henk.birkholz@sit.fraunhofer.de
+  email: michael.eckel@sit.fraunhofer.de
   street: Rheinstrasse 75
   code: '64295'
   city: Darmstadt
@@ -52,10 +52,7 @@ Remote attestation procedures (RATS) are a combination of activities, in which a
 
 ## Requirements notation
 
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-"SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
-"OPTIONAL" in this document are to be interpreted as described in RFC
-2119, BCP 14 {{RFC2119}}.
+{::boilerplate bcp14}
 
 # Disambiguation
 
