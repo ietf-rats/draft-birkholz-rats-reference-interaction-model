@@ -1,13 +1,13 @@
 ---
-title: Reference Interaction Model for Challenge-Response-based Remote Attestation
-abbrev: RAIM
+title: Reference Interaction Models for Remote Attestation Procedures
+abbrev: REIM
 docname: draft-birkholz-rats-reference-interaction-model-latest
 wg: RATS Working Group
 stand_alone: true
 ipr: trust200902
 area: Security
 kw: Internet-Draft
-cat: info
+cat: std
 pi:
   toc: yes
   sortrefs: yes
@@ -35,20 +35,27 @@ author:
 
 normative:
   RFC2119:
+  RFC8174:
+  BCP205: RFC7942
+  RFC8610:
 
 informative:
-  I-D.birkholz-rats-architecture: rats
+  I-D.birkholz-rats-architecture: RATS
 
 --- abstract
 
-This document defines an interaction model for a basic remote attestation procedure.
-Additionally, the required information elements are illustrated.
+This document defines interaction models for basic remote attestation procedures.
+Different methods of conveying attestation evidence securely are defined and illustrated.
+Analogously, the required information elements used by conveyance protocols are defined and illustrated.
 
 --- middle
 
 # Introduction
 
-Remote attestation procedures (RATS) are a combination of activities, in which a Verifier creates assertions about assertions of integrity and about characteristics of other system entities by the appraisal of corresponding signed assertions (evidence). In this document, a reference interaction model for a generic challenge-response-based remote attestation procedure is provided. The minimum set of components, roles and information elements that have to be conveyed between Verifier and Attester are defined as a standard reference to derive more complex RATS from.
+Remote ATtestation procedureS {{-RATS}} are a workflows composed of roles and interactions, in which a Verifier creates assessments based on evidence about the trustworthiness of an Attester's system component characteristics.
+The RATS Roles *Attester* and *Verifier*, as well as the RATS Message *Evidence* are terms defined by the RATS Architecture.
+The goal of this document is to enable the design and adoption of secure conveyance methods for attestation evidence from an Attester to a Verifier.  
+This document defines three reference interaction models that describe the conveyance of evidence between Attester and Verifier in order to provide the basis for reliable and believable appraisal of evidence by a Verifier.
 
 ## Requirements notation
 
@@ -56,37 +63,58 @@ Remote attestation procedures (RATS) are a combination of activities, in which a
 
 # Disambiguation
 
-The term "Remote Attestation" is a common expression and often associated with certain properties. The term "Remote" in this context does not necessarily refer to a remote system entity in the scope of network topologies or the Internet. It rather refers to a decoupled system or different computing context, which also could be present locally as components of a composite device. Examples include: a Trusted Execution Environment (TEE), Baseboard Management Controllers (BMCs), as well as other physical or logical protected/isolated execution environments.
+The term "Remote Attestation" is a common expression and often associated with certain properties. The term "Remote" in this context does not necessarily refer to a remote principal in the scope of network topologies or the Internet.
+It rather refers to a decoupled system or different Computing Environments {{-RATS}}, which also can be present locally as system components of a composite device (a single RATS Principal).
+Examples include: a Trusted Execution Environment (TEE), Baseboard Management Controllers (BMCs), as well as other physical or logical protected/isolated/shielded Computing Environments.
 
 # Scope
 
-This document focuses on a generic interaction model between Verifiers and Attesters. Complementary processes, functions and activities that are required for a complete semantic binding of RATS are not in scope. Examples include: identity establishment, key enrollment, and certificate revocation. Furthermore, any processes and activities that go beyond carrying out the remote attestation process are out of scope. For instance, using the result of a remote attestation that is emitted by the Verifier, such as triggering remediation actions and recovery processes, as well as the remediation actions and recovery processes themselves, are out of scope.
+This document focuses on generic interaction models between Verifiers and Attesters.
+Complementary procedures, duties and functions that are required for a complete semantic binding of RATS are not in scope.
+Examples include: identity establishment, key distribution and enrollment, as well as certificate revocation.
+
+Furthermore, any processes and duties that go beyond carrying out remote attestation procedures are out-of-scope.
+For instance, using the result of a remote attestation that is emitted by the Verifier, such as triggering remediation actions or recovery processes, as well as the remediation actions and recovery processes themselves, are out-of-scope.
 
 # Component Roles
 
-The Reference Interaction Model for Challenge-Response-based Remote Attestation is based on the standard roles defined in {{-rats}}:
+The Reference Interaction Models for RATS are based on the standard RATS Roles defined in {{-RATS}}.
+Relevant portions of the RATS Role definitions including additional terminology defined by the RATS Architecture are illustrated below:
 
 Attester:
 
-: The role that designates the subject of the remote attestation. A system entity that is the provider of evidence takes on the role of an Attester.
+: An Attestation Function residing in an Attesting Computing Environment that creates Evidence about Attested Computing Environments by collecting, formatting and protecting (e.g., signing) Claims about them.
+It presents Evidence to a Verifier using a conveyance mechanism or protocol.
+An Attester includes at least one Attesting Computing Environment and one Attested Computing Environment.
 
 Verifier:
 
-: The role that designates the system entity and that is the appraiser of evidence provided by the Attester. A system entity that is the consumer of evidence takes on the role of a Verifier.
+: An Attestation Function that accepts Evidence from an Attester using a conveyance mechanism or protocol.
+It verifies the protection mechanisms, parses and appraises Evidence according to good-known valid (or known-invalid) Claims and Endorsements.
 
-# Prerequisites
+# Normative Prerequisites
 
 Attester Identity:
 
-Attestation Authenticity:
+: The provenance of Attestation Evidence with respect to a distinguishable Attesting Computing Environment MUST be correct and unambiguous.
 
-: An Attestation MUST be authentic.
+: An Attester Identity MAY be a unique identity, or it MAY be included in a zero-knowledge proof (ZKP), or it MAY be part of a group signature.
 
-: An attestation, in order to be authentic, MAY This Identity MUST be part of the signed assertions (attestation evidence) that the Attester conveys to the Verifier. An Identity MAY be a unique identity or it MAY be included in a zero-knowledge proof (ZKP) or be part of a group signature.
+Attestation Evidence:
+
+: Attestation Evidence MUST be a set of well-formatted and well-protected Claims that an Attester can create and convey to a Verifier.
+
+Attestation Evidence Authenticity:
+
+: Attestation Evidence MUST be correct and authentic.
+
+: Attestation Evidence, in order to provide proof of authenticity, SHOULD be cryptographically associated with an identity document (e.g. an X.509 certificate), or SHOULD include a correct and unambiguous reference to an accessible identity document.
 
 Authentication Secret:
 
-: An Authentication Secret MUST be present on the Attester. The Attester MUST sign assertions with that Authentication Secret, proving the authenticity of the assertions. The Authentication Secret MUST be established before a remote attestation procedure can take place. How it is established is out of scope for this reference model.
+: An Authentication Secret MUST be available exclusively to an Attester's Attesting Computing Environment.
+The Attester MUST sign Claims with that Authentication Secret, thereby proving the authenticity of the Claims included in the signed Attestation Evidence.
+The Authentication Secret MUST be established before RATS can take place. How it is established is out-of-scope for this document.
 
 # Remote Attestation Interaction Model
 
