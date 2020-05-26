@@ -1,0 +1,1541 @@
+<!DOCTYPE html>
+<html lang="en" class="Internet-Draft">
+<head>
+<meta charset="utf-8">
+<meta content="Common,Latin" name="scripts">
+<meta content="initial-scale=1.0" name="viewport">
+<title>Reference Interaction Models for Remote Attestation Procedures</title>
+<meta content="Henk Birkholz" name="author">
+<meta content="Michael Eckel" name="author">
+<meta content="
+       This document defines interaction models for basic remote attestation procedures.
+Different methods of conveying attestation evidence securely are defined and illustrated.
+Analogously, the required information elements used by conveyance protocols are defined and illustrated. 
+    " name="description">
+<meta content="xml2rfc 2.44.0" name="generator">
+<meta content="Internet-Draft" name="keyword">
+<meta content="draft-birkholz-rats-reference-interaction-model-latest" name="ietf.draft">
+<link href="draft-birkholz-rats-reference-interaction-model.xml" rel="alternate" type="application/rfc+xml">
+<link href="#copyright" rel="license">
+<style type="text/css">@import url('https://martinthomson.github.io/i-d-template/fonts.css');
+
+html {
+  --background-color: #fff;
+  --text-color: #222;
+  --title-color: #191919;
+  --link-color: #2a6496;
+  --highlight-color: #f9f9f9;
+  --line-color: #eee;
+  --small-font-size: 14.5px;
+}
+body {
+  max-width: 600px;
+  margin: 75px auto;
+  padding: 0 5px;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  font: 16px/22px "Lora", serif;
+  scroll-behavior: smooth;
+}
+
+.ears {
+  display: none;
+}
+
+/* headings */
+#title, h1, h2, h3, h4, h5, h6 {
+  font-family: "Cabin Condensed", sans-serif;
+  font-weight: 600;
+  margin: 0.8em 0 0.3em;
+  font-size-adjust: 0.5;
+  color: var(--title-color);
+}
+#title {
+  padding: 1em 0 0.2em;
+  font-size: 32px;
+  line-height: 40px;
+  clear: both;
+}
+h1, h2, h3 {
+  font-size: 22px;
+  line-height: 26px;
+}
+h4, h5, h6 {
+  font-size: 18px;
+  line-height: 22px;
+}
+
+/* general structure */
+.author {
+  padding-bottom: 0.3em;
+}
+#abstract+p, #abstract+p code, #abstract+p samp, #abstract+p tt {
+  font-size: 18px;
+  line-height: 24px;
+}
+p {
+  padding: 0;
+  margin: 0.5em 0;
+  text-align: left;
+}
+div, span {
+  position: relative;
+}
+div {
+  margin: 0;
+}
+.alignRight.art-text {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  padding: 0.5em 1em 0;
+  margin-bottom: 0.5em;
+}
+.alignRight.art-text pre {
+  padding: 0;
+  width: auto;
+}
+.alignRight {
+  margin: 1em 0;
+}
+.alignRight > *:first-child {
+  border: none;
+  margin: 0;
+  float: right;
+  clear: both;
+}
+.alignRight > *:nth-child(2) {
+  clear: both;
+  display: block;
+  border: none;
+}
+svg {
+  display: block;
+}
+.alignCenter.art-text {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  padding: 0.5em 1em 0;
+  margin-bottom: 0.5em;
+}
+.alignCenter.art-text pre {
+  padding: 0;
+  width: auto;
+}
+.alignCenter {
+  margin: 1em 0;
+}
+.alignCenter > *:first-child {
+  border: none;
+  /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
+     support flexbox yet.
+  */
+  display: table;
+  margin: 0 auto;
+}
+
+/* lists */
+ol, ul {
+  padding: 0;
+  margin: 0 0 1em 2em;
+}
+ol ol, ul ul, ol ul, ul ol {
+  margin-left: 1em;
+}
+li {
+  margin: 0 0 0.25em 0;
+}
+.ulCompact li {
+  margin: 0;
+}
+ul.empty, .ulEmpty {
+  list-style-type: none;
+}
+ul.empty li, .ulEmpty li {
+  margin-top: 0.5em;
+}
+ul.compact, .ulCompact,
+ol.compact, .olCompact {
+  line-height: 100%;
+  margin: 0 0 0 2em;
+}
+
+/* definition lists */
+dl {
+}
+dl > dt {
+  float: left;
+  margin-right: 1em;
+}
+dl > dd {
+  margin-bottom: .8em;
+  min-height: 1.3em;
+}
+dl.compact > dd, .dlCompact > dd {
+  margin-bottom: 0em;
+}
+dl > dd > dl {
+  margin-top: 0.5em;
+  margin-bottom: 0em;
+}
+dd.break {
+  display: none;
+}
+
+/* links */
+a, a[href].selfRef:hover {
+  text-decoration: none;
+}
+a[href].selfRef {
+  color: var(--text-color);
+}
+a[href] {
+  color: var(--link-color);
+}
+a[href]:hover {
+  text-decoration: underline;
+}
+a[href].selfRef:hover {
+  background-color: var(--highlight-color);
+}
+a.xref {
+  white-space: nowrap;
+}
+
+/* Figures */
+tt, code, pre {
+  background-color: var(--highlight-color);
+  font: 14px/22px 'Oxygen Mono', monospace;
+}
+pre {
+  border: 1px solid var(--line-color);
+  font-size: 13.5px;
+  line-height: 16px;
+  letter-spacing: -0.2px;
+  margin: 5px;
+  padding: 5px;
+}
+img {
+  max-width: 100%;
+}
+figure {
+  margin: 0.5em 0;
+}
+figure blockquote {
+  margin: 0.8em 0.4em 0.4em;
+}
+figcaption, caption {
+  font-style: italic;
+  margin: 0.5em 1.5em;
+  text-align: left;
+}
+@media screen {
+  pre {
+    display: inline-block;
+    overflow-x: auto;
+    max-width: 100%;
+    width: calc(100% - 22px - 1em);
+  }
+  figure pre {
+    display: block;
+    width: calc(100% - 25px);
+  }
+  pre + .pilcrow {
+    display: inline-block;
+    vertical-align: text-bottom;
+    padding-bottom: 8px;
+  }
+  table {
+    display: inline-block;
+    overflow-x: auto;
+  }
+}
+
+/* aside, blockquote */
+aside, blockquote {
+  margin-left: 0;
+  padding: 0 2em;
+  font-style: italic;
+}
+blockquote {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  margin: 1em 0;
+}
+cite {
+  display: block;
+  text-align: right;
+  font-style: italic;
+}
+
+/* tables */
+table {
+  width: 100%;
+  margin: 0 0 1em;
+  border-collapse: collapse;
+  border: 1px solid var(--line-color);
+}
+th, td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.5em 0.75em;
+}
+th {
+  text-align: left;
+  background-color: #eee;
+}
+tr:nth-child(2n) > td {
+  background-color: var(--background-color);
+}
+tr:nth-child(2n+1) > td {
+  background-color: var(--highlight-color);
+}
+thead+tbody tr:nth-child(2n) > td {
+  background-color: var(--highlight-color);
+}
+thead+tbody tr:nth-child(2n+1) > td {
+  background-color: var(--background-color);
+}
+table caption {
+  margin: 0;
+  padding: 3px 1em;
+  border-top: 1px solid var(--line-color);
+}
+table p {
+  /* XXX to avoid bottom margin on table row signifiers. If paragraphs should
+     be allowed within tables more generally, it would be far better to select on a class. */
+  margin: 0;
+}
+
+/* pilcrow */
+a.pilcrow {
+  margin-left: 3px;
+  visibility: hidden;
+  user-select: none;
+}
+a.pilcrow[href] { color: #ddd; }
+a.pilcrow[href]:hover { text-decoration: none; }
+@media screen {
+  :hover > a.pilcrow {
+    visibility: visible;
+  }
+  a.pilcrow:hover {
+    background-color: transparent;
+  }
+}
+
+/* misc */
+hr {
+  border: 0;
+  border-top: 1px solid var(--line-color);
+}
+.bcp14 {
+  font-variant: small-caps;
+}
+
+.role {
+  font-variant: all-small-caps;
+}
+
+/* info block */
+#identifiers {
+  margin: 0;
+  font-size: var(--small-font-size);
+  line-height: 18px;
+  --identifier-width: 8em;
+}
+#identifiers dt {
+  width: var(--identifier-width);
+  margin: 0;
+  clear: left;
+  float: left;
+  text-align: right;
+}
+#identifiers dd {
+  margin: 0 0 0 calc(1em + var(--identifier-width));
+  min-width: 5em;
+}
+#identifiers .authors .author {
+  display: inline-block;
+  margin-right: 1.5em;
+}
+#identifiers .authors .org {
+  font-style: italic;
+}
+
+/* The prepared/rendered info at the very bottom of the page */
+.docInfo {
+  color: #999;
+  font-size: 0.9em;
+  font-style: italic;
+  margin-top: 2em;
+}
+.docInfo .prepared {
+  float: left;
+}
+.docInfo .prepared {
+  float: right;
+}
+
+/* table of contents */
+#toc {
+  padding: 0.75em 0 2em 0;
+  margin-bottom: 1em;
+}
+#toc nav ul {
+  margin: 0 0.5em 0 0;
+  padding: 0;
+  list-style: none;
+}
+#toc nav li {
+  line-height: 1.3em;
+  margin: 0.75em 0;
+  padding-left: 1.2em;
+  text-indent: -1.2em;
+}
+#toc a.xref {
+  white-space: normal;
+}
+/* references */
+.references dt {
+  text-align: right;
+  font-weight: bold;
+  min-width: 7em;
+}
+.references dd {
+  margin-left: 8em;
+  overflow: auto;
+}
+
+.refInstance {
+  margin-bottom: 1.25em;
+}
+
+.references .ascii {
+  margin-bottom: 0.25em;
+}
+
+/* index */
+.index ul {
+  margin: 0 0 0 1em;
+  padding: 0;
+  list-style: none;
+}
+.index ul ul {
+  margin: 0;
+}
+.index li {
+  margin: 0;
+  text-indent: -2em;
+  padding-left: 2em;
+  padding-bottom: 5px;
+}
+.indexIndex {
+  margin: 0.5em 0 1em;
+}
+.index a {
+  font-weight: 700;
+}
+/* make the index two-column on all but the smallest screens */
+@media (min-width: 500px) {
+  .index ul {
+    column-count: 2;
+    column-gap: 20px;
+  }
+  .index ul ul {
+    column-count: 1;
+    column-gap: 0;
+  }
+}
+
+/* authors */
+address.vcard {
+  font-style: normal;
+  margin: 1em 0;
+}
+address.vcard .nameRole {
+  font-weight: 700;
+  margin-left: 0;
+}
+address.vcard .label {
+  margin: 0.5em 0;
+}
+address.vcard .type {
+  display: none;
+}
+.alternative-contact {
+  margin: 1.5em 0 1em;
+}
+hr.addr {
+  border-top: 1px dashed;
+  margin: 0;
+  color: #ddd;
+  max-width: calc(100% - 16px);
+}
+@media (min-width: 500px) {
+  #authors-addresses > section {
+    display: relative;
+    padding: 32px 0 0;
+    column-count: 2;
+    column-gap: 20px;
+  }
+  #name-authors-addresses {
+    position: absolute;
+    top: 0px;
+    column-span: all;
+  }
+  /* hack for break-inside: avoid-column */
+  #authors-addresses address {
+    display: inline-block;
+    break-inside: avoid-column;
+  }
+}
+
+/* temporary notes */
+.rfcEditorRemove::before {
+  position: absolute;
+  top: 0.2em;
+  right: 0.2em;
+  padding: 0.2em;
+  content: "The RFC Editor will remove this note";
+  color: #b76427;
+  background-color: rgba(249, 232, 105, 0.3);
+}
+.rfcEditorRemove {
+  position: relative;
+  padding-top: 1.8em;
+  background-color: rgba(249, 232, 105, 0.3);
+  border-radius: 3px;
+}
+.cref {
+  background-color: rgba(249, 232, 105, 0.3);
+  padding: 2px 4px;
+}
+.crefSource {
+  font-style: italic;
+}
+/* alternative layout for smaller screens */
+@media screen and (max-width: 929px) {
+  #toc {
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    padding: 0;
+    margin: 0;
+    border-bottom: 1px solid #ccc;
+    opacity: 0.6;
+  }
+  #toc.active {
+      opacity: 1;
+  }
+  #toc h2 {
+    margin: 0;
+    padding: 2px 0 2px 6px;
+    padding-right: 1em;
+    font-size: 18px;
+    line-height: 24px;
+    min-width: 190px;
+    text-align: right;
+    background-color: #444;
+    color: white;
+    cursor: pointer;
+  }
+  #toc h2::before { /* css hamburger */
+    float: right;
+    position: relative;
+    width: 1em;
+    height: 1px;
+    left: -164px;
+    margin: 8px 0 0 0;
+    background: white none repeat scroll 0 0;
+    box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+    content: "";
+  }
+  #toc nav {
+    display: none;
+    background-color: var(--background-color);
+    padding: 0.5em 1em 1em;
+    overflow: auto;
+    overscroll-behavior: contain;
+    height: calc(100vh - 48px);
+    border-left: 1px solid #ddd;
+  }
+  #toc.active nav {
+    display: block;
+  }
+  /* Make the collapsed ToC header render white on gray also when it's a link */
+  #toc h2 a,
+  #toc h2 a:link,
+  #toc h2 a:focus,
+  #toc h2 a:hover,
+  #toc a.toplink,
+  #toc a.toplink:hover {
+    color: white;
+    background-color: #444;
+    text-decoration: none;
+  }
+  #toc a.toplink {
+    margin-top: 2px;
+  }
+}
+
+/* alternative layout for wide screens */
+@media screen and (min-width: 930px) {
+  body {
+    padding-right: 360px;
+    padding-right: calc(min(180px + 20%, 500px));
+  }
+  #toc {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    right: calc(50vw - 480px);
+    width: 312px;
+    margin: 0;
+    padding: 0;
+    z-index: 1;
+  }
+  #toc h2 {
+    margin: 0;
+    padding: 0.25em 1em 1em 0;
+  }
+  #toc nav {
+    display: block;
+    height: calc(90vh - 84px);
+    bottom: 0;
+    padding: 0.5em 0 2em;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+  #toc nav > ul  {
+    margin-bottom: 2em;
+  }
+  #toc ul {
+    margin: 0 0 0 4px;
+    font-size: var(--small-font-size);
+  }
+  #toc ul p, #toc ul li {
+    margin: 2px 0;
+    line-height: 22px;
+  }
+  img { /* future proofing */
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* pagination */
+@media print {
+  body {
+    width: 100%;
+  }
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+  #n-copyright-notice {
+    border-bottom: none;
+  }
+  #toc, #n-introduction {
+    page-break-before: always;
+  }
+  #toc {
+    border-top: none;
+    padding-top: 0;
+  }
+  figure, pre {
+    page-break-inside: avoid;
+  }
+  figure {
+    overflow: scroll;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  h2+*, h3+*, h4+*, h5+*, h6+* {
+    page-break-before: avoid;
+  }
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 10pt;
+  }
+  table {
+    border: 1px solid #ddd;
+  }
+  td {
+    border-top: 1px solid #ddd;
+  }
+}
+
+@page :first {
+  padding-top: 0;
+  @top-left {
+    content: normal;
+    border: none;
+  }
+  @top-center {
+    content: normal;
+    border: none;
+  }
+  @top-right {
+    content: normal;
+    border: none;
+  }
+}
+
+@page {
+  size: A4;
+  margin-bottom: 45mm;
+  padding-top: 20px;
+}
+
+/* Changes introduced to fix issues found during implementation */
+
+/* Separate body from document info even without intervening H1 */
+section {
+  clear: both;
+}
+
+/* Top align author divs, to avoid names without organization dropping level with org names */
+.author {
+  vertical-align: top;
+}
+
+/* Style section numbers with more space between number and title */
+.section-number {
+  padding-right: 0.5em;
+}
+
+/* Add styling for a link in the ToC that points to the top of the document */
+a.toplink {
+  float: right;
+  margin: 8px 0.5em 0;
+}
+
+/* Fix the dl styling to match the RFC 7992 attributes */
+dl > dt,
+dl.dlParallel > dt {
+  float: left;
+  margin-right: 1em;
+}
+dl.dlNewline > dt {
+  float: none;
+}
+
+/* Provide styling for table cell text alignment */
+table .text-left, table .text-left {
+  text-align: left;
+}
+table .text-center, table .text-center {
+  text-align: center;
+}
+table .text-right, table .text-right {
+  text-align: right;
+}
+
+/* Make the alternative author contact information look less like just another
+   author, and group it closer with the primary author contact information */
+.alternative-contact {
+  margin: 0.5em 0 0.25em 0;
+}
+address .non-ascii {
+  margin: 0 0 0 2em;
+}
+
+/* With it being possible to set tables with alignment
+  left, center, and right, { width: 100%; } does not make sense */
+table {
+  width: auto;
+}
+
+/* Avoid reference text that sits in a block with very wide left margin,
+   because of a long floating dt label.*/
+.references dd {
+  overflow: visible;
+}
+
+/* Control caption placement */
+caption {
+  caption-side: bottom;
+}
+
+/* Limit the width of the author address vcard, so names in right-to-left
+   script don't end up on the other side of the page. */
+
+address.vcard {
+  max-width: 20em;
+  margin-right: auto;
+}
+
+/* For address alignment dependent on LTR or RTL scripts */
+address div.left {
+  text-align: left;
+}
+address div.right {
+  text-align: right;
+}
+
+/* Provide table alignment support.  We can't use the alignX classes above
+   since they do unwanted things with caption and other styling. */
+table.right {
+ margin-left: auto;
+ margin-right: 0;
+}
+table.center {
+ margin-left: auto;
+ margin-right: auto;
+}
+table.left {
+ margin-left: 0;
+ margin-right: auto;
+}
+
+/* Give the table caption label the same styling as the figcaption */
+
+@media print {
+  .toplink {
+    display: none;
+  }
+
+  /* avoid overwriting the top border line with the ToC header */
+  #toc {
+    padding-top: 1px;
+  }
+
+  /* Avoid page breaks inside dl and author address entries */
+  dd {
+    page-break-before: avoid;
+  }
+  .vcard {
+    page-break-inside: avoid;
+  }
+
+}
+/* Tweak the bcp14 keyword presentation */
+.bcp14 {
+  font-variant: small-caps;
+  font-weight: bold;
+  font-size: 0.9em;
+}
+</style>
+<link href="rfc-local.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<table class="ears">
+<thead><tr>
+<td class="left">Internet-Draft</td>
+<td class="center">REIM</td>
+<td class="right">May 2020</td>
+</tr></thead>
+<tfoot><tr>
+<td class="left">Birkholz &amp; Eckel</td>
+<td class="center">Expires 27 November 2020</td>
+<td class="right">[Page]</td>
+</tr></tfoot>
+</table>
+<div id="external-metadata" class="document-information"></div>
+<div id="internal-metadata" class="document-information">
+<dl id="identifiers">
+<dt class="label-workgroup">Workgroup:</dt>
+<dd class="workgroup">RATS Working Group</dd>
+<dt class="label-internet-draft">Internet-Draft:</dt>
+<dd class="internet-draft">draft-birkholz-rats-reference-interaction-model-latest</dd>
+<dt class="label-published">Published:</dt>
+<dd class="published">
+<time datetime="2020-05-26" class="published">26 May 2020</time>
+    </dd>
+<dt class="label-intended-status">Intended Status:</dt>
+<dd class="intended-status">Standards Track</dd>
+<dt class="label-expires">Expires:</dt>
+<dd class="expires"><time datetime="2020-11-27">27 November 2020</time></dd>
+<dt class="label-authors">Authors:</dt>
+<dd class="authors">
+<div class="author">
+      <div class="author-name">H. Birkholz</div>
+<div class="org">Fraunhofer SIT</div>
+</div>
+<div class="author">
+      <div class="author-name">M. Eckel</div>
+<div class="org">Fraunhofer SIT</div>
+</div>
+</dd>
+</dl>
+</div>
+<h1 id="title">Reference Interaction Models for Remote Attestation Procedures</h1>
+<section id="section-abstract">
+      <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
+<p id="section-abstract-1">This document defines interaction models for basic remote attestation procedures.
+Different methods of conveying attestation evidence securely are defined and illustrated.
+Analogously, the required information elements used by conveyance protocols are defined and illustrated.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+</section>
+<div id="status-of-memo">
+<section id="section-boilerplate.1">
+        <h2 id="name-status-of-this-memo">
+<a href="#name-status-of-this-memo" class="section-name selfRef">Status of This Memo</a>
+        </h2>
+<p id="section-boilerplate.1-1">
+        This Internet-Draft is submitted in full conformance with the
+        provisions of BCP 78 and BCP 79.<a href="#section-boilerplate.1-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-2">
+        Internet-Drafts are working documents of the Internet Engineering Task
+        Force (IETF). Note that other groups may also distribute working
+        documents as Internet-Drafts. The list of current Internet-Drafts is
+        at <span><a href="https://datatracker.ietf.org/drafts/current/">https://datatracker.ietf.org/drafts/current/</a></span>.<a href="#section-boilerplate.1-2" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-3">
+        Internet-Drafts are draft documents valid for a maximum of six months
+        and may be updated, replaced, or obsoleted by other documents at any
+        time. It is inappropriate to use Internet-Drafts as reference
+        material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-4">
+        This Internet-Draft will expire on 27 November 2020.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="copyright">
+<section id="section-boilerplate.2">
+        <h2 id="name-copyright-notice">
+<a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
+        </h2>
+<p id="section-boilerplate.2-1">
+            Copyright (c) 2020 IETF Trust and the persons identified as the
+            document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.2-2">
+            This document is subject to BCP 78 and the IETF Trust's Legal
+            Provisions Relating to IETF Documents
+            (<span><a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a></span>) in effect on the date of
+            publication of this document. Please review these documents
+            carefully, as they describe your rights and restrictions with
+            respect to this document. Code Components extracted from this
+            document must include Simplified BSD License text as described in
+            Section 4.e of the Trust Legal Provisions and are provided without
+            warranty as described in the Simplified BSD License.<a href="#section-boilerplate.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="toc">
+<section id="section-toc.1">
+        <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
+<a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
+        </h2>
+<nav class="toc"><ul class="toc ulEmpty">
+<li class="toc ulEmpty" id="section-toc.1-1.1">
+            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="xref">1</a>.  <a href="#name-introduction" class="xref">Introduction</a><a href="#section-toc.1-1.1.1" class="pilcrow">¶</a></p>
+<ul class="toc ulEmpty">
+<li class="toc ulEmpty" id="section-toc.1-1.1.2.1">
+                <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1" class="xref">1.1</a>.  <a href="#name-requirements-notation" class="xref">Requirements notation</a><a href="#section-toc.1-1.1.2.1.1" class="pilcrow">¶</a></p>
+</li>
+</ul>
+</li>
+<li class="toc ulEmpty" id="section-toc.1-1.2">
+            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="xref">2</a>.  <a href="#name-disambiguation" class="xref">Disambiguation</a><a href="#section-toc.1-1.2.1" class="pilcrow">¶</a></p>
+</li>
+<li class="toc ulEmpty" id="section-toc.1-1.3">
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="xref">3</a>.  <a href="#name-scope" class="xref">Scope</a><a href="#section-toc.1-1.3.1" class="pilcrow">¶</a></p>
+</li>
+<li class="toc ulEmpty" id="section-toc.1-1.4">
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="xref">4</a>.  <a href="#name-normative-prerequisites" class="xref">Normative Prerequisites</a><a href="#section-toc.1-1.4.1" class="pilcrow">¶</a></p>
+</li>
+<li class="toc ulEmpty" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="xref">5</a>.  <a href="#name-remote-attestation-interact" class="xref">Remote Attestation Interaction Model</a><a href="#section-toc.1-1.5.1" class="pilcrow">¶</a></p>
+<ul class="toc ulEmpty">
+<li class="toc ulEmpty" id="section-toc.1-1.5.2.1">
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="xref">5.1</a>.  <a href="#name-information-elements" class="xref">Information Elements</a><a href="#section-toc.1-1.5.2.1.1" class="pilcrow">¶</a></p>
+</li>
+<li class="toc ulEmpty" id="section-toc.1-1.5.2.2">
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="xref">5.2</a>.  <a href="#name-interaction-model" class="xref">Interaction Model</a><a href="#section-toc.1-1.5.2.2.1" class="pilcrow">¶</a></p>
+</li>
+</ul>
+</li>
+<li class="toc ulEmpty" id="section-toc.1-1.6">
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="xref">6</a>.  <a href="#name-further-context" class="xref">Further Context</a><a href="#section-toc.1-1.6.1" class="pilcrow">¶</a></p>
+<ul class="toc ulEmpty">
+<li class="toc ulEmpty" id="section-toc.1-1.6.2.1">
+                <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="xref">6.1</a>.  <a href="#name-confidentiality" class="xref">Confidentiality</a><a href="#section-toc.1-1.6.2.1.1" class="pilcrow">¶</a></p>
+</li>
+<li class="toc ulEmpty" id="section-toc.1-1.6.2.2">
+                <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="xref">6.2</a>.  <a href="#name-mutual-authentication" class="xref">Mutual Authentication</a><a href="#section-toc.1-1.6.2.2.1" class="pilcrow">¶</a></p>
+</li>
+<li class="toc ulEmpty" id="section-toc.1-1.6.2.3">
+                <p id="section-toc.1-1.6.2.3.1"><a href="#section-6.3" class="xref">6.3</a>.  <a href="#name-hardware-enforcement-suppor" class="xref">Hardware-Enforcement/Support</a><a href="#section-toc.1-1.6.2.3.1" class="pilcrow">¶</a></p>
+</li>
+</ul>
+</li>
+<li class="toc ulEmpty" id="section-toc.1-1.7">
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="xref">7</a>.  <a href="#name-implementation-status" class="xref">Implementation Status</a><a href="#section-toc.1-1.7.1" class="pilcrow">¶</a></p>
+<ul class="toc ulEmpty">
+<li class="toc ulEmpty" id="section-toc.1-1.7.2.1">
+                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="xref">7.1</a>.  <a href="#name-implementer" class="xref">Implementer</a><a href="#section-toc.1-1.7.2.1.1" class="pilcrow">¶</a></p>
+</li>
+<li class="toc ulEmpty" id="section-toc.1-1.7.2.2">
+                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="xref">7.2</a>.  <a href="#name-implementation-name" class="xref">Implementation Name</a><a href="#section-toc.1-1.7.2.2.1" class="pilcrow">¶</a></p>
+</li>
+<li class="toc ulEmpty" id="section-toc.1-1.7.2.3">
+                <p id="section-toc.1-1.7.2.3.1"><a href="#section-7.3" class="xref">7.3</a>.  <a href="#name-implementation-url" class="xref">Implementation URL</a><a href="#section-toc.1-1.7.2.3.1" class="pilcrow">¶</a></p>
+</li>
+<li class="toc ulEmpty" id="section-toc.1-1.7.2.4">
+                <p id="section-toc.1-1.7.2.4.1"><a href="#section-7.4" class="xref">7.4</a>.  <a href="#name-maturity" class="xref">Maturity</a><a href="#section-toc.1-1.7.2.4.1" class="pilcrow">¶</a></p>
+</li>
+<li class="toc ulEmpty" id="section-toc.1-1.7.2.5">
+                <p id="section-toc.1-1.7.2.5.1"><a href="#section-7.5" class="xref">7.5</a>.  <a href="#name-coverage-and-version-compat" class="xref">Coverage and Version Compatibility</a><a href="#section-toc.1-1.7.2.5.1" class="pilcrow">¶</a></p>
+</li>
+<li class="toc ulEmpty" id="section-toc.1-1.7.2.6">
+                <p id="section-toc.1-1.7.2.6.1"><a href="#section-7.6" class="xref">7.6</a>.  <a href="#name-license" class="xref">License</a><a href="#section-toc.1-1.7.2.6.1" class="pilcrow">¶</a></p>
+</li>
+<li class="toc ulEmpty" id="section-toc.1-1.7.2.7">
+                <p id="section-toc.1-1.7.2.7.1"><a href="#section-7.7" class="xref">7.7</a>.  <a href="#name-implementation-dependencies" class="xref">Implementation Dependencies</a><a href="#section-toc.1-1.7.2.7.1" class="pilcrow">¶</a></p>
+</li>
+<li class="toc ulEmpty" id="section-toc.1-1.7.2.8">
+                <p id="section-toc.1-1.7.2.8.1"><a href="#section-7.8" class="xref">7.8</a>.  <a href="#name-contact" class="xref">Contact</a><a href="#section-toc.1-1.7.2.8.1" class="pilcrow">¶</a></p>
+</li>
+</ul>
+</li>
+<li class="toc ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="xref">8</a>.  <a href="#name-security-and-privacy-consid" class="xref">Security and Privacy Considerations</a><a href="#section-toc.1-1.8.1" class="pilcrow">¶</a></p>
+</li>
+<li class="toc ulEmpty" id="section-toc.1-1.9">
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="xref">9</a>.  <a href="#name-acknowledgments" class="xref">Acknowledgments</a><a href="#section-toc.1-1.9.1" class="pilcrow">¶</a></p>
+</li>
+<li class="toc ulEmpty" id="section-toc.1-1.10">
+            <p id="section-toc.1-1.10.1"><a href="#section-10" class="xref">10</a>. <a href="#name-change-log" class="xref">Change Log</a><a href="#section-toc.1-1.10.1" class="pilcrow">¶</a></p>
+</li>
+<li class="toc ulEmpty" id="section-toc.1-1.11">
+            <p id="section-toc.1-1.11.1"><a href="#section-11" class="xref">11</a>. <a href="#name-references" class="xref">References</a><a href="#section-toc.1-1.11.1" class="pilcrow">¶</a></p>
+<ul class="toc ulEmpty">
+<li class="toc ulEmpty" id="section-toc.1-1.11.2.1">
+                <p id="section-toc.1-1.11.2.1.1"><a href="#section-11.1" class="xref">11.1</a>.  <a href="#name-normative-references" class="xref">Normative References</a><a href="#section-toc.1-1.11.2.1.1" class="pilcrow">¶</a></p>
+</li>
+<li class="toc ulEmpty" id="section-toc.1-1.11.2.2">
+                <p id="section-toc.1-1.11.2.2.1"><a href="#section-11.2" class="xref">11.2</a>.  <a href="#name-informative-references" class="xref">Informative References</a><a href="#section-toc.1-1.11.2.2.1" class="pilcrow">¶</a></p>
+</li>
+</ul>
+</li>
+<li class="toc ulEmpty" id="section-toc.1-1.12">
+            <p id="section-toc.1-1.12.1"><a href="#section-appendix.a" class="xref">Appendix A</a>.  <a href="#name-cddl-specification-for-a-si" class="xref">CDDL Specification for a simple CoAP Challenge/Response Interaction</a><a href="#section-toc.1-1.12.1" class="pilcrow">¶</a></p>
+</li>
+<li class="toc ulEmpty" id="section-toc.1-1.13">
+            <p id="section-toc.1-1.13.1"><a href="#section-appendix.b" class="xref"></a><a href="#name-authors-addresses" class="xref">Authors' Addresses</a><a href="#section-toc.1-1.13.1" class="pilcrow">¶</a></p>
+</li>
+</ul>
+</nav>
+</section>
+</div>
+<div id="introduction">
+<section id="section-1">
+      <h2 id="name-introduction">
+<a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
+      </h2>
+<p id="section-1-1">Remote ATtestation procedureS  
+This document defines three [note: pub/sub &amp; time-based are still missing] reference interaction models that describe the conveyance of evidence between Attester and Verifier in order to provide the basis for reliable and believable appraisal of evidence by a Verifier.<span>[<a href="#I-D.ietf-rats-architecture" class="xref">I-D.ietf-rats-architecture</a>]</span> are workflows composed of roles and interactions, in which a Verifier creates assessments based on evidence about the trustworthiness of an Attester's system component characteristics.
+The roles <em>Attester</em> and <em>Verifier</em>, as well as the message <em>Evidence</em> are terms defined by the RATS Architecture.
+The goal of this document is to enable the design and adoption of secure conveyance methods for attestation evidence from an Attester to a Verifier.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<div id="requirements-notation">
+<section id="section-1.1">
+        <h3 id="name-requirements-notation">
+<a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-requirements-notation" class="section-name selfRef">Requirements notation</a>
+        </h3>
+<p id="section-1.1-1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
+"MAY", and "OPTIONAL" in this document are to be interpreted as
+described in BCP 14 <span>[<a href="#RFC2119" class="xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="xref">RFC8174</a>]</span> when, and only when, they
+appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="disambiguation">
+<section id="section-2">
+      <h2 id="name-disambiguation">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-disambiguation" class="section-name selfRef">Disambiguation</a>
+      </h2>
+<p id="section-2-1">The term "Remote Attestation" is a common expression and often associated with certain properties. The term "Remote" in this context does not necessarily refer to a remote entity in the scope of network topologies or the Internet.
+It rather refers to a decoupled system or different Types of Environments <span>[<a href="#I-D.ietf-rats-architecture" class="xref">I-D.ietf-rats-architecture</a>]</span>, which also can be present locally as separate system components of a composite device (in a single RATS Entity).
+Examples include: a Trusted Execution Environment (TEE), Baseboard Management Controllers (BMCs), as well as other physical or logical protected/isolated/shielded Computing Environments.<a href="#section-2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="scope">
+<section id="section-3">
+      <h2 id="name-scope">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-scope" class="section-name selfRef">Scope</a>
+      </h2>
+<p id="section-3-1">This document focuses on generic interaction models between Verifiers and Attesters.
+Complementary procedures, duties and functions that are required for a complete semantic binding of RATS are not in scope.
+Examples include: identity establishment, key distribution and enrollment, as well as certificate revocation.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-2">Furthermore, any processes and duties that go beyond carrying out remote attestation procedures are out-of-scope.
+For instance, using the results of a remote attestation that are created by the Verifier, e.g., triggering remediation actions or recovery processes, as well as the remediation actions and recovery processes themselves, is also out-of-scope.<a href="#section-3-2" class="pilcrow">¶</a></p>
+<p id="section-3-3">The definition of Reference Interaction Models for RATS uses the role definitions of Attester and Verifier as defined in <span>[<a href="#I-D.ietf-rats-architecture" class="xref">I-D.ietf-rats-architecture</a>]</span>.<a href="#section-3-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="normative-prerequisites">
+<section id="section-4">
+      <h2 id="name-normative-prerequisites">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-normative-prerequisites" class="section-name selfRef">Normative Prerequisites</a>
+      </h2>
+<dl class="dlParallel" id="section-4-1">
+        <dt id="section-4-1.1">Attester Identity:</dt>
+<dd id="section-4-1.2">
+  The provenance of Attestation Evidence with respect to a distinguishable Attesting Environment MUST be correct and unambiguous.<a href="#section-4-1.2" class="pilcrow">¶</a>
+</dd>
+<dd class="break"></dd>
+<dt id="section-4-1.3"></dt>
+<dd id="section-4-1.4">An Attester Identity MAY be a unique identity, or it MAY be included in a zero-knowledge proof (ZKP), or it MAY be part of a group signature.<a href="#section-4-1.4" class="pilcrow">¶</a>
+</dd>
+<dd class="break"></dd>
+<dt id="section-4-1.5">Attestation Evidence:</dt>
+<dd id="section-4-1.6">
+  Attestation Evidence MUST be a set of well-formatted and well-protected Claims that an Attester can create and convey to a Verifier.<a href="#section-4-1.6" class="pilcrow">¶</a>
+</dd>
+<dd class="break"></dd>
+<dt id="section-4-1.7">Attestation Evidence Authenticity:</dt>
+<dd id="section-4-1.8">
+  Attestation Evidence MUST be correct and authentic.<a href="#section-4-1.8" class="pilcrow">¶</a>
+</dd>
+<dd class="break"></dd>
+<dt id="section-4-1.9"></dt>
+<dd id="section-4-1.10">Attestation Evidence, in order to provide proof of authenticity, SHOULD be cryptographically associated with an identity document (e.g. an X.509 certificate), or SHOULD include a correct and unambiguous reference to an accessible identity document.<a href="#section-4-1.10" class="pilcrow">¶</a>
+</dd>
+<dd class="break"></dd>
+<dt id="section-4-1.11">Authentication Secret:</dt>
+<dd id="section-4-1.12">
+  An Authentication Secret MUST be available exclusively to an Attester's Attesting Environment.
+The Attester MUST sign Claims with that Authentication Secret, thereby proving the authenticity of the Claims included in the signed Attestation Evidence.
+The Authentication Secret MUST be established before RATS can take place. How it is established is out-of-scope for this document.<a href="#section-4-1.12" class="pilcrow">¶</a>
+</dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="remote-attestation-interaction-model">
+<section id="section-5">
+      <h2 id="name-remote-attestation-interact">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-remote-attestation-interact" class="section-name selfRef">Remote Attestation Interaction Model</a>
+      </h2>
+<p id="section-5-1">This section defines the information elements that have to be conveyed via a protocol, enabling the conveyance of Evidence between Verifier and Attester, as well as the interaction model for a generic challenge-response remote attestation scheme.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<div id="information-elements">
+<section id="section-5.1">
+        <h3 id="name-information-elements">
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-information-elements" class="section-name selfRef">Information Elements</a>
+        </h3>
+<dl class="dlParallel" id="section-5.1-1">
+          <dt id="section-5.1-1.1">Attester Identity ('attesterIdentity'):</dt>
+<dd id="section-5.1-1.2">
+            <em>mandatory</em><a href="#section-5.1-1.2" class="pilcrow">¶</a>
+</dd>
+<dd class="break"></dd>
+<dt id="section-5.1-1.3"></dt>
+<dd id="section-5.1-1.4">A statement about a distinguishable Attester made by an entity without accompanying evidence of its validity, used as proof of identity.<a href="#section-5.1-1.4" class="pilcrow">¶</a>
+</dd>
+<dd class="break"></dd>
+<dt id="section-5.1-1.5">Authentication Secret ID ('authSecID'):</dt>
+<dd id="section-5.1-1.6">
+            <em>mandatory</em><a href="#section-5.1-1.6" class="pilcrow">¶</a>
+</dd>
+<dd class="break"></dd>
+<dt id="section-5.1-1.7"></dt>
+<dd id="section-5.1-1.8">An identifier that MUST be associated with the Authentication Secret which is used to sign evidence.<a href="#section-5.1-1.8" class="pilcrow">¶</a>
+</dd>
+<dd class="break"></dd>
+<dt id="section-5.1-1.9">Nonce ('nonce'):</dt>
+<dd id="section-5.1-1.10">
+            <em>mandatory</em><a href="#section-5.1-1.10" class="pilcrow">¶</a>
+</dd>
+<dd class="break"></dd>
+<dt id="section-5.1-1.11"></dt>
+<dd id="section-5.1-1.12">The Nonce (number used once) is intended to be unique and practically infeasible to guess. In this reference interaction model the Nonce MUST be provided by the Verifier and MUST be used as proof of freshness. With respect to conveyed evidence, it ensures the result of an attestation activity to be created recently, e. g. sent or derived by the challenge from the Verifier. As such, the Nonce MUST be part of the signed Attestation Evidence that is sent from the Attester to the Verifier.<a href="#section-5.1-1.12" class="pilcrow">¶</a>
+</dd>
+<dd class="break"></dd>
+<dt id="section-5.1-1.13">Claims ('claims'):</dt>
+<dd id="section-5.1-1.14">
+            <em>mandatory</em><a href="#section-5.1-1.14" class="pilcrow">¶</a>
+</dd>
+<dd class="break"></dd>
+<dt id="section-5.1-1.15"></dt>
+<dd id="section-5.1-1.16">Claims are assertions that represent characteristics of an Attester. Claims compose attestation evidence and are, for example, used to appraise the integrity of an Attester. Examples are Claims about sensor data, policies that are active on the entity, versions of composite firmware of a platform, running software, routing tables, or information about a local time source.<a href="#section-5.1-1.16" class="pilcrow">¶</a>
+</dd>
+<dd class="break"></dd>
+<dt id="section-5.1-1.17">Reference Claims ('refClaims')</dt>
+<dd id="section-5.1-1.18">
+            <em>mandatory</em><a href="#section-5.1-1.18" class="pilcrow">¶</a>
+</dd>
+<dd class="break"></dd>
+<dt id="section-5.1-1.19"></dt>
+<dd id="section-5.1-1.20">Reference Claims are a specific subset of Appraisal Policies as defined in <span>[<a href="#I-D.ietf-rats-architecture" class="xref">I-D.ietf-rats-architecture</a>]</span>. Reference Claims are used to appraise the Claims received from an Attester via appraisal by direct comparison. For example, Reference Claims MAY be Reference Integrity Measurements (RIMs) or assertions that are implicitly trusted because they are signed by a trusted authority (see Endorsements in <span>[<a href="#I-D.ietf-rats-architecture" class="xref">I-D.ietf-rats-architecture</a>]</span>). RIMs represent (trusted) Claim sets about an Attester's intended platform operational state.<a href="#section-5.1-1.20" class="pilcrow">¶</a>
+</dd>
+<dd class="break"></dd>
+<dt id="section-5.1-1.21">Claim Selection ('claimSelection'):</dt>
+<dd id="section-5.1-1.22">
+            <em>optional</em><a href="#section-5.1-1.22" class="pilcrow">¶</a>
+</dd>
+<dd class="break"></dd>
+<dt id="section-5.1-1.23"></dt>
+<dd id="section-5.1-1.24">An Attester MAY provide a selection of Claims in order to reduce or increase retrieved assertions to those that are relevant to the appraisal policies. Usually, all available Claims that are available to the Attester SHOULD be conveyed. The Claim Selection MAY be composed as complementary signed Claim sets or MAY be encapsulated Claims in the signed Attestation Evidence. An Attester MAY decide whether or not to provide all requested Claims or not. An example of a Claim Selection is a Verifier requesting (signed) RIMs from an Attester.<a href="#section-5.1-1.24" class="pilcrow">¶</a>
+</dd>
+<dd class="break"></dd>
+<dt id="section-5.1-1.25">(Signed) Attestation Evidence ('signedAttestationEvidence'):</dt>
+<dd id="section-5.1-1.26">
+            <em>mandatory</em><a href="#section-5.1-1.26" class="pilcrow">¶</a>
+</dd>
+<dd class="break"></dd>
+<dt id="section-5.1-1.27"></dt>
+<dd id="section-5.1-1.28">Attestation Evidence consists of the Authentication Secret ID that identifies an Authentication Secret, the Attester Identity, the Claims, and the Verifier-provided Nonce. Attestation Evidence MUST cryptographically bind all of those elements. The Attestation Evidence MUST be signed by the Authentication Secret. The Authentication Secret MUST be trusted by the Verifier as authoritative.<a href="#section-5.1-1.28" class="pilcrow">¶</a>
+</dd>
+<dd class="break"></dd>
+<dt id="section-5.1-1.29">Attestation Result ('attestationResult'):</dt>
+<dd id="section-5.1-1.30">
+            <em>mandatory</em><a href="#section-5.1-1.30" class="pilcrow">¶</a>
+</dd>
+<dd class="break"></dd>
+<dt id="section-5.1-1.31"></dt>
+<dd id="section-5.1-1.32">An Attestation Result is produced by the Verifier as the output of the appraisal of Attestation Evidence. The Attestation Result represents Claims about integrity and other characteristics of the corresponding Attester.<a href="#section-5.1-1.32" class="pilcrow">¶</a>
+</dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="interaction-model">
+<section id="section-5.2">
+        <h3 id="name-interaction-model">
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-interaction-model" class="section-name selfRef">Interaction Model</a>
+        </h3>
+<p id="section-5.2-1">The following sequence diagram illustrates the reference remote attestation procedure defined by this document.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<div class="artwork art-text alignLeft" id="section-5.2-2">
+<pre>
+[Attester]                                                      [Verifier]
+    |                                                               |
+measureClaims(attestedEnvironment)                                  |
+    | =&gt; claims                                                     |
+    |                                                               |
+    | &lt;---------- requestEvidence(nonce, authSecID, claimSelection) |
+    |                                                               |
+collectClaims(claimSelection)                                       |
+    | =&gt; claims                                                     |
+    |                                                               |
+signAttestationEvidence(authSecID, claims, nonce)                   |
+    | =&gt; signedAttestationEvidence                                  |
+    |                                                               |
+    | signedAttestationEvidence ----------------------------------&gt; |
+    |                                                               |
+    |   appraiseAttestationEvidence(signedAttestationEvidence, refClaims)
+    |                                          attestationResult &lt;= |
+    |                                                               |
+
+</pre><a href="#section-5.2-2" class="pilcrow">¶</a>
+</div>
+<p id="section-5.2-3">The remote attestation procedure is initiated by the Verifier, sending an attestation request to the Attester. The attestation request consists of a Nonce, a Authentication Secret ID, and a Claim Selection. The Nonce guarantees attestation freshness. The Authentication Secret ID selects the secret with which the Attester is requested to sign the Attestation Evidence. The Claim Selection narrows down or increases the amount of received Claims, if required. If the Claim Selection is empty, then by default all Claims that are available on the Attester MUST be signed and returned as Attestation Evidence. For example, a Verifier may only be requesting a particular subset of information about the Attester, such as evidence about BIOS and firmware the Attester booted up with - and not include information about all currently running software.<a href="#section-5.2-3" class="pilcrow">¶</a></p>
+<p id="section-5.2-4">The Attester, after receiving the attestation request, collects the corresponding Claims that have been measured beforehand to compose the Attestation Evidence that the Verifier requested. In the case that the Verifier did not provide a Claim Selection, the Attester collects all information that can be used as complementary Claims in the scope of the semantics of the remote attestation procedure. Conclusively, the Attester creates Attestation Evidence by signing the Attester Identity, the Claims, and the Nonce with the Authentication Secret identified by the Authentication Secret ID. The signed Attestation Evidence is transferred back to the Verifier.<a href="#section-5.2-4" class="pilcrow">¶</a></p>
+<p id="section-5.2-5">It is crucial at this point that Claims, the Nonce, as well as the Attester Identity information MUST be cryptographically bound to the signature of the Attestation Evidence. It is not required for them to be present in plain text, though. Cryptographic blinding MAY be used at this point. For further reference see section <a href="#security-and-privacy-considerations" class="xref">Section 8</a>.<a href="#section-5.2-5" class="pilcrow">¶</a></p>
+<p id="section-5.2-6">As soon as the Verifier receives the signed Attestation Evidence, it verifies the signature, the Attester Identity, the Nonce, and appraises the Claims. This procedure is application-specific and can be carried out by comparing the Claims with corresponding Reference Claims, e.g., Reference Integrity Measurements (RIMs), or using other appraisal policies. The final output of the Verifier are Attestation Results. Attestation Results constitute new Claims about an Attester's properties and characteristics that enables relying parties, for example, to assess an Attester's trustworthiness.<a href="#section-5.2-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="further-context">
+<section id="section-6">
+      <h2 id="name-further-context">
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-further-context" class="section-name selfRef">Further Context</a>
+      </h2>
+<p id="section-6-1">Depending on the use cases covered, there can be additional requirements. An exemplary subset is illustrated in this section.<a href="#section-6-1" class="pilcrow">¶</a></p>
+<div id="confidentiality">
+<section id="section-6.1">
+        <h3 id="name-confidentiality">
+<a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-confidentiality" class="section-name selfRef">Confidentiality</a>
+        </h3>
+<p id="section-6.1-1">Confidentiality of exchanged attestation information may be desirable. This requirement usually is present when communication takes place over insecure channels, such as the public Internet. In such cases, TLS may be uses as a suitable communication protocol that preserves confidentiality. In private networks, such as carrier management networks, it must be evaluated whether or not the transport medium is considered confidential.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="mutual-authentication">
+<section id="section-6.2">
+        <h3 id="name-mutual-authentication">
+<a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-mutual-authentication" class="section-name selfRef">Mutual Authentication</a>
+        </h3>
+<p id="section-6.2-1">In particular use cases mutual authentication may be desirable in such a way that a Verifier also needs to prove its identity to the Attester, instead of only the Attester proving its identity to the Verifier.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="hardware-enforcementsupport">
+<section id="section-6.3">
+        <h3 id="name-hardware-enforcement-suppor">
+<a href="#section-6.3" class="section-number selfRef">6.3. </a><a href="#name-hardware-enforcement-suppor" class="section-name selfRef">Hardware-Enforcement/Support</a>
+        </h3>
+<p id="section-6.3-1">Depending on the requirements, hardware support for secure storage of cryptographic keys, crypto accelerators, or protected or isolated execution environments may be useful. Well-known technologies are roots of trusts, such as Hardware Security Modules (HSM), Physically Unclonable Functions (PUFs), Shielded Secrets, or Trusted Executions Environments (TEEs).<a href="#section-6.3-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="implementation-status">
+<section id="section-7">
+      <h2 id="name-implementation-status">
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-implementation-status" class="section-name selfRef">Implementation Status</a>
+      </h2>
+<p id="section-7-1">Note to RFC Editor: Please remove this section as well as references to <span>[<a href="#BCP205" class="xref">BCP205</a>]</span> before AUTH48.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-7-2">This section records the status of known implementations of the protocol defined by this specification at the time of posting of this Internet-Draft, and is based on a proposal described in <span>[<a href="#BCP205" class="xref">BCP205</a>]</span>.
+The description of implementations in this section is intended to assist the IETF in its decision processes in progressing drafts to RFCs. 
+Please note that the listing of any individual implementation here does not imply endorsement by the IETF.
+Furthermore, no effort has been spent to verify the information presented here that was supplied by IETF contributors.
+This is not intended as, and must not be construed to be, a catalog of available implementations or their features.
+Readers are advised to note that other implementations may exist.<a href="#section-7-2" class="pilcrow">¶</a></p>
+<p id="section-7-3">According to <span>[<a href="#BCP205" class="xref">BCP205</a>]</span>,
+"this will allow reviewers and working groups to assign due consideration to documents that have the benefit of running code, which may serve as evidence of valuable experimentation and feedback that have made the implemented protocols more mature.
+It is up to the individual working groups to use this information as they see fit".<a href="#section-7-3" class="pilcrow">¶</a></p>
+<div id="implementer">
+<section id="section-7.1">
+        <h3 id="name-implementer">
+<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-implementer" class="section-name selfRef">Implementer</a>
+        </h3>
+<p id="section-7.1-1">The open-source implementation was initiated and is maintained by the Fraunhofer Institute for Secure Information Technology - SIT.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="implementation-name">
+<section id="section-7.2">
+        <h3 id="name-implementation-name">
+<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-implementation-name" class="section-name selfRef">Implementation Name</a>
+        </h3>
+<p id="section-7.2-1">The open-source implementation is named "CHAllenge-Response based Remote Attestation" or in short: CHARRA.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="implementation-url">
+<section id="section-7.3">
+        <h3 id="name-implementation-url">
+<a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-implementation-url" class="section-name selfRef">Implementation URL</a>
+        </h3>
+<p id="section-7.3-1">The open-source implementation project resource can be located via: https://github.com/Fraunhofer-SIT/charra<a href="#section-7.3-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="maturity">
+<section id="section-7.4">
+        <h3 id="name-maturity">
+<a href="#section-7.4" class="section-number selfRef">7.4. </a><a href="#name-maturity" class="section-name selfRef">Maturity</a>
+        </h3>
+<p id="section-7.4-1">The code's level of maturity is considered to be "prototype".<a href="#section-7.4-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="coverage-and-version-compatibility">
+<section id="section-7.5">
+        <h3 id="name-coverage-and-version-compat">
+<a href="#section-7.5" class="section-number selfRef">7.5. </a><a href="#name-coverage-and-version-compat" class="section-name selfRef">Coverage and Version Compatibility</a>
+        </h3>
+<p id="section-7.5-1">The current version (commit '847bcde') is aligned with the exemplary specification of the CoAP FETCH bodies defined in section <a href="#coap-fetch-bodies" class="xref">Appendix A</a> of this document.<a href="#section-7.5-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="license">
+<section id="section-7.6">
+        <h3 id="name-license">
+<a href="#section-7.6" class="section-number selfRef">7.6. </a><a href="#name-license" class="section-name selfRef">License</a>
+        </h3>
+<p id="section-7.6-1">The CHARRA project and all corresponding code and data maintained on github are provided under the BSD 3-Clause "New" or "Revised" license.<a href="#section-7.6-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="implementation-dependencies">
+<section id="section-7.7">
+        <h3 id="name-implementation-dependencies">
+<a href="#section-7.7" class="section-number selfRef">7.7. </a><a href="#name-implementation-dependencies" class="section-name selfRef">Implementation Dependencies</a>
+        </h3>
+<p id="section-7.7-1">The implementation requires the use of the official Trusted Computing Group (TCG) open-source Trusted Software Stack (TSS) for the Trusted Platform Module (TPM) 2.0. The corresponding code and data is also maintained on github and the project resources can be located via: https://github.com/tpm2-software/tpm2-tss/<a href="#section-7.7-1" class="pilcrow">¶</a></p>
+<p id="section-7.7-2">The implementation uses the Constrained Application Protocol <span>[<a href="#RFC7252" class="xref">RFC7252</a>]</span> (http://coap.technology/) and the Concise Binary Object Representation <span>[<a href="#RFC7049" class="xref">RFC7049</a>]</span> (https://cbor.io/).<a href="#section-7.7-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="contact">
+<section id="section-7.8">
+        <h3 id="name-contact">
+<a href="#section-7.8" class="section-number selfRef">7.8. </a><a href="#name-contact" class="section-name selfRef">Contact</a>
+        </h3>
+<p id="section-7.8-1">Michael Eckel (michael.eckel@sit.fraunhofer.de)<a href="#section-7.8-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="security-and-privacy-considerations">
+<section id="section-8">
+      <h2 id="name-security-and-privacy-consid">
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-security-and-privacy-consid" class="section-name selfRef">Security and Privacy Considerations</a>
+      </h2>
+<p id="section-8-1">In a remote attestation procedure the Verifier or the Attester MAY want to cryptographically blind several attributes. For instance, information can be part of the signature after applying a one-way function (e. g. a hash function).<a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-8-2">There is also a possibility to scramble the Nonce or Attester Identity with other information that is known to both the Verifier and Attester. A prominent example is the IP address of the Attester that usually is known by the Attester itself as well as the Verifier. This extra information can be used to scramble the Nonce in order to counter certain types of relay attacks.<a href="#section-8-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="acknowledgments">
+<section id="section-9">
+      <h2 id="name-acknowledgments">
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
+      </h2>
+<p id="section-9-1">Olaf Bergmann and Ned Smith<a href="#section-9-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="change-log">
+<section id="section-10">
+      <h2 id="name-change-log">
+<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-change-log" class="section-name selfRef">Change Log</a>
+      </h2>
+<ul>
+<li id="section-10-1.1">Initial draft -00<a href="#section-10-1.1" class="pilcrow">¶</a>
+</li>
+<li id="section-10-1.2">
+          <p id="section-10-1.2.1">Changes from version 00 to version 01:<a href="#section-10-1.2.1" class="pilcrow">¶</a></p>
+<ul>
+<li id="section-10-1.2.2.1">Added details to the flow diagram<a href="#section-10-1.2.2.1" class="pilcrow">¶</a>
+</li>
+<li id="section-10-1.2.2.2">Integrated comments from Ned Smith (Intel)<a href="#section-10-1.2.2.2" class="pilcrow">¶</a>
+</li>
+<li id="section-10-1.2.2.3">Reorganized sections and<a href="#section-10-1.2.2.3" class="pilcrow">¶</a>
+</li>
+<li id="section-10-1.2.2.4">Updated interaction model<a href="#section-10-1.2.2.4" class="pilcrow">¶</a>
+</li>
+<li id="section-10-1.2.2.5">Replaced "claims" with "assertions"<a href="#section-10-1.2.2.5" class="pilcrow">¶</a>
+</li>
+<li id="section-10-1.2.2.6">Added proof-of-concept CDDL for CBOR via CoAP based on a TPM 2.0 quote operation<a href="#section-10-1.2.2.6" class="pilcrow">¶</a>
+</li>
+</ul>
+</li>
+<li id="section-10-1.3">
+          <p id="section-10-1.3.1">Changes from version 01 to version 02:<a href="#section-10-1.3.1" class="pilcrow">¶</a></p>
+<ul>
+<li id="section-10-1.3.2.1">Revised the relabeling of "claims" with "assertion" in alignment with the RATS Architecture I-D.<a href="#section-10-1.3.2.1" class="pilcrow">¶</a>
+</li>
+<li id="section-10-1.3.2.2">Added Implementation Status section<a href="#section-10-1.3.2.2" class="pilcrow">¶</a>
+</li>
+<li id="section-10-1.3.2.3">Updated interaction model<a href="#section-10-1.3.2.3" class="pilcrow">¶</a>
+</li>
+<li id="section-10-1.3.2.4">Text revisions based on changes in <span>[<a href="#I-D.ietf-rats-architecture" class="xref">I-D.ietf-rats-architecture</a>]</span> and comments provided on rats@ietf.org.<a href="#section-10-1.3.2.4" class="pilcrow">¶</a>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+</div>
+<section id="section-11">
+      <h2 id="name-references">
+<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-references" class="section-name selfRef">References</a>
+      </h2>
+<section id="section-11.1">
+        <h3 id="name-normative-references">
+<a href="#section-11.1" class="section-number selfRef">11.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+        </h3>
+<dl class="references">
+<dt id="BCP205">[BCP205]</dt>
+<dd>
+<span class="refAuthor">Sheffer, Y.</span><span class="refAuthor"> and A. Farrel</span>, <span class="refTitle">"Improving Awareness of Running Code: The Implementation Status Section"</span>, <span class="seriesInfo">BCP 205</span>, <span class="seriesInfo">RFC 7942</span>, <span class="seriesInfo">DOI 10.17487/RFC7942</span>, <time datetime="2016-07">July 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7942">https://www.rfc-editor.org/info/rfc7942</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC2119">[RFC2119]</dt>
+<dd>
+<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7049">[RFC7049]</dt>
+<dd>
+<span class="refAuthor">Bormann, C.</span><span class="refAuthor"> and P. Hoffman</span>, <span class="refTitle">"Concise Binary Object Representation (CBOR)"</span>, <span class="seriesInfo">RFC 7049</span>, <span class="seriesInfo">DOI 10.17487/RFC7049</span>, <time datetime="2013-10">October 2013</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7049">https://www.rfc-editor.org/info/rfc7049</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7252">[RFC7252]</dt>
+<dd>
+<span class="refAuthor">Shelby, Z.</span><span class="refAuthor">, Hartke, K.</span><span class="refAuthor">, and C. Bormann</span>, <span class="refTitle">"The Constrained Application Protocol (CoAP)"</span>, <span class="seriesInfo">RFC 7252</span>, <span class="seriesInfo">DOI 10.17487/RFC7252</span>, <time datetime="2014-06">June 2014</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7252">https://www.rfc-editor.org/info/rfc7252</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8174">[RFC8174]</dt>
+<dd>
+<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8610">[RFC8610]</dt>
+<dd>
+<span class="refAuthor">Birkholz, H.</span><span class="refAuthor">, Vigano, C.</span><span class="refAuthor">, and C. Bormann</span>, <span class="refTitle">"Concise Data Definition Language (CDDL): A Notational Convention to Express Concise Binary Object Representation (CBOR) and JSON Data Structures"</span>, <span class="seriesInfo">RFC 8610</span>, <span class="seriesInfo">DOI 10.17487/RFC8610</span>, <time datetime="2019-06">June 2019</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8610">https://www.rfc-editor.org/info/rfc8610</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+<section id="section-11.2">
+        <h3 id="name-informative-references">
+<a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+        </h3>
+<dl class="references">
+<dt id="I-D.ietf-rats-architecture">[I-D.ietf-rats-architecture]</dt>
+<dd>
+<span class="refAuthor">Birkholz, H.</span><span class="refAuthor">, Thaler, D.</span><span class="refAuthor">, Richardson, M.</span><span class="refAuthor">, Smith, N.</span><span class="refAuthor">, and W. Pan</span>, <span class="refTitle">"Remote Attestation Procedures Architecture"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-rats-architecture-04</span>, <time datetime="2020-05-21">21 May 2020</time>, <span>&lt;<a href="http://www.ietf.org/internet-drafts/draft-ietf-rats-architecture-04.txt">http://www.ietf.org/internet-drafts/draft-ietf-rats-architecture-04.txt</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</section>
+<div id="coap-fetch-bodies">
+<section id="section-appendix.a">
+      <h2 id="name-cddl-specification-for-a-si">
+<a href="#section-appendix.a" class="section-number selfRef">Appendix A. </a><a href="#name-cddl-specification-for-a-si" class="section-name selfRef">CDDL Specification for a simple CoAP Challenge/Response Interaction</a>
+      </h2>
+<p id="section-appendix.a-1">The following CDDL specification is an examplary proof-of-concept to illustrate a potential implementation of the Reference Interaction Model. The transfer protocol used is CoAP using the FETCH operation. The actual resource operated on can be empty. Both the Challenge Message and the Response Message are exchanged via the FETCH Request and FETCH Response body.<a href="#section-appendix.a-1" class="pilcrow">¶</a></p>
+<p id="section-appendix.a-2">In this example, the root-of-trust for reporting primitive operation "quote" is provided by a TPM 2.0.<a href="#section-appendix.a-2" class="pilcrow">¶</a></p>
+<div class="artwork art-text alignLeft art-CDDL" id="section-appendix.a-3">
+<pre>
+RAIM-Bodies = CoAP-FETCH-Body / CoAP-FETCH-Response-Body
+
+CoAP-FETCH-Body = [ hello: bool, ; if true, the AK-Cert is conveyed
+                    nonce: bytes,
+                    pcr-selection: [ + [ tcg-hash-alg-id: uint .size 2, ; TPM2_ALG_ID
+                                         [ + pcr: uint .size 1 ],
+                                       ]
+                                   ],
+                  ]
+
+CoAP-FETCH-Response-Body = [ attestation-evidence: TPMS_ATTEST-quote,
+                             tpm-native-signature: bytes,
+                             ? ak-cert: bytes, ; attestation key certificate
+                           ]
+
+TPMS_ATTEST-quote = [ qualifiediSigner: uint .size 2, ;TPM2B_NAME
+                      TPMS_CLOCK_INFO,
+                      firmwareVersion: uint .size 8
+                      quote-responses: [ * [ pcr: uint .size 1,
+                                             + [ pcr-value: bytes,
+                                                 ? hash-alg-id: uint .size 2,
+                                               ],
+                                           ],
+                                         ? pcr-digest: bytes,
+                                       ],
+                    ]
+
+TPMS_CLOCK_INFO = [ clock: uint .size 8,
+                    resetCounter: uint .size 4,
+                    restartCounter: uint .size 4,
+                    save: bool,
+                  ]
+
+</pre><a href="#section-appendix.a-3" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="authors-addresses">
+<section id="section-appendix.b">
+      <h2 id="name-authors-addresses">
+<a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
+      </h2>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Henk Birkholz</span></div>
+<div dir="auto" class="left"><span class="org">Fraunhofer SIT</span></div>
+<div dir="auto" class="left"><span class="street-address">Rheinstrasse 75</span></div>
+<div dir="auto" class="left">
+<span class="postal-code">64295</span> <span class="locality">Darmstadt</span>
+</div>
+<div dir="auto" class="left"><span class="country-name">Germany</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:henk.birkholz@sit.fraunhofer.de" class="email">henk.birkholz@sit.fraunhofer.de</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Michael Eckel</span></div>
+<div dir="auto" class="left"><span class="org">Fraunhofer SIT</span></div>
+<div dir="auto" class="left"><span class="street-address">Rheinstrasse 75</span></div>
+<div dir="auto" class="left">
+<span class="postal-code">64295</span> <span class="locality">Darmstadt</span>
+</div>
+<div dir="auto" class="left"><span class="country-name">Germany</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:michael.eckel@sit.fraunhofer.de" class="email">michael.eckel@sit.fraunhofer.de</a>
+</div>
+</address>
+</section>
+</div>
+<script>const toc = document.getElementById("toc");
+toc.querySelector("h2").addEventListener("click", e => {
+  toc.classList.toggle("active");
+});
+toc.querySelector("nav").addEventListener("click", e => {
+  toc.classList.remove("active");
+});
+</script>
+</body>
+</html>
