@@ -9,8 +9,8 @@
 <meta content="Michael Eckel" name="author">
 <meta content="
        This document describes interaction models for remote attestation procedures (RATS).
-Three conveying mechanisms - Challenge/Response (CHARRA), Time-Based Uni-Directional (TUDA), and Attestation Telemetry (AT) - are illustrated and defined.
-Analogously, a general overview about the information elements typically used by corresponding conveyance protocols are highlighted. Privacy preserving conveyance of Evidence via Direct Anonymous Attestation (DAA) is elaborated on for each interaction model, individually. 
+Three conveying mechanisms - Challenge/Response, Uni-Directional, and Attestation Telemetry - are illustrated and defined.
+Analogously, a general overview about the information elements typically used by corresponding conveyance protocols are highlighted. Privacy preserving conveyance of Evidence via Direct Anonymous Attestation is elaborated on for each interaction model, individually. 
     " name="description">
 <meta content="xml2rfc 2.45.2" name="generator">
 <meta content="Internet-Draft" name="keyword">
@@ -854,8 +854,8 @@ table.left {
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
 <p id="section-abstract-1">This document describes interaction models for remote attestation procedures (RATS).
-Three conveying mechanisms - Challenge/Response (CHARRA), Time-Based Uni-Directional (TUDA), and Attestation Telemetry (AT) - are illustrated and defined.
-Analogously, a general overview about the information elements typically used by corresponding conveyance protocols are highlighted. Privacy preserving conveyance of Evidence via Direct Anonymous Attestation (DAA) is elaborated on for each interaction model, individually.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+Three conveying mechanisms - Challenge/Response, Uni-Directional, and Attestation Telemetry - are illustrated and defined.
+Analogously, a general overview about the information elements typically used by corresponding conveyance protocols are highlighted. Privacy preserving conveyance of Evidence via Direct Anonymous Attestation is elaborated on for each interaction model, individually.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <div id="status-of-memo">
 <section id="section-boilerplate.1">
@@ -904,106 +904,106 @@ Analogously, a general overview about the information elements typically used by
         <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
 <a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
         </h2>
-<nav class="toc"><ul class="ulEmpty toc compact">
-<li class="ulEmpty toc compact" id="section-toc.1-1.1">
+<nav class="toc"><ul class="compact toc ulEmpty">
+<li class="compact toc ulEmpty" id="section-toc.1-1.1">
             <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="xref">1</a>.  <a href="#name-introduction" class="xref">Introduction</a><a href="#section-toc.1-1.1.1" class="pilcrow">¶</a></p>
 </li>
-<li class="ulEmpty toc compact" id="section-toc.1-1.2">
+<li class="compact toc ulEmpty" id="section-toc.1-1.2">
             <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="xref">2</a>.  <a href="#name-terminology" class="xref">Terminology</a><a href="#section-toc.1-1.2.1" class="pilcrow">¶</a></p>
 </li>
-<li class="ulEmpty toc compact" id="section-toc.1-1.3">
+<li class="compact toc ulEmpty" id="section-toc.1-1.3">
             <p id="section-toc.1-1.3.1" class="keepWithNext"><a href="#section-3" class="xref">3</a>.  <a href="#name-disambiguation" class="xref">Disambiguation</a><a href="#section-toc.1-1.3.1" class="pilcrow">¶</a></p>
 </li>
-<li class="ulEmpty toc compact" id="section-toc.1-1.4">
+<li class="compact toc ulEmpty" id="section-toc.1-1.4">
             <p id="section-toc.1-1.4.1"><a href="#section-4" class="xref">4</a>.  <a href="#name-scope" class="xref">Scope</a><a href="#section-toc.1-1.4.1" class="pilcrow">¶</a></p>
 </li>
-<li class="ulEmpty toc compact" id="section-toc.1-1.5">
+<li class="compact toc ulEmpty" id="section-toc.1-1.5">
             <p id="section-toc.1-1.5.1"><a href="#section-5" class="xref">5</a>.  <a href="#name-normative-prerequisites" class="xref">Normative Prerequisites</a><a href="#section-toc.1-1.5.1" class="pilcrow">¶</a></p>
 </li>
-<li class="ulEmpty toc compact" id="section-toc.1-1.6">
+<li class="compact toc ulEmpty" id="section-toc.1-1.6">
             <p id="section-toc.1-1.6.1"><a href="#section-6" class="xref">6</a>.  <a href="#name-generic-information-element" class="xref">Generic Information Elements</a><a href="#section-toc.1-1.6.1" class="pilcrow">¶</a></p>
 </li>
-<li class="ulEmpty toc compact" id="section-toc.1-1.7">
+<li class="compact toc ulEmpty" id="section-toc.1-1.7">
             <p id="section-toc.1-1.7.1"><a href="#section-7" class="xref">7</a>.  <a href="#name-interaction-models" class="xref">Interaction Models</a><a href="#section-toc.1-1.7.1" class="pilcrow">¶</a></p>
-<ul class="ulEmpty toc compact">
-<li class="ulEmpty toc compact" id="section-toc.1-1.7.2.1">
-                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="xref">7.1</a>.  <a href="#name-challenge-response-remote-a" class="xref">Challenge/Response Remote Attestation (CHARRA)</a><a href="#section-toc.1-1.7.2.1.1" class="pilcrow">¶</a></p>
+<ul class="toc compact ulEmpty">
+<li class="toc compact ulEmpty" id="section-toc.1-1.7.2.1">
+                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="xref">7.1</a>.  <a href="#name-challenge-response-remote-a" class="xref">Challenge/Response Remote Attestation</a><a href="#section-toc.1-1.7.2.1.1" class="pilcrow">¶</a></p>
 </li>
-<li class="ulEmpty toc compact" id="section-toc.1-1.7.2.2">
-                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="xref">7.2</a>.  <a href="#name-time-based-uni-directional-" class="xref">Time-Based Uni-Directional Attestation (TUDA)</a><a href="#section-toc.1-1.7.2.2.1" class="pilcrow">¶</a></p>
+<li class="toc compact ulEmpty" id="section-toc.1-1.7.2.2">
+                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="xref">7.2</a>.  <a href="#name-uni-directional-remote-atte" class="xref">Uni-Directional Remote Attestation</a><a href="#section-toc.1-1.7.2.2.1" class="pilcrow">¶</a></p>
 </li>
-<li class="ulEmpty toc compact" id="section-toc.1-1.7.2.3">
-                <p id="section-toc.1-1.7.2.3.1"><a href="#section-7.3" class="xref">7.3</a>.  <a href="#name-attestation-telemetry-at" class="xref">Attestation Telemetry (AT)</a><a href="#section-toc.1-1.7.2.3.1" class="pilcrow">¶</a></p>
+<li class="toc compact ulEmpty" id="section-toc.1-1.7.2.3">
+                <p id="section-toc.1-1.7.2.3.1"><a href="#section-7.3" class="xref">7.3</a>.  <a href="#name-attestation-telemetry" class="xref">Attestation Telemetry</a><a href="#section-toc.1-1.7.2.3.1" class="pilcrow">¶</a></p>
 </li>
 </ul>
 </li>
-<li class="ulEmpty toc compact" id="section-toc.1-1.8">
+<li class="compact toc ulEmpty" id="section-toc.1-1.8">
             <p id="section-toc.1-1.8.1"><a href="#section-8" class="xref">8</a>.  <a href="#name-further-context" class="xref">Further Context</a><a href="#section-toc.1-1.8.1" class="pilcrow">¶</a></p>
-<ul class="ulEmpty toc compact">
-<li class="ulEmpty toc compact" id="section-toc.1-1.8.2.1">
+<ul class="toc compact ulEmpty">
+<li class="toc compact ulEmpty" id="section-toc.1-1.8.2.1">
                 <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="xref">8.1</a>.  <a href="#name-confidentiality" class="xref">Confidentiality</a><a href="#section-toc.1-1.8.2.1.1" class="pilcrow">¶</a></p>
 </li>
-<li class="ulEmpty toc compact" id="section-toc.1-1.8.2.2">
+<li class="toc compact ulEmpty" id="section-toc.1-1.8.2.2">
                 <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="xref">8.2</a>.  <a href="#name-mutual-authentication" class="xref">Mutual Authentication</a><a href="#section-toc.1-1.8.2.2.1" class="pilcrow">¶</a></p>
 </li>
-<li class="ulEmpty toc compact" id="section-toc.1-1.8.2.3">
+<li class="toc compact ulEmpty" id="section-toc.1-1.8.2.3">
                 <p id="section-toc.1-1.8.2.3.1"><a href="#section-8.3" class="xref">8.3</a>.  <a href="#name-hardware-enforcement-suppor" class="xref">Hardware-Enforcement/Support</a><a href="#section-toc.1-1.8.2.3.1" class="pilcrow">¶</a></p>
 </li>
 </ul>
 </li>
-<li class="ulEmpty toc compact" id="section-toc.1-1.9">
+<li class="compact toc ulEmpty" id="section-toc.1-1.9">
             <p id="section-toc.1-1.9.1"><a href="#section-9" class="xref">9</a>.  <a href="#name-implementation-status" class="xref">Implementation Status</a><a href="#section-toc.1-1.9.1" class="pilcrow">¶</a></p>
-<ul class="ulEmpty toc compact">
-<li class="ulEmpty toc compact" id="section-toc.1-1.9.2.1">
+<ul class="toc compact ulEmpty">
+<li class="toc compact ulEmpty" id="section-toc.1-1.9.2.1">
                 <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="xref">9.1</a>.  <a href="#name-implementer" class="xref">Implementer</a><a href="#section-toc.1-1.9.2.1.1" class="pilcrow">¶</a></p>
 </li>
-<li class="ulEmpty toc compact" id="section-toc.1-1.9.2.2">
+<li class="toc compact ulEmpty" id="section-toc.1-1.9.2.2">
                 <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="xref">9.2</a>.  <a href="#name-implementation-name" class="xref">Implementation Name</a><a href="#section-toc.1-1.9.2.2.1" class="pilcrow">¶</a></p>
 </li>
-<li class="ulEmpty toc compact" id="section-toc.1-1.9.2.3">
+<li class="toc compact ulEmpty" id="section-toc.1-1.9.2.3">
                 <p id="section-toc.1-1.9.2.3.1"><a href="#section-9.3" class="xref">9.3</a>.  <a href="#name-implementation-url" class="xref">Implementation URL</a><a href="#section-toc.1-1.9.2.3.1" class="pilcrow">¶</a></p>
 </li>
-<li class="ulEmpty toc compact" id="section-toc.1-1.9.2.4">
+<li class="toc compact ulEmpty" id="section-toc.1-1.9.2.4">
                 <p id="section-toc.1-1.9.2.4.1"><a href="#section-9.4" class="xref">9.4</a>.  <a href="#name-maturity" class="xref">Maturity</a><a href="#section-toc.1-1.9.2.4.1" class="pilcrow">¶</a></p>
 </li>
-<li class="ulEmpty toc compact" id="section-toc.1-1.9.2.5">
+<li class="toc compact ulEmpty" id="section-toc.1-1.9.2.5">
                 <p id="section-toc.1-1.9.2.5.1"><a href="#section-9.5" class="xref">9.5</a>.  <a href="#name-coverage-and-version-compat" class="xref">Coverage and Version Compatibility</a><a href="#section-toc.1-1.9.2.5.1" class="pilcrow">¶</a></p>
 </li>
-<li class="ulEmpty toc compact" id="section-toc.1-1.9.2.6">
+<li class="toc compact ulEmpty" id="section-toc.1-1.9.2.6">
                 <p id="section-toc.1-1.9.2.6.1"><a href="#section-9.6" class="xref">9.6</a>.  <a href="#name-license" class="xref">License</a><a href="#section-toc.1-1.9.2.6.1" class="pilcrow">¶</a></p>
 </li>
-<li class="ulEmpty toc compact" id="section-toc.1-1.9.2.7">
+<li class="toc compact ulEmpty" id="section-toc.1-1.9.2.7">
                 <p id="section-toc.1-1.9.2.7.1"><a href="#section-9.7" class="xref">9.7</a>.  <a href="#name-implementation-dependencies" class="xref">Implementation Dependencies</a><a href="#section-toc.1-1.9.2.7.1" class="pilcrow">¶</a></p>
 </li>
-<li class="ulEmpty toc compact" id="section-toc.1-1.9.2.8">
+<li class="toc compact ulEmpty" id="section-toc.1-1.9.2.8">
                 <p id="section-toc.1-1.9.2.8.1"><a href="#section-9.8" class="xref">9.8</a>.  <a href="#name-contact" class="xref">Contact</a><a href="#section-toc.1-1.9.2.8.1" class="pilcrow">¶</a></p>
 </li>
 </ul>
 </li>
-<li class="ulEmpty toc compact" id="section-toc.1-1.10">
+<li class="compact toc ulEmpty" id="section-toc.1-1.10">
             <p id="section-toc.1-1.10.1"><a href="#section-10" class="xref">10</a>. <a href="#name-security-and-privacy-consid" class="xref">Security and Privacy Considerations</a><a href="#section-toc.1-1.10.1" class="pilcrow">¶</a></p>
 </li>
-<li class="ulEmpty toc compact" id="section-toc.1-1.11">
+<li class="compact toc ulEmpty" id="section-toc.1-1.11">
             <p id="section-toc.1-1.11.1"><a href="#section-11" class="xref">11</a>. <a href="#name-acknowledgments" class="xref">Acknowledgments</a><a href="#section-toc.1-1.11.1" class="pilcrow">¶</a></p>
 </li>
-<li class="ulEmpty toc compact" id="section-toc.1-1.12">
+<li class="compact toc ulEmpty" id="section-toc.1-1.12">
             <p id="section-toc.1-1.12.1"><a href="#section-12" class="xref">12</a>. <a href="#name-change-log" class="xref">Change Log</a><a href="#section-toc.1-1.12.1" class="pilcrow">¶</a></p>
 </li>
-<li class="ulEmpty toc compact" id="section-toc.1-1.13">
+<li class="compact toc ulEmpty" id="section-toc.1-1.13">
             <p id="section-toc.1-1.13.1"><a href="#section-13" class="xref">13</a>. <a href="#name-references" class="xref">References</a><a href="#section-toc.1-1.13.1" class="pilcrow">¶</a></p>
-<ul class="ulEmpty toc compact">
-<li class="ulEmpty toc compact" id="section-toc.1-1.13.2.1">
+<ul class="toc compact ulEmpty">
+<li class="toc compact ulEmpty" id="section-toc.1-1.13.2.1">
                 <p id="section-toc.1-1.13.2.1.1"><a href="#section-13.1" class="xref">13.1</a>.  <a href="#name-normative-references" class="xref">Normative References</a><a href="#section-toc.1-1.13.2.1.1" class="pilcrow">¶</a></p>
 </li>
-<li class="ulEmpty toc compact" id="section-toc.1-1.13.2.2">
+<li class="toc compact ulEmpty" id="section-toc.1-1.13.2.2">
                 <p id="section-toc.1-1.13.2.2.1"><a href="#section-13.2" class="xref">13.2</a>.  <a href="#name-informative-references" class="xref">Informative References</a><a href="#section-toc.1-1.13.2.2.1" class="pilcrow">¶</a></p>
 </li>
 </ul>
 </li>
-<li class="ulEmpty toc compact" id="section-toc.1-1.14">
+<li class="compact toc ulEmpty" id="section-toc.1-1.14">
             <p id="section-toc.1-1.14.1"><a href="#section-appendix.a" class="xref">Appendix A</a>.  <a href="#name-cddl-specification-for-a-si" class="xref">CDDL Specification for a simple CoAP Challenge/Response Interaction</a><a href="#section-toc.1-1.14.1" class="pilcrow">¶</a></p>
 </li>
-<li class="ulEmpty toc compact" id="section-toc.1-1.15">
+<li class="compact toc ulEmpty" id="section-toc.1-1.15">
             <p id="section-toc.1-1.15.1"><a href="#section-appendix.b" class="xref"></a><a href="#name-authors-addresses" class="xref">Authors' Addresses</a><a href="#section-toc.1-1.15.1" class="pilcrow">¶</a></p>
 </li>
 </ul>
@@ -1202,18 +1202,18 @@ Ultimately, they have to be conveyed in order to enable an interaction model.<a 
       </h2>
 <p id="section-7-1">The following subsections introduce and illustrate the interaction models:<a href="#section-7-1" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-7-2">
-        <li id="section-7-2.1">Challenge/Response Remote Attestation (CHARRA)<a href="#section-7-2.1" class="pilcrow">¶</a>
+        <li id="section-7-2.1">Challenge/Response Remote Attestation<a href="#section-7-2.1" class="pilcrow">¶</a>
 </li>
-<li id="section-7-2.2">Time-Based Uni-Directional Attestation (TUDA)<a href="#section-7-2.2" class="pilcrow">¶</a>
+<li id="section-7-2.2">Uni-Directional Remote Attestation<a href="#section-7-2.2" class="pilcrow">¶</a>
 </li>
-<li id="section-7-2.3">Attestation Telemetry (AT)<a href="#section-7-2.3" class="pilcrow">¶</a>
+<li id="section-7-2.3">Attestation Telemetry<a href="#section-7-2.3" class="pilcrow">¶</a>
 </li>
 </ol>
 <p id="section-7-3">Each section starts with a sequence diagram illustrating the interactions between Attester and Verifier. Other roles involved - mainly Relying Parties and Endorsers - are elaborated in the following expositional text, if applicable.<a href="#section-7-3" class="pilcrow">¶</a></p>
-<div id="challengeresponse-remote-attestation-charra">
+<div id="challengeresponse-remote-attestation">
 <section id="section-7.1">
         <h3 id="name-challenge-response-remote-a">
-<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-challenge-response-remote-a" class="section-name selfRef">Challenge/Response Remote Attestation (CHARRA)</a>
+<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-challenge-response-remote-a" class="section-name selfRef">Challenge/Response Remote Attestation</a>
         </h3>
 <div class="artwork art-text alignLeft" id="section-7.1-1">
 <pre>
@@ -1246,16 +1246,16 @@ generateEvidence(authSecID, collectedClaims, handle)              |
 <p id="section-7.1-5">As soon as the Verifier receives the signed Attestation Evidence, it verifies the signature, the Attester Identity, the Nonce, and appraises the Claims. This procedure is application-specific and can be carried out by comparing the Claims with corresponding Reference Claims, e.g., Reference Integrity Measurements (RIMs), or using other appraisal policies. The final output of the Verifier are Attestation Results. Attestation Results constitute new Claims about an Attester's properties and characteristics that enables relying parties, for example, to assess an Attester's trustworthiness.<a href="#section-7.1-5" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="time-based-uni-directional-attestation-tuda">
+<div id="uni-directional-remote-attestation">
 <section id="section-7.2">
-        <h3 id="name-time-based-uni-directional-">
-<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-time-based-uni-directional-" class="section-name selfRef">Time-Based Uni-Directional Attestation (TUDA)</a>
+        <h3 id="name-uni-directional-remote-atte">
+<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-uni-directional-remote-atte" class="section-name selfRef">Uni-Directional Remote Attestation</a>
         </h3>
 <div class="artwork art-text alignLeft" id="section-7.2-1">
 <pre>
-.----------.                                                 .---------.
-| Attester |                                                 |Verifier |
-'----------'                                                 '---------'
+.----------.                                                .----------.
+| Attester |                                                | Verifier |
+'----------'                                                '----------'
      |                                                            |
 valueGeneration(targetEnvironment)                                |
      | =&gt; Claims                                                  |
@@ -1283,23 +1283,23 @@ generateEvidence(authSecID, claimsDelta, handle                   |
      | pushEventLogDelta----------------------------------------&gt; |
      | pushEvidence---------------------------------------------&gt; |
      |                                                            |
-     |             appraiseEvidence(evidence, eventLogDelta, refClaims)
+     |              appraiseEvidence(evidence, eventLogDelta, refClaims)
      |                                       attestationResult &lt;= |
      |                                                            |
 </pre><a href="#section-7.2-1" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
-<div id="attestation-telemetry-at">
+<div id="attestation-telemetry">
 <section id="section-7.3">
-        <h3 id="name-attestation-telemetry-at">
-<a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-attestation-telemetry-at" class="section-name selfRef">Attestation Telemetry (AT)</a>
+        <h3 id="name-attestation-telemetry">
+<a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-attestation-telemetry" class="section-name selfRef">Attestation Telemetry</a>
         </h3>
 <div class="artwork art-text alignLeft" id="section-7.3-1">
 <pre>
-.----------.                                                 .---------.
-| Attester |                                                 |Verifier |
-'----------'                                                 '---------'
+.----------.                                                .----------.
+| Attester |                                                | Verifier |
+'----------'                                                '----------'
      |                                                            |
 valueGeneration(targetEnvironment)                                |
      | =&gt; Claims                                                  |

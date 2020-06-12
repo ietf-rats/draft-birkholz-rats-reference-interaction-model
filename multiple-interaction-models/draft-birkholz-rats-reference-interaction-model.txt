@@ -14,13 +14,13 @@ Expires: 14 December 2020                                   12 June 2020
 Abstract
 
    This document describes interaction models for remote attestation
-   procedures (RATS).  Three conveying mechanisms - Challenge/Response
-   (CHARRA), Time-Based Uni-Directional (TUDA), and Attestation
-   Telemetry (AT) - are illustrated and defined.  Analogously, a general
-   overview about the information elements typically used by
-   corresponding conveyance protocols are highlighted.  Privacy
-   preserving conveyance of Evidence via Direct Anonymous Attestation
-   (DAA) is elaborated on for each interaction model, individually.
+   procedures (RATS).  Three conveying mechanisms - Challenge/Response,
+   Uni-Directional, and Attestation Telemetry - are illustrated and
+   defined.  Analogously, a general overview about the information
+   elements typically used by corresponding conveyance protocols are
+   highlighted.  Privacy preserving conveyance of Evidence via Direct
+   Anonymous Attestation is elaborated on for each interaction model,
+   individually.
 
 Status of This Memo
 
@@ -76,9 +76,9 @@ Table of Contents
    5.  Normative Prerequisites . . . . . . . . . . . . . . . . . . .   4
    6.  Generic Information Elements  . . . . . . . . . . . . . . . .   5
    7.  Interaction Models  . . . . . . . . . . . . . . . . . . . . .   7
-     7.1.  Challenge/Response Remote Attestation (CHARRA)  . . . . .   7
-     7.2.  Time-Based Uni-Directional Attestation (TUDA) . . . . . .   8
-     7.3.  Attestation Telemetry (AT)  . . . . . . . . . . . . . . .   9
+     7.1.  Challenge/Response Remote Attestation . . . . . . . . . .   7
+     7.2.  Uni-Directional Remote Attestation  . . . . . . . . . . .   8
+     7.3.  Attestation Telemetry . . . . . . . . . . . . . . . . . .   9
    8.  Further Context . . . . . . . . . . . . . . . . . . . . . . .  10
      8.1.  Confidentiality . . . . . . . . . . . . . . . . . . . . .  10
      8.2.  Mutual Authentication . . . . . . . . . . . . . . . . . .  11
@@ -343,18 +343,18 @@ Internet-Draft                    REIM                         June 2020
    The following subsections introduce and illustrate the interaction
    models:
 
-   1.  Challenge/Response Remote Attestation (CHARRA)
+   1.  Challenge/Response Remote Attestation
 
-   2.  Time-Based Uni-Directional Attestation (TUDA)
+   2.  Uni-Directional Remote Attestation
 
-   3.  Attestation Telemetry (AT)
+   3.  Attestation Telemetry
 
    Each section starts with a sequence diagram illustrating the
    interactions between Attester and Verifier.  Other roles involved -
    mainly Relying Parties and Endorsers - are elaborated in the
    following expositional text, if applicable.
 
-7.1.  Challenge/Response Remote Attestation (CHARRA)
+7.1.  Challenge/Response Remote Attestation
 
    .----------.                                                .----------.
    | Attester |                                                | Verifier |
@@ -427,7 +427,7 @@ Internet-Draft                    REIM                         June 2020
    Attester's properties and characteristics that enables relying
    parties, for example, to assess an Attester's trustworthiness.
 
-7.2.  Time-Based Uni-Directional Attestation (TUDA)
+7.2.  Uni-Directional Remote Attestation
 
 
 
@@ -450,9 +450,9 @@ Birkholz & Eckel        Expires 14 December 2020                [Page 8]
 Internet-Draft                    REIM                         June 2020
 
 
-   .----------.                                                 .---------.
-   | Attester |                                                 |Verifier |
-   '----------'                                                 '---------'
+   .----------.                                                .----------.
+   | Attester |                                                | Verifier |
+   '----------'                                                '----------'
         |                                                            |
    valueGeneration(targetEnvironment)                                |
         | => Claims                                                  |
@@ -480,11 +480,11 @@ Internet-Draft                    REIM                         June 2020
         | pushEventLogDelta----------------------------------------> |
         | pushEvidence---------------------------------------------> |
         |                                                            |
-        |             appraiseEvidence(evidence, eventLogDelta, refClaims)
+        |              appraiseEvidence(evidence, eventLogDelta, refClaims)
         |                                       attestationResult <= |
         |                                                            |
 
-7.3.  Attestation Telemetry (AT)
+7.3.  Attestation Telemetry
 
 
 
@@ -506,9 +506,9 @@ Birkholz & Eckel        Expires 14 December 2020                [Page 9]
 Internet-Draft                    REIM                         June 2020
 
 
-   .----------.                                                 .---------.
-   | Attester |                                                 |Verifier |
-   '----------'                                                 '---------'
+   .----------.                                                .----------.
+   | Attester |                                                | Verifier |
+   '----------'                                                '----------'
         |                                                            |
    valueGeneration(targetEnvironment)                                |
         | => Claims                                                  |
