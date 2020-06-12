@@ -7,7 +7,7 @@ stand_alone: true
 ipr: trust200902
 area: Security
 kw: Internet-Draft
-cat: std
+cat: informational
 pi:
   toc: yes
   sortrefs: yes
@@ -46,142 +46,162 @@ informative:
 
 --- abstract
 
-This document defines interaction models for basic remote attestation procedures.
-Different methods of conveying attestation evidence securely are defined and illustrated.
-Analogously, the required information elements used by conveyance protocols are defined and illustrated.
+This document describes interaction models for remote attestation procedures (RATS).
+Three conveying mechanisms -- Challenge/Response (CHARRA), Time-Based Uni-Directional (TUDA), and Attestation Telemetry (AT) -- are illustrated and defined.
+Analogously, a general overview about the information elements typically used by corresponding conveyance protocols are highlighted. Privacy preserving conveyance of Evidence via Direct Anonymous Attestation (DAA) is elaborated on for each interaction model, individually.
 
 --- middle
 
 # Introduction
 
-Remote ATtestation procedureS {{-RATS}} are workflows composed of roles and interactions, in which a Verifier creates assessments based on evidence about the trustworthiness of an Attester's system component characteristics.
-The roles *Attester* and *Verifier*, as well as the message *Evidence* are terms defined by the RATS Architecture.
-The goal of this document is to enable the design and adoption of secure conveyance methods for attestation evidence from an Attester to a Verifier.  
-This document defines three [note: pub/sub & time-based are still missing] reference interaction models that describe the conveyance of evidence between Attester and Verifier in order to provide the basis for reliable and believable appraisal of evidence by a Verifier.
+Remote ATtestation procedureS (RATS, {{-RATS}}) are workflows composed of roles and interactions, in which Verifiers create Attestation Results about the trustworthiness of an Attester's system component characteristics. The Verifier's assessment in the form of Attestation Results is created based on Attestation Policies and Evidence -- trustable and temper-evident Claims Sets about an Attester's system component characteristics -- created by an Attester.
+The roles *Attester* and *Verifier*, as well as the Conceptual Messages *Evidence* and *Attestation Results* are terms defined by the RATS Architecture {{-RATS}}.
+This documents captures interaction models that can be used in specific RATS-related solution documents. The primary focus of this document is the conveyance of attestation Evidence. Specific goals of this document re to:
 
-## Requirements notation
+* prevent inconsistencies in descriptions of these interaction models in other documents (due to text cloning over time),
+* enable to highlight an exact delta/divergence between the core set of characteristics captured here in this document and variants of these interaction models used in other specifications or solutions, and to
+* illustrate the application of Direct Anonymous Attestation (DAA) for each of the interaction models described.
+
+In summary, this document enables the specification and design of trustworthy and privacy preserving conveyance methods for attestation Evidence from an Attester to a Verifier. While the conveyance of other Conceptual Messages is out-of-scope [note: may still change] the methods described can also be applied to the conveyance of Endorsements or Attestation Results.
+
+# Terminology
+
+This document uses the terms, roles, and concepts defined in {{-RATS}}.
 
 {::boilerplate bcp14}
 
 # Disambiguation
 
 The term "Remote Attestation" is a common expression and often associated with certain properties. The term "Remote" in this context does not necessarily refer to a remote entity in the scope of network topologies or the Internet.
-It rather refers to a decoupled system or different Types of Environments {{-RATS}}, which also can be present locally as separate system components of a composite device (in a single RATS Entity).
-Examples include: a Trusted Execution Environment (TEE), Baseboard Management Controllers (BMCs), as well as other physical or logical protected/isolated/shielded Computing Environments.
+It rather refers to a decoupled system or entities that exchange the payload of the Conceptual Message type called Evidence {{-RATS}}. This conveyance can also be "local", if the Verifier is part of the same entity as the Attester, e.g., separate system components of a Composite Device (a single RATS Entity).
+Examples of these types of co-located environments include: a Trusted Execution Environment (TEE), Baseboard Management Controllers (BMCs), as well as other physical or logical protected/isolated/shielded Computing Environments (e.g. embedded Secure Elements (eSE) or Trusted Platform Modules (TPM)).
 
 # Scope
 
-This document focuses on generic interaction models between Verifiers and Attesters.
-Complementary procedures, duties and functions that are required for a complete semantic binding of RATS are not in scope.
+This document focuses on generic interaction models between Attesters and Verifiers.
+Complementary procedures, functions, or services that are required for a complete semantic binding of the concepts defined in {{-RATS}} are not in scope.
 Examples include: identity establishment, key distribution and enrollment, as well as certificate revocation.
 
 Furthermore, any processes and duties that go beyond carrying out remote attestation procedures are out-of-scope.
-For instance, using the results of a remote attestation that are created by the Verifier, e.g., triggering remediation actions or recovery processes, as well as the remediation actions and recovery processes themselves, is also out-of-scope.
-
-The definition of Reference Interaction Models for RATS uses the role definitions of Attester and Verifier as defined in {{-RATS}}.
+For instance, using the results of a remote attestation that are created by the Verifier, e.g., triggering remediation actions or recovery processes, as well as the remediation actions and recovery processes themselves, are also out-of-scope.
 
 # Normative Prerequisites
 
+In order to ensure an appropriate conveyance of Evidence, the following set of prerequisites must be in place to support the implementation of interaction models:
+
 Attester Identity:
 
-: The provenance of Attestation Evidence with respect to a distinguishable Attesting Environment MUST be correct and unambiguous.
+: The provenance of Evidence with respect to a distinguishable Attesting Environment MUST be correct and unambiguous.
 
-: An Attester Identity MAY be a unique identity, or it MAY be included in a zero-knowledge proof (ZKP), or it MAY be part of a group signature.
+: An Attester Identity MAY be a unique identity, it MAY be included in a zero-knowledge proof (ZKP), or it MAY be part of a group signature.
 
 Attestation Evidence:
 
-: Attestation Evidence MUST be a set of well-formatted and well-protected Claims that an Attester can create and convey to a Verifier.
+: Evidence MUST be a set of well-formatted and well-protected Claims that an Attester can create and convey to a Verifier in a temper-evident manner.
+
+: Evidence MUST include an indicator about its Freshness that can be understood by a Verifier.
 
 Attestation Evidence Authenticity:
 
 : Attestation Evidence MUST be correct and authentic.
 
-: Attestation Evidence, in order to provide proof of authenticity, SHOULD be cryptographically associated with an identity document (e.g. an X.509 certificate), or SHOULD include a correct and unambiguous reference to an accessible identity document.
+: Attestation Evidence, in order to provide proof of authenticity, SHOULD be cryptographically associated with an identity document (e.g. an X.509 certificate or trusted key material), or SHOULD include a correct and unambiguous and stable reference to an accessible identity document.
 
 Authentication Secret:
 
 : An Authentication Secret MUST be available exclusively to an Attester's Attesting Environment.
-The Attester MUST sign Claims with that Authentication Secret, thereby proving the authenticity of the Claims included in the signed Attestation Evidence.
-The Authentication Secret MUST be established before RATS can take place. How it is established is out-of-scope for this document.
 
-# Remote Attestation Interaction Model
+: The Attester MUST protect Claims with that Authentication Secret, thereby proving the authenticity of the Claims included in Evidence.
+The Authentication Secret MUST be established before RATS can take place.
 
-This section defines the information elements that have to be conveyed via a protocol, enabling the conveyance of Evidence between Verifier and Attester, as well as the interaction model for a generic challenge-response remote attestation scheme.
+# Generic Information Elements
 
-## Information Elements
+This section defines the information elements that can be used in all interaction models.
+Varying from solution to solution, generic information elements can be either included in the scope of protocol messages or can be included in their payload.
+Ultimately, they have to be conveyed in order to enable an interaction model.
 
 Attester Identity ('attesterIdentity'):
 
 : *mandatory*
 
-: A statement about a distinguishable Attester made by an entity without accompanying evidence of its validity, used as proof of identity.
+: A statement about a distinguishable Attester made by an Endorser without accompanying evidence of its validity - used as proof of identity.
 
 Authentication Secret ID ('authSecID'):
 
 : *mandatory*
 
-: An identifier that MUST be associated with the Authentication Secret which is used to sign evidence.
+: A statement representing an identifier that MUST be associated with an Authentication Secret that is used to protect Evidence.
 
-Nonce ('nonce'):
+Handle ('handle'):
 
 : *mandatory*
 
-: The Nonce (number used once) is intended to be unique and practically infeasible to guess. In this reference interaction model the Nonce MUST be provided by the Verifier and MUST be used as proof of freshness. With respect to conveyed evidence, it ensures the result of an attestation activity to be created recently, e. g. sent or derived by the challenge from the Verifier. As such, the Nonce MUST be part of the signed Attestation Evidence that is sent from the Attester to the Verifier.
+: A statement that is intended to uniquely distinguish received Evidence and/or determine the Freshness of Evidence. A Verifier can also use a Handle as an indicator for authenticity or attestation provenance, as only Attesters and Verifiers that are intended to exchange Evidence should have knowledge of the corresponding Handles. Examples include Nonces or signed timestamps.
 
 Claims ('claims'):
 
 : *mandatory*
 
-: Claims are assertions that represent characteristics of an Attester. Claims compose attestation evidence and are, for example, used to appraise the integrity of an Attester. Examples are Claims about sensor data, policies that are active on the entity, versions of composite firmware of a platform, running software, routing tables, or information about a local time source.
+: Claims are assertions that represent characteristics of an Attester. Claims compose attestation Evidence and are, for example, used to appraise the integrity of an Attester by a Verifier. The statements that compose the information elements in this section can also be expressed as Claims in Evidence by some solutions.
 
 Reference Claims ('refClaims')
 
 : *mandatory*
 
-: Reference Claims are a specific subset of Appraisal Policies as defined in {{-RATS}}. Reference Claims are used to appraise the Claims received from an Attester via appraisal by direct comparison. For example, Reference Claims MAY be Reference Integrity Measurements (RIMs) or assertions that are implicitly trusted because they are signed by a trusted authority (see Endorsements in {{-RATS}}). RIMs represent (trusted) Claim sets about an Attester's intended platform operational state.
+: Reference Claims are a specific subset of Appraisal Policies as defined in {{-RATS}}. Reference Claims are used to appraise the Claims received from an Attester via appraisal by direct comparison. For example, Reference Claims MAY be Reference Integrity Measurements (RIMs) or assertions that are implicitly trusted because they are signed by a trusted authority (see Endorsements in {{-RATS}}). Reference Claims typically represent (trusted) Claim sets about an Attester's intended platform operational state.
 
 Claim Selection ('claimSelection'):
 
 : *optional*
 
-: An Attester MAY provide a selection of Claims in order to reduce or increase retrieved assertions to those that are relevant to the appraisal policies. Usually, all available Claims that are available to the Attester SHOULD be conveyed. The Claim Selection MAY be composed as complementary signed Claim sets or MAY be encapsulated Claims in the signed Attestation Evidence. An Attester MAY decide whether or not to provide all requested Claims or not. An example of a Claim Selection is a Verifier requesting (signed) RIMs from an Attester.
+: A statement that represents a (sub-)set of Claims that can be created by an Attester. Claim Selections can act as filters that can specify the exact set of Claims to be included in Evidence. An Attester MAY decide whether or not to provide all Claims as requested via a Claim Selection.
 
-(Signed) Attestation Evidence ('signedAttestationEvidence'):
+Attestation Evidence ('signedAttestationEvidence'):
 
 : *mandatory*
 
-: Attestation Evidence consists of the Authentication Secret ID that identifies an Authentication Secret, the Attester Identity, the Claims, and the Verifier-provided Nonce. Attestation Evidence MUST cryptographically bind all of those elements. The Attestation Evidence MUST be signed by the Authentication Secret. The Authentication Secret MUST be trusted by the Verifier as authoritative.
+: Evidence consists of an Authentication Secret ID that identifies an Authentication Secret, the Attester Identity, Claims, and a Handle. Attestation Evidence MUST cryptographically bind all of these information elements. The Evidence MUST be protected via the Authentication Secret. The Authentication Secret MUST be trusted by the Verifier as authoritative.
 
 Attestation Result ('attestationResult'):
 
 : *mandatory*
 
-: An Attestation Result is produced by the Verifier as the output of the appraisal of Attestation Evidence. The Attestation Result represents Claims about integrity and other characteristics of the corresponding Attester.
+: An Attestation Result is produced by the Verifier as the output of the appraisal of Evidence. Attestation Results include condensed assertions about integrity or other characteristics of the corresponding Attester.
 
-## Interaction Model
+# Interaction Models
 
-The following sequence diagram illustrates the reference remote attestation procedure defined by this document.
+The following subsections introduce and illustrate the interaction models:
+
+1. Challenge/Response Remote Attestation (CHARRA)
+2. Time-Based Uni-Directional Attestation (TUDA)
+3. Attestation Telemetry (AT)
+
+Each section starts with a sequence diagram illustrating the interactions between Attester and Verifier. Other roles involved -- mainly Relying Parties and Endorsers -- are elaborated in the following expositional text, if applicable.
+
+## Challenge/Response Remote Attestation (CHARRA)
 
 ~~~~
-[Attester]                                                      [Verifier]
-    |                                                               |
-measureClaims(attestedEnvironment)                                  |       
-    | => claims                                                     |
-    |                                                               |  
-    | <---------- requestEvidence(nonce, authSecID, claimSelection) |
-    |                                                               |
+.----------.                                                  .----------.
+| Attester |                                                  | Verifier |
+'----------'                                                  '----------'
+     |                                                              |
+     |                                                              |
+generateClaims(targetEnvironment)                                   |
+     | => claims                                                    |
+     |                                                              |  
+     | <-------- requestEvidence(handle, authSecID, claimSelection) |
+     |                                                              |
 collectClaims(claimSelection)                                       |
-    | => claims                                                     |
-    |                                                               |
-signAttestationEvidence(authSecID, claims, nonce)                   |
-    | => signedAttestationEvidence                                  |
-    |                                                               |
-    | signedAttestationEvidence ----------------------------------> |
-    |                                                               |
-    |   appraiseAttestationEvidence(signedAttestationEvidence, refClaims)
-    |                                          attestationResult <= |
-    |                                                               |
-
+     | => collectedClaims                                           |
+     |                                                              |
+generateEvidence(authSecID, collectedClaims, handle)                |
+     | => evidence                                                  |
+     |                                                              |
+     | conveyEvidence --------------------------------------------> |
+     |                                                              |
+     |                             appraiseEvidence(evidence, refClaims)
+     |                                         attestationResult <= |
+     |                                                              |
 ~~~~
 
 The remote attestation procedure is initiated by the Verifier, sending an attestation request to the Attester. The attestation request consists of a Nonce, a Authentication Secret ID, and a Claim Selection. The Nonce guarantees attestation freshness. The Authentication Secret ID selects the secret with which the Attester is requested to sign the Attestation Evidence. The Claim Selection narrows down or increases the amount of received Claims, if required. If the Claim Selection is empty, then by default all Claims that are available on the Attester MUST be signed and returned as Attestation Evidence. For example, a Verifier may only be requesting a particular subset of information about the Attester, such as evidence about BIOS and firmware the Attester booted up with - and not include information about all currently running software.
@@ -191,6 +211,78 @@ The Attester, after receiving the attestation request, collects the correspondin
 It is crucial at this point that Claims, the Nonce, as well as the Attester Identity information MUST be cryptographically bound to the signature of the Attestation Evidence. It is not required for them to be present in plain text, though. Cryptographic blinding MAY be used at this point. For further reference see section {{security-and-privacy-considerations}}.
 
 As soon as the Verifier receives the signed Attestation Evidence, it verifies the signature, the Attester Identity, the Nonce, and appraises the Claims. This procedure is application-specific and can be carried out by comparing the Claims with corresponding Reference Claims, e.g., Reference Integrity Measurements (RIMs), or using other appraisal policies. The final output of the Verifier are Attestation Results. Attestation Results constitute new Claims about an Attester's properties and characteristics that enables relying parties, for example, to assess an Attester's trustworthiness.
+
+## Time-Based Uni-Directional Attestation (TUDA)
+
+~~~~
+.----------.                                                   .---------.
+| Attester |                                                   |Verifier |
+'----------'                                                   '---------'
+     |                                                              |
+valueGeneration(targetEnvironment)                                  |
+     | => Claims                                                    |
+     |                                                              |
+     |                    .--------------------.                    |
+     | <-----------handle | Handle Distributor | handle-----------> |
+     |                    '--------------------'                    |
+     |                                                              |
+generateEvidence(authSecID, claims, handle)                         |
+     | => evidence                                                  |
+     |                                                              |
+     | pushEventLog-----------------------------------------------> |
+     | pushEvidence-----------------------------------------------> |
+     |                                                              |
+     |                    appraiseEvidence(evidence, eventLog, refClaims)
+     |                                         attestationResult <= |
+     ~                                                              ~
+     |                                                              | 
+valueGeneration(targetEnvironment)                                  |
+     | => ClaimsDelta                                               |
+     |                                                              |
+generateEvidence(authSecID, claimsDelta, handle)                    |
+     | => evidence                                                  |
+     |                                                              |
+     | pushEventLogDelta------------------------------------------> |
+     | pushEvidence-----------------------------------------------> |
+     |                                                              |
+     |               appraiseEvidence(evidence, eventLogDelta, refClaims)
+     |                                         attestationResult <= |          |                                                              |
+~~~~
+
+## Attestation Telemetry (AT)
+
+~~~~
+.----------.                                                   .---------.
+| Attester |                                                   |Verifier |
+'----------'                                                   '---------'
+     |                                                              |
+valueGeneration(targetEnvironment)                                  |
+     | => Claims                                                    |
+     |                                                              |
+     | <-------subscribeEvidence(handle, authSecID, claimSelection) |
+     |                                                              |
+generateEvidence(authSecID, claimSelection, handle)                 |
+     | => evidence                                                  |
+     |                                                              |
+     | pushEventLog-----------------------------------------------> |
+     | pushEvidence-----------------------------------------------> |
+     |                                                              |
+     |                    appraiseEvidence(evidence, eventLog, refClaims)
+     |                                         attestationResult <= |
+     ~                                                              ~
+     |                                                              |
+valueGeneration(targetEnvironment)                                  |
+     | => Claims                                                    |
+     |                                                              |
+generateEvidence(authSecID, claimSelection, handle)                 |
+     | => evidence                                                  |
+     |                                                              |
+     | pushEventLogDelta------------------------------------------> |
+     | pushEvidence-----------------------------------------------> |
+     |                                                              |
+     |               appraiseEvidence(evidence, eventLogDelta, refClaims)
+     |                                         attestationResult <= |          |                                                              |
+~~~~
 
 # Further Context
 
