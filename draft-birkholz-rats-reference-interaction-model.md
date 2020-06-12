@@ -47,8 +47,8 @@ informative:
 --- abstract
 
 This document describes interaction models for remote attestation procedures (RATS).
-Three conveying mechanisms -- Challenge/Response (CHARRA), Time-Based Uni-Directional (TUDA), and Attestation Telemetry (AT) -- are illustrated and defined.
-Analogously, a general overview about the information elements typically used by corresponding conveyance protocols are highlighted. Privacy preserving conveyance of Evidence via Direct Anonymous Attestation (DAA) is elaborated on for each interaction model, individually.
+Three conveying mechanisms -- Challenge/Response, Uni-Directional, and Attestation Telemetry -- are illustrated and defined.
+Analogously, a general overview about the information elements typically used by corresponding conveyance protocols are highlighted. Privacy preserving conveyance of Evidence via Direct Anonymous Attestation is elaborated on for each interaction model, individually.
 
 --- middle
 
@@ -172,13 +172,13 @@ Attestation Result ('attestationResult'):
 
 The following subsections introduce and illustrate the interaction models:
 
-1. Challenge/Response Remote Attestation (CHARRA)
-2. Time-Based Uni-Directional Attestation (TUDA)
-3. Attestation Telemetry (AT)
+1. Challenge/Response Remote Attestation
+2. Uni-Directional Remote Attestation
+3. Attestation Telemetry
 
 Each section starts with a sequence diagram illustrating the interactions between Attester and Verifier. Other roles involved -- mainly Relying Parties and Endorsers -- are elaborated in the following expositional text, if applicable.
 
-## Challenge/Response Remote Attestation (CHARRA)
+## Challenge/Response Remote Attestation
 
 ~~~~
 .----------.                                                .----------.
@@ -212,12 +212,12 @@ It is crucial at this point that Claims, the Nonce, as well as the Attester Iden
 
 As soon as the Verifier receives the signed Attestation Evidence, it verifies the signature, the Attester Identity, the Nonce, and appraises the Claims. This procedure is application-specific and can be carried out by comparing the Claims with corresponding Reference Claims, e.g., Reference Integrity Measurements (RIMs), or using other appraisal policies. The final output of the Verifier are Attestation Results. Attestation Results constitute new Claims about an Attester's properties and characteristics that enables relying parties, for example, to assess an Attester's trustworthiness.
 
-## Time-Based Uni-Directional Attestation (TUDA)
+## Uni-Directional Remote Attestation
 
 ~~~~
-.----------.                                                 .---------.
-| Attester |                                                 |Verifier |
-'----------'                                                 '---------'
+.----------.                                                .----------.
+| Attester |                                                | Verifier |
+'----------'                                                '----------'
      |                                                            |
 valueGeneration(targetEnvironment)                                |
      | => Claims                                                  |
@@ -245,17 +245,17 @@ generateEvidence(authSecID, claimsDelta, handle                   |
      | pushEventLogDelta----------------------------------------> |
      | pushEvidence---------------------------------------------> |
      |                                                            |
-     |             appraiseEvidence(evidence, eventLogDelta, refClaims)
+     |              appraiseEvidence(evidence, eventLogDelta, refClaims)
      |                                       attestationResult <= |
      |                                                            |
 ~~~~
 
-## Attestation Telemetry (AT)
+## Attestation Telemetry
 
 ~~~~
-.----------.                                                 .---------.
-| Attester |                                                 |Verifier |
-'----------'                                                 '---------'
+.----------.                                                .----------.
+| Attester |                                                | Verifier |
+'----------'                                                '----------'
      |                                                            |
 valueGeneration(targetEnvironment)                                |
      | => Claims                                                  |
