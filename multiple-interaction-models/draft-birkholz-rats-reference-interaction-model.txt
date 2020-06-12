@@ -356,27 +356,27 @@ Internet-Draft                    REIM                         June 2020
 
 7.1.  Challenge/Response Remote Attestation (CHARRA)
 
-   .----------.                                                  .----------.
-   | Attester |                                                  | Verifier |
-   '----------'                                                  '----------'
-        |                                                              |
-        |                                                              |
-   generateClaims(targetEnvironment)                                   |
-        | => claims                                                    |
-        |                                                              |
-        | <-------- requestEvidence(handle, authSecID, claimSelection) |
-        |                                                              |
-   collectClaims(claimSelection)                                       |
-        | => collectedClaims                                           |
-        |                                                              |
-   generateEvidence(authSecID, collectedClaims, handle)                |
-        | => evidence                                                  |
-        |                                                              |
-        | conveyEvidence --------------------------------------------> |
-        |                                                              |
+   .----------.                                                .----------.
+   | Attester |                                                | Verifier |
+   '----------'                                                '----------'
+        |                                                            |
+        |                                                            |
+   generateClaims(targetEnvironment)                                 |
+        | => claims                                                  |
+        |                                                            |
+        | <------ requestEvidence(handle, authSecID, claimSelection) |
+        |                                                            |
+   collectClaims(claimSelection)                                     |
+        | => collectedClaims                                         |
+        |                                                            |
+   generateEvidence(authSecID, collectedClaims, handle)              |
+        | => evidence                                                |
+        |                                                            |
+        | conveyEvidence ------------------------------------------> |
+        |                                                            |
         |                             appraiseEvidence(evidence, refClaims)
-        |                                         attestationResult <= |
-        |                                                              |
+        |                                       attestationResult <= |
+        |                                                            |
 
    The remote attestation procedure is initiated by the Verifier,
    sending an attestation request to the Attester.  The attestation
@@ -450,41 +450,41 @@ Birkholz & Eckel        Expires 14 December 2020                [Page 8]
 Internet-Draft                    REIM                         June 2020
 
 
-   .----------.                                                   .---------.
-   | Attester |                                                   |Verifier |
-   '----------'                                                   '---------'
-        |                                                              |
-   valueGeneration(targetEnvironment)                                  |
-        | => Claims                                                    |
-        |                                                              |
-        |                    .--------------------.                    |
-        | <-----------handle | Handle Distributor | handle-----------> |
-        |                    '--------------------'                    |
-        |                                                              |
-   generateEvidence(authSecID, claims, handle)                         |
-        | => evidence                                                  |
-        |                                                              |
-        | pushEventLog-----------------------------------------------> |
-        | pushEvidence-----------------------------------------------> |
-        |                                                              |
-        |                    appraiseEvidence(evidence, eventLog, refClaims)
-        |                                         attestationResult <= |
-        ~                                                              ~
-        |                                                              |
-   valueGeneration(targetEnvironment)                                  |
-        | => ClaimsDelta                                               |
-        |                                                              |
-   generateEvidence(authSecID, claimsDelta, handle)                    |
-        | => evidence                                                  |
-        |                                                              |
-        | pushEventLogDelta------------------------------------------> |
-        | pushEvidence-----------------------------------------------> |
-        |                                                              |
-        |               appraiseEvidence(evidence, eventLogDelta, refClaims)
-        |                                         attestationResult <= |          |                                                              |
+   .----------.                                                 .---------.
+   | Attester |                                                 |Verifier |
+   '----------'                                                 '---------'
+        |                                                            |
+   valueGeneration(targetEnvironment)                                |
+        | => Claims                                                  |
+        |                                                            |
+        |                   .--------------------.                   |
+        | <----------handle | Handle Distributor | handle----------> |
+        |                   '--------------------'                   |
+        |                                                            |
+   generateEvidence(authSecID, claims, handle)                       |
+        | => evidence                                                |
+        |                                                            |
+        | pushEventLog---------------------------------------------> |
+        | pushEvidence---------------------------------------------> |
+        |                                                            |
+        |                   appraiseEvidence(evidence, eventLog, refClaims)
+        |                                       attestationResult <= |
+        ~                                                            ~
+        |                                                            |
+   valueGeneration(targetEnvironment)                                |
+        | => ClaimsDelta                                             |
+        |                                                            |
+   generateEvidence(authSecID, claimsDelta, handle                   |
+        | => evidence                                                |
+        |                                                            |
+        | pushEventLogDelta----------------------------------------> |
+        | pushEvidence---------------------------------------------> |
+        |                                                            |
+        |             appraiseEvidence(evidence, eventLogDelta, refClaims)
+        |                                       attestationResult <= |
+        |                                                            |
 
 7.3.  Attestation Telemetry (AT)
-
 
 
 
@@ -506,36 +506,37 @@ Birkholz & Eckel        Expires 14 December 2020                [Page 9]
 Internet-Draft                    REIM                         June 2020
 
 
-   .----------.                                                   .---------.
-   | Attester |                                                   |Verifier |
-   '----------'                                                   '---------'
-        |                                                              |
-   valueGeneration(targetEnvironment)                                  |
-        | => Claims                                                    |
-        |                                                              |
-        | <-------subscribeEvidence(handle, authSecID, claimSelection) |
-        |                                                              |
-   generateEvidence(authSecID, claimSelection, handle)                 |
-        | => evidence                                                  |
-        |                                                              |
-        | pushEventLog-----------------------------------------------> |
-        | pushEvidence-----------------------------------------------> |
-        |                                                              |
-        |                    appraiseEvidence(evidence, eventLog, refClaims)
-        |                                         attestationResult <= |
-        ~                                                              ~
-        |                                                              |
-   valueGeneration(targetEnvironment)                                  |
-        | => Claims                                                    |
-        |                                                              |
-   generateEvidence(authSecID, claimSelection, handle)                 |
-        | => evidence                                                  |
-        |                                                              |
-        | pushEventLogDelta------------------------------------------> |
-        | pushEvidence-----------------------------------------------> |
-        |                                                              |
-        |               appraiseEvidence(evidence, eventLogDelta, refClaims)
-        |                                         attestationResult <= |          |                                                              |
+   .----------.                                                 .---------.
+   | Attester |                                                 |Verifier |
+   '----------'                                                 '---------'
+        |                                                            |
+   valueGeneration(targetEnvironment)                                |
+        | => Claims                                                  |
+        |                                                            |
+        | <-----subscribeEvidence(handle, authSecID, claimSelection) |
+        |                                                            |
+   generateEvidence(authSecID, claimSelection, handle)               |
+        | => evidence                                                |
+        |                                                            |
+        | pushEventLog---------------------------------------------> |
+        | pushEvidence---------------------------------------------> |
+        |                                                            |
+        |                   appraiseEvidence(evidence, eventLog, refClaims)
+        |                                       attestationResult <= |
+        ~                                                            ~
+        |                                                            |
+   valueGeneration(targetEnvironment)                                |
+        | => Claims                                                  |
+        |                                                            |
+   generateEvidence(authSecID, claimSelection, handle)               |
+        | => evidence                                                |
+        |                                                            |
+        | pushEventLogDelta----------------------------------------> |
+        | pushEvidence---------------------------------------------> |
+        |                                                            |
+        |              appraiseEvidence(evidence, eventLogDelta, refClaims)
+        |                                       attestationResult <= |
+        |                                                            |
 
 8.  Further Context
 
@@ -551,7 +552,6 @@ Internet-Draft                    REIM                         June 2020
    preserves confidentiality.  In private networks, such as carrier
    management networks, it must be evaluated whether or not the
    transport medium is considered confidential.
-
 
 
 
