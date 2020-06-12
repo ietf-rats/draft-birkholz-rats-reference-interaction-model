@@ -181,27 +181,27 @@ Each section starts with a sequence diagram illustrating the interactions betwee
 ## Challenge/Response Remote Attestation (CHARRA)
 
 ~~~~
-.----------.                                                  .----------.
-| Attester |                                                  | Verifier |
-'----------'                                                  '----------'
-     |                                                              |
-     |                                                              |
-generateClaims(targetEnvironment)                                   |
-     | => claims                                                    |
-     |                                                              |  
-     | <-------- requestEvidence(handle, authSecID, claimSelection) |
-     |                                                              |
-collectClaims(claimSelection)                                       |
-     | => collectedClaims                                           |
-     |                                                              |
-generateEvidence(authSecID, collectedClaims, handle)                |
-     | => evidence                                                  |
-     |                                                              |
-     | conveyEvidence --------------------------------------------> |
-     |                                                              |
+.----------.                                                .----------.
+| Attester |                                                | Verifier |
+'----------'                                                '----------'
+     |                                                            |
+     |                                                            |
+generateClaims(targetEnvironment)                                 |
+     | => claims                                                  |
+     |                                                            |  
+     | <------ requestEvidence(handle, authSecID, claimSelection) |
+     |                                                            |
+collectClaims(claimSelection)                                     |
+     | => collectedClaims                                         |
+     |                                                            |
+generateEvidence(authSecID, collectedClaims, handle)              |
+     | => evidence                                                |
+     |                                                            |
+     | conveyEvidence ------------------------------------------> |
+     |                                                            |
      |                             appraiseEvidence(evidence, refClaims)
-     |                                         attestationResult <= |
-     |                                                              |
+     |                                       attestationResult <= |
+     |                                                            |
 ~~~~
 
 The remote attestation procedure is initiated by the Verifier, sending an attestation request to the Attester. The attestation request consists of a Nonce, a Authentication Secret ID, and a Claim Selection. The Nonce guarantees attestation freshness. The Authentication Secret ID selects the secret with which the Attester is requested to sign the Attestation Evidence. The Claim Selection narrows down or increases the amount of received Claims, if required. If the Claim Selection is empty, then by default all Claims that are available on the Attester MUST be signed and returned as Attestation Evidence. For example, a Verifier may only be requesting a particular subset of information about the Attester, such as evidence about BIOS and firmware the Attester booted up with - and not include information about all currently running software.
@@ -215,73 +215,75 @@ As soon as the Verifier receives the signed Attestation Evidence, it verifies th
 ## Time-Based Uni-Directional Attestation (TUDA)
 
 ~~~~
-.----------.                                                   .---------.
-| Attester |                                                   |Verifier |
-'----------'                                                   '---------'
-     |                                                              |
-valueGeneration(targetEnvironment)                                  |
-     | => Claims                                                    |
-     |                                                              |
-     |                    .--------------------.                    |
-     | <-----------handle | Handle Distributor | handle-----------> |
-     |                    '--------------------'                    |
-     |                                                              |
-generateEvidence(authSecID, claims, handle)                         |
-     | => evidence                                                  |
-     |                                                              |
-     | pushEventLog-----------------------------------------------> |
-     | pushEvidence-----------------------------------------------> |
-     |                                                              |
-     |                    appraiseEvidence(evidence, eventLog, refClaims)
-     |                                         attestationResult <= |
-     ~                                                              ~
-     |                                                              | 
-valueGeneration(targetEnvironment)                                  |
-     | => ClaimsDelta                                               |
-     |                                                              |
-generateEvidence(authSecID, claimsDelta, handle)                    |
-     | => evidence                                                  |
-     |                                                              |
-     | pushEventLogDelta------------------------------------------> |
-     | pushEvidence-----------------------------------------------> |
-     |                                                              |
-     |               appraiseEvidence(evidence, eventLogDelta, refClaims)
-     |                                         attestationResult <= |          |                                                              |
+.----------.                                                 .---------.
+| Attester |                                                 |Verifier |
+'----------'                                                 '---------'
+     |                                                            |
+valueGeneration(targetEnvironment)                                |
+     | => Claims                                                  |
+     |                                                            |
+     |                   .--------------------.                   |
+     | <----------handle | Handle Distributor | handle----------> |
+     |                   '--------------------'                   |
+     |                                                            |
+generateEvidence(authSecID, claims, handle)                       |
+     | => evidence                                                |
+     |                                                            |
+     | pushEventLog---------------------------------------------> |
+     | pushEvidence---------------------------------------------> |
+     |                                                            |
+     |                   appraiseEvidence(evidence, eventLog, refClaims)
+     |                                       attestationResult <= |
+     ~                                                            ~
+     |                                                            | 
+valueGeneration(targetEnvironment)                                |
+     | => ClaimsDelta                                             |
+     |                                                            |
+generateEvidence(authSecID, claimsDelta, handle                   |
+     | => evidence                                                |
+     |                                                            |
+     | pushEventLogDelta----------------------------------------> |
+     | pushEvidence---------------------------------------------> |
+     |                                                            |
+     |             appraiseEvidence(evidence, eventLogDelta, refClaims)
+     |                                       attestationResult <= |
+     |                                                            |
 ~~~~
 
 ## Attestation Telemetry (AT)
 
 ~~~~
-.----------.                                                   .---------.
-| Attester |                                                   |Verifier |
-'----------'                                                   '---------'
-     |                                                              |
-valueGeneration(targetEnvironment)                                  |
-     | => Claims                                                    |
-     |                                                              |
-     | <-------subscribeEvidence(handle, authSecID, claimSelection) |
-     |                                                              |
-generateEvidence(authSecID, claimSelection, handle)                 |
-     | => evidence                                                  |
-     |                                                              |
-     | pushEventLog-----------------------------------------------> |
-     | pushEvidence-----------------------------------------------> |
-     |                                                              |
-     |                    appraiseEvidence(evidence, eventLog, refClaims)
-     |                                         attestationResult <= |
-     ~                                                              ~
-     |                                                              |
-valueGeneration(targetEnvironment)                                  |
-     | => Claims                                                    |
-     |                                                              |
-generateEvidence(authSecID, claimSelection, handle)                 |
-     | => evidence                                                  |
-     |                                                              |
-     | pushEventLogDelta------------------------------------------> |
-     | pushEvidence-----------------------------------------------> |
-     |                                                              |
-     |               appraiseEvidence(evidence, eventLogDelta, refClaims)
-     |                                         attestationResult <= |          |                                                              |
+.----------.                                                 .---------.
+| Attester |                                                 |Verifier |
+'----------'                                                 '---------'
+     |                                                            |
+valueGeneration(targetEnvironment)                                |
+     | => Claims                                                  |
+     |                                                            |
+     | <-----subscribeEvidence(handle, authSecID, claimSelection) |
+     |                                                            |
+generateEvidence(authSecID, claimSelection, handle)               |
+     | => evidence                                                |
+     |                                                            |
+     | pushEventLog---------------------------------------------> |
+     | pushEvidence---------------------------------------------> |
+     |                                                            |
+     |                   appraiseEvidence(evidence, eventLog, refClaims)
+     |                                       attestationResult <= |
+     ~                                                            ~
+     |                                                            |
+valueGeneration(targetEnvironment)                                |
+     | => Claims                                                  |
+     |                                                            |
+generateEvidence(authSecID, claimSelection, handle)               |
+     | => evidence                                                |
+     |                                                            |
+     | pushEventLogDelta----------------------------------------> |
+     | pushEvidence---------------------------------------------> |
+     |                                                            |
+     |              appraiseEvidence(evidence, eventLogDelta, refClaims)
+     |                                       attestationResult <= |
+     |                                                            |
 ~~~~
 
 # Further Context
