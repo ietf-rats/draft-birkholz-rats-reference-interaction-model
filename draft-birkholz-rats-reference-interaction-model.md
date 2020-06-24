@@ -43,7 +43,7 @@ normative:
 
 informative:
   I-D.ietf-rats-architecture: RATS
-
+  I-D.birkholz-rats-tuda: TUDA
 --- abstract
 
 This document describes interaction models for remote attestation procedures (RATS).
@@ -126,11 +126,11 @@ Attester Identity ('attesterIdentity'):
 
 : A statement about a distinguishable Attester made by an Endorser without accompanying evidence of its validity - used as proof of identity.
 
-Authentication Secret ID ('authSecID'):
+Authentication Secret IDs ('authSecID'):
 
 : *mandatory*
 
-: A statement representing an identifier that MUST be associated with an Authentication Secret that is used to protect Evidence.
+: A statement representing an identifier list that MUST be associated with corresponding Authentication Secrets used to protect Evidence. Each Authentication Secrets is uniquely associated with a distinguishable Attesting Environment. Consecutively, an Authentication Secret ID also identifies an Attesting Environment.
 
 Handle ('handle'):
 
@@ -156,11 +156,11 @@ Claim Selection ('claimSelection'):
 
 : A statement that represents a (sub-)set of Claims that can be created by an Attester. Claim Selections can act as filters that can specify the exact set of Claims to be included in Evidence. An Attester MAY decide whether or not to provide all Claims as requested via a Claim Selection.
 
-Attestation Evidence ('signedAttestationEvidence'):
+Evidence ('signedAttestationEvidence'):
 
 : *mandatory*
 
-: Evidence consists of an Authentication Secret ID that identifies an Authentication Secret, the Attester Identity, Claims, and a Handle. Attestation Evidence MUST cryptographically bind all of these information elements. The Evidence MUST be protected via the Authentication Secret. The Authentication Secret MUST be trusted by the Verifier as authoritative.
+: Evidence consists of an Authentication Secret ID that identifies an Authentication Secret in a single Attesting Environment, the Attester Identity, Claims, and a Handle. Attestation Evidence MUST cryptographically bind all of these information elements. The Evidence MUST be protected via the Authentication Secret. The Authentication Secret MUST be trusted by the Verifier as authoritative.
 
 Attestation Result ('attestationResult'):
 
@@ -174,9 +174,9 @@ The following subsections introduce and illustrate the interaction models:
 
 1. Challenge/Response Remote Attestation
 2. Uni-Directional Remote Attestation
-3. Attestation Telemetry
+3. Streaming Remote Attestation
 
-Each section starts with a sequence diagram illustrating the interactions between Attester and Verifier. Other roles involved -- mainly Relying Parties and Endorsers -- are elaborated in the following expositional text, if applicable.
+Each section starts with a sequence diagram illustrating the interactions between Attester and Verifier. Other roles involved -- mainly Relying Parties and Endorsers -- are elaborated on in the following expositional text, if applicable. While the interaction models presented focus on the conveyance of Evidence, they can also be used for the conveyance of other Conceptual Messages, namely Attestation Results, Endorsements, or Appraisal Policies. Every interaction model uses a handle to incorporate a proof of freshness. The ways these handles are processed is the most prominent difference between the three interaction models.
 
 ## Challenge/Response Remote Attestation
 
@@ -186,31 +186,44 @@ Each section starts with a sequence diagram illustrating the interactions betwee
 '----------'                                                '----------'
      |                                                            |
      |                                                            |
-generateClaims(targetEnvironment)                                 |
+valueGeneration(targetEnvironment)                                |
      | => claims                                                  |
      |                                                            |  
-     | <------ requestEvidence(handle, authSecID, claimSelection) |
+     | <----- requestEvidence(handle, authSecIDs, claimSelection) |
      |                                                            |
-collectClaims(claimSelection)                                     |
+claimsCollection(claimSelection)                                  |
      | => collectedClaims                                         |
      |                                                            |
-generateEvidence(authSecID, collectedClaims, handle)              |
+evidenceGeneration(handle, authSecIDs, collectedClaims)           |
      | => evidence                                                |
      |                                                            |
-     | conveyEvidence ------------------------------------------> |
+     | returnEvidence ------------------------------------------> |
+     | returnEventLog ------------------------------------------> |
      |                                                            |
-     |                             appraiseEvidence(evidence, refClaims)
+     |                  evidenceAppraisal(evidence, eventLog, refClaims)
      |                                       attestationResult <= |
      |                                                            |
 ~~~~
 
-The remote attestation procedure is initiated by the Verifier, sending an attestation request to the Attester. The attestation request consists of a Nonce, a Authentication Secret ID, and a Claim Selection. The Nonce guarantees attestation freshness. The Authentication Secret ID selects the secret with which the Attester is requested to sign the Attestation Evidence. The Claim Selection narrows down or increases the amount of received Claims, if required. If the Claim Selection is empty, then by default all Claims that are available on the Attester MUST be signed and returned as Attestation Evidence. For example, a Verifier may only be requesting a particular subset of information about the Attester, such as evidence about BIOS and firmware the Attester booted up with - and not include information about all currently running software.
+Challenge/Response Remote Attestation procedures are initiated by the Verifier, sending a remote attestation request to the Attester.
+A request includes a Handle, a list of Authentication Secret IDs, and a Claim Selection.
+In the Challenge/Response model, the handle is composed of qualifying data in the form of a nonce.
+The Verifier-generated (and therefore Verifier-known) nonce is intended to guarantee Evidence freshness.
+The list of Authentication Secret IDs selects the attestation keys with which the Attester is requested to sign the Attestation Evidence.
+Each selected key is uniquely associated with an Attesting Environment of the Attester.
+As a result, a single Authentication Secret ID identifies a single Attesting Environment.
+Analogously, a set of Evidence originating from multiple Attesting Environments in a composite device can be requested via multiple Authentication Secret IDs.
+Methods to acquire Authentication Secret IDs or mappings between Attesting Environments to Authentication Secret IDs are out-of-scope of this document.
+The Claim Selection narrows down the set of Claims collected and used to create Evidence, if required.
+If the Claim Selection is omitted, then by default all Claims that are known and available on the Attester MUST be used to create corresponding Evidence.
+For example, a Verifier may only be requesting a particular subset of claims about the Attester, such as Evidence about BIOS and firmware the Attester booted up with (boot integrity Evidence) - and not include information about all currently running software (run-time integrity Evidence).
 
-The Attester, after receiving the attestation request, collects the corresponding Claims that have been measured beforehand to compose the Attestation Evidence that the Verifier requested. In the case that the Verifier did not provide a Claim Selection, the Attester collects all information that can be used as complementary Claims in the scope of the semantics of the remote attestation procedure. Conclusively, the Attester creates Attestation Evidence by signing the Attester Identity, the Claims, and the Nonce with the Authentication Secret identified by the Authentication Secret ID. The signed Attestation Evidence is transferred back to the Verifier.
+While it is crucial that Claims, the Handle, as well as the Attester Identity information MUST be cryptographically bound to the signature of Evidence, it is not required for them to be present in plain text.
+Cryptographic blinding MAY be used at this point. For further reference see section {{security-and-privacy-considerations}}.
 
-It is crucial at this point that Claims, the Nonce, as well as the Attester Identity information MUST be cryptographically bound to the signature of the Attestation Evidence. It is not required for them to be present in plain text, though. Cryptographic blinding MAY be used at this point. For further reference see section {{security-and-privacy-considerations}}.
-
-As soon as the Verifier receives the signed Attestation Evidence, it verifies the signature, the Attester Identity, the Nonce, and appraises the Claims. This procedure is application-specific and can be carried out by comparing the Claims with corresponding Reference Claims, e.g., Reference Integrity Measurements (RIMs), or using other appraisal policies. The final output of the Verifier are Attestation Results. Attestation Results constitute new Claims about an Attester's properties and characteristics that enables relying parties, for example, to assess an Attester's trustworthiness.
+As soon as the Verifier receives signed Evidence, it validates the signature, the Attester Identity, as well as the Nonce, and appraises the Claims.
+Appraisal procedures are application-specific and can be conducted via comparison of the Claims with corresponding Reference Claims, such as Reference Integrity Measurements (RIM).
+The final output of the Verifier are Attestation Results. Attestation Results constitute new Claims Sets about an Attester's properties and characteristics that enables Relying Parties, for example, to assess an Attester's trustworthiness.
 
 ## Uni-Directional Remote Attestation
 
@@ -220,37 +233,55 @@ As soon as the Verifier receives the signed Attestation Evidence, it verifies th
 '----------'                                                '----------'
      |                                                            |
 valueGeneration(targetEnvironment)                                |
-     | => Claims                                                  |
+     | => claims                                                  |
      |                                                            |
      |                   .--------------------.                   |
-     | <----------handle | Handle Distributor | handle----------> |
+     | <----------handle |                    |                   |
+     |                   | Handle Distributor |                   |
+     |                   |                    | handle----------> |
      |                   '--------------------'                   |
      |                                                            |
-generateEvidence(authSecID, claims, handle)                       |
+evidenceGeneration(handle, authSecIDs, collectedClaims)           |
      | => evidence                                                |
      |                                                            |
      | pushEventLog---------------------------------------------> |
      | pushEvidence---------------------------------------------> |
      |                                                            |
      |                   appraiseEvidence(evidence, eventLog, refClaims)
+     |                            evidenceAppraisal(evidence, refClaims)
      |                                       attestationResult <= |
      ~                                                            ~
      |                                                            | 
 valueGeneration(targetEnvironment)                                |
-     | => ClaimsDelta                                             |
+     | => claimsDelta                                             |
      |                                                            |
-generateEvidence(authSecID, claimsDelta, handle                   |
+evidenceGeneration(handle, authSecIDs, collectedClaims)           |
      | => evidence                                                |
      |                                                            |
      | pushEventLogDelta----------------------------------------> |
      | pushEvidence---------------------------------------------> |
      |                                                            |
      |              appraiseEvidence(evidence, eventLogDelta, refClaims)
+     |                            evidenceAppraisal(evidence, refClaims)
      |                                       attestationResult <= |
      |                                                            |
 ~~~~
 
-## Attestation Telemetry
+Uni-Directional Remote Attestation procedures can be initiated both by the Attester and by the Verifier.
+Initiation by the Attester can result in unsolicited pushes of Evidence to the Verifier.
+Initiation by the Verifier always results in solicited pushes to the Verifier.
+The Uni-Directional model uses the same information elements as the Challenge/Response model.
+In the sequence diagram above, the Attester initiates the conveyance of Evidence (comparable with a RESTful POST operation or the emission of a beacon).
+While a request of evidence from the Verifier would result in a sequence diagram more similar to the Challenge/Response model (comparable with a RESTful GET operation), the specific manner how handles are created and used always remains as the distinguishing quality of this model.
+In the Uni-Directional model, handles are composed of trustable signed timestamps as shown in {{-TUDA}}, potentially including other qualifying data.
+The handles are created by an external 3rd entity -- the Handle Distributor -- that includes a trustworthy source of time and takes on the role of a Time Stamping Authority (TSA, as initially defined in {{RFC3161}}).
+Timstamps created from local clocks (absolute clocks using a global timescale, as well as relative clocks, such as tick-counters) of Attesters and Verifiers MUST be cryptographically bound to fresh Handles received from the Handle Distributor.
+This binding provides a proof of synchronization that MUST be included in every evidence created.
+Correspondingly, evidence created for conveyance via this model provides a proof that it was fresh at a certain point in time.
+Effectively, this allows for series of evidence to be pushed to multiple Verifiers, simultaniously. 
+Methods to detect excessive time drift that would mandate a fresh Handle to be received by the Handle Distributor, as well as timing of handle distribution are out-of-scope of this document.
+
+## Streaming Remote Attestation
 
 ~~~~
 .----------.                                                .----------.
@@ -258,35 +289,46 @@ generateEvidence(authSecID, claimsDelta, handle                   |
 '----------'                                                '----------'
      |                                                            |
 valueGeneration(targetEnvironment)                                |
-     | => Claims                                                  |
+     | => claims                                                  |
      |                                                            |
-     | <-----subscribeEvidence(handle, authSecID, claimSelection) |
+     | <----subscribeEvidence(handle, authSecIDs, claimSelection) |
+     | subscriptionResult --------------------------------------> |
      |                                                            |
-generateEvidence(authSecID, claimSelection, handle)               |
+evidenceGeneration(handle, authSecIDs, collectedClaims)           |
      | => evidence                                                |
      |                                                            |
      | pushEventLog---------------------------------------------> |
      | pushEvidence---------------------------------------------> |
      |                                                            |
-     |                   appraiseEvidence(evidence, eventLog, refClaims)
+     |                  evidenceAppraisal(evidence, eventLog, refClaims)
      |                                       attestationResult <= |
      ~                                                            ~
      |                                                            |
 valueGeneration(targetEnvironment)                                |
-     | => Claims                                                  |
+     | => claimsDelta                                             |
      |                                                            |
-generateEvidence(authSecID, claimSelection, handle)               |
+evidenceGeneration(handle, authSecIDs, collectedClaims)           |
      | => evidence                                                |
      |                                                            |
      | pushEventLogDelta----------------------------------------> |
      | pushEvidence---------------------------------------------> |
      |                                                            |
-     |              appraiseEvidence(evidence, eventLogDelta, refClaims)
+     |             evidenceAppraisal(evidence, eventLogDelta, refClaims)
      |                                       attestationResult <= |
      |                                                            |
 ~~~~
 
-# Further Context
+Streaming Remote Attestation procedures require the setup of subscription state.
+Setting up subscription state between a Verifier and an Attester is conducted via a subscribe operation.
+This subscribe operation is used to convey the handles required for Evidence generation.
+Effectively, this allows for series of evidence to be pushed to a Verifier similar to the Uni-Directional model.
+While a Handle Distributor is not required in this model, it is also limited to bi-lateral subscription relationships, in which each Verifier has to create and provide its individual handle.
+Handles provided by a specific subscribing Verifier MUST be used in Evidence generation for that specific Verifier.
+The Streaming model uses the same information elements as the Challenge/Response and the Uni-Directional model.
+Methods to detect excessive time drift that would mandate a refreshed Handle to be conveyed via another subscribe operation are out-of-scope of this document.
+
+
+# Additional Application-Specific Requirements
 
 Depending on the use cases covered, there can be additional requirements. An exemplary subset is illustrated in this section.
 
@@ -300,7 +342,7 @@ In particular use cases mutual authentication may be desirable in such a way tha
 
 ## Hardware-Enforcement/Support
 
-Depending on the requirements, hardware support for secure storage of cryptographic keys, crypto accelerators, or protected or isolated execution environments may be useful. Well-known technologies are roots of trusts, such as Hardware Security Modules (HSM), Physically Unclonable Functions (PUFs), Shielded Secrets, or Trusted Executions Environments (TEEs).
+Depending on given usage scenarios, hardware support for secure storage of cryptographic keys, crypto accelerators, as well as protected or isolated execution environments can be mandatory requirements. Well-known technologies in support of these requirements are roots of trusts, such as Hardware Security Modules (HSM), Physically Unclonable Functions (PUFs), Shielded Secrets, or Trusted Executions Environments (TEEs).
 
 # Implementation Status
 
