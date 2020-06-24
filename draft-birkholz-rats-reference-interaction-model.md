@@ -35,7 +35,7 @@ author:
 
 normative:
   RFC2119:
-  FRC3161: TSA
+  RFC3161: TSA
   RFC7049: CBOR
   RFC7252: COAP
   RFC8174:
