@@ -4,7 +4,7 @@
 
 RATS Working Group                                           H. Birkholz
 Internet-Draft                                                  M. Eckel
-Intended status: Standards Track                          Fraunhofer SIT
+Intended status: Informational                            Fraunhofer SIT
 Expires: 26 December 2020                                   24 June 2020
 
 
