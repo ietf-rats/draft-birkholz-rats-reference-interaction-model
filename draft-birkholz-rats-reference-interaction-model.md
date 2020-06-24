@@ -35,8 +35,9 @@ author:
 
 normative:
   RFC2119:
-  RFC7252: COAP
+  FRC3161: TSA
   RFC7049: CBOR
+  RFC7252: COAP
   RFC8174:
   BCP205: RFC7942
   RFC8610:
@@ -274,7 +275,7 @@ The Uni-Directional model uses the same information elements as the Challenge/Re
 In the sequence diagram above, the Attester initiates the conveyance of Evidence (comparable with a RESTful POST operation or the emission of a beacon).
 While a request of evidence from the Verifier would result in a sequence diagram more similar to the Challenge/Response model (comparable with a RESTful GET operation), the specific manner how handles are created and used always remains as the distinguishing quality of this model.
 In the Uni-Directional model, handles are composed of trustable signed timestamps as shown in {{-TUDA}}, potentially including other qualifying data.
-The handles are created by an external 3rd entity -- the Handle Distributor -- that includes a trustworthy source of time and takes on the role of a Time Stamping Authority (TSA, as initially defined in {{RFC3161}}).
+The handles are created by an external 3rd entity -- the Handle Distributor -- that includes a trustworthy source of time and takes on the role of a Time Stamping Authority (TSA, as initially defined in {{-TSA}}).
 Timstamps created from local clocks (absolute clocks using a global timescale, as well as relative clocks, such as tick-counters) of Attesters and Verifiers MUST be cryptographically bound to fresh Handles received from the Handle Distributor.
 This binding provides a proof of synchronization that MUST be included in every evidence created.
 Correspondingly, evidence created for conveyance via this model provides a proof that it was fresh at a certain point in time.
