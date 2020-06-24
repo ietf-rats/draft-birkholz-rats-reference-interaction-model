@@ -4,8 +4,8 @@
 
 RATS Working Group                                           H. Birkholz
 Internet-Draft                                                  M. Eckel
-Intended status: Standards Track                          Fraunhofer SIT
-Expires: 10 July 2020                                     7 January 2020
+Intended status: Informational                            Fraunhofer SIT
+Expires: 26 December 2020                                   24 June 2020
 
 
      Reference Interaction Models for Remote Attestation Procedures
@@ -13,11 +13,14 @@ Expires: 10 July 2020                                     7 January 2020
 
 Abstract
 
-   This document defines interaction models for basic remote attestation
-   procedures.  Different methods of conveying attestation evidence
-   securely are defined and illustrated.  Analogously, the required
-   information elements used by conveyance protocols are defined and
-   illustrated.
+   This document describes interaction models for remote attestation
+   procedures (RATS).  Three conveying mechanisms - Challenge/Response,
+   Uni-Directional, and Streaming Remote Attestation - are illustrated
+   and defined.  Analogously, a general overview about the information
+   elements typically used by corresponding conveyance protocols are
+   highlighted.  Privacy preserving conveyance of Evidence via Direct
+   Anonymous Attestation is elaborated on for each interaction model,
+   individually.
 
 Status of This Memo
 
@@ -34,12 +37,26 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 10 July 2020.
+   This Internet-Draft will expire on 26 December 2020.
 
 Copyright Notice
 
    Copyright (c) 2020 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
+
+
+
+
+
+
+
+
+
+
+Birkholz & Eckel        Expires 26 December 2020                [Page 1]
+
+Internet-Draft                    REIM                         June 2020
+
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents (https://trustee.ietf.org/
@@ -50,71 +67,108 @@ Copyright Notice
    as described in Section 4.e of the Trust Legal Provisions and are
    provided without warranty as described in the Simplified BSD License.
 
-
-
-
-Birkholz & Eckel          Expires 10 July 2020                  [Page 1]
-
-Internet-Draft                    REIM                      January 2020
-
-
 Table of Contents
 
-   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
-     1.1.  Requirements notation . . . . . . . . . . . . . . . . . .   3
-   2.  Disambiguation  . . . . . . . . . . . . . . . . . . . . . . .   3
-   3.  Scope . . . . . . . . . . . . . . . . . . . . . . . . . . . .   3
-   4.  Normative Prerequisites . . . . . . . . . . . . . . . . . . .   3
-   5.  Remote Attestation Interaction Model  . . . . . . . . . . . .   4
-     5.1.  Information Elements  . . . . . . . . . . . . . . . . . .   4
-     5.2.  Interaction Model . . . . . . . . . . . . . . . . . . . .   6
-   6.  Further Context . . . . . . . . . . . . . . . . . . . . . . .   7
-     6.1.  Confidentiality . . . . . . . . . . . . . . . . . . . . .   7
-     6.2.  Mutual Authentication . . . . . . . . . . . . . . . . . .   7
-     6.3.  Hardware-Enforcement/Support  . . . . . . . . . . . . . .   8
-   7.  Implementation Status . . . . . . . . . . . . . . . . . . . .   8
-     7.1.  Implementer . . . . . . . . . . . . . . . . . . . . . . .   8
-     7.2.  Implementation Name . . . . . . . . . . . . . . . . . . .   8
-     7.3.  Implementation URL  . . . . . . . . . . . . . . . . . . .   8
-     7.4.  Maturity  . . . . . . . . . . . . . . . . . . . . . . . .   9
-     7.5.  Coverage and Version Compatibility  . . . . . . . . . . .   9
-     7.6.  License . . . . . . . . . . . . . . . . . . . . . . . . .   9
-     7.7.  Implementation Dependencies . . . . . . . . . . . . . . .   9
-     7.8.  Contact . . . . . . . . . . . . . . . . . . . . . . . . .   9
-   8.  Security and Privacy Considerations . . . . . . . . . . . . .   9
-   9.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  10
-   10. Change Log  . . . . . . . . . . . . . . . . . . . . . . . . .  10
-   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  10
-     11.1.  Normative References . . . . . . . . . . . . . . . . . .  10
-     11.2.  Informative References . . . . . . . . . . . . . . . . .  11
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
+   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   3
+   3.  Disambiguation  . . . . . . . . . . . . . . . . . . . . . . .   4
+   4.  Scope and Intent  . . . . . . . . . . . . . . . . . . . . . .   4
+   5.  Normative Prerequisites . . . . . . . . . . . . . . . . . . .   5
+   6.  Generic Information Elements  . . . . . . . . . . . . . . . .   6
+   7.  Interaction Models  . . . . . . . . . . . . . . . . . . . . .   7
+     7.1.  Challenge/Response Remote Attestation . . . . . . . . . .   8
+     7.2.  Uni-Directional Remote Attestation  . . . . . . . . . . .   9
+     7.3.  Streaming Remote Attestation  . . . . . . . . . . . . . .  11
+   8.  Additional Application-Specific Requirements  . . . . . . . .  13
+     8.1.  Confidentiality . . . . . . . . . . . . . . . . . . . . .  13
+     8.2.  Mutual Authentication . . . . . . . . . . . . . . . . . .  13
+     8.3.  Hardware-Enforcement/Support  . . . . . . . . . . . . . .  13
+   9.  Implementation Status . . . . . . . . . . . . . . . . . . . .  13
+     9.1.  Implementer . . . . . . . . . . . . . . . . . . . . . . .  14
+     9.2.  Implementation Name . . . . . . . . . . . . . . . . . . .  14
+     9.3.  Implementation URL  . . . . . . . . . . . . . . . . . . .  14
+     9.4.  Maturity  . . . . . . . . . . . . . . . . . . . . . . . .  14
+     9.5.  Coverage and Version Compatibility  . . . . . . . . . . .  14
+     9.6.  License . . . . . . . . . . . . . . . . . . . . . . . . .  15
+     9.7.  Implementation Dependencies . . . . . . . . . . . . . . .  15
+     9.8.  Contact . . . . . . . . . . . . . . . . . . . . . . . . .  15
+   10. Security and Privacy Considerations . . . . . . . . . . . . .  15
+   11. Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  15
+   12. Change Log  . . . . . . . . . . . . . . . . . . . . . . . . .  15
+   13. References  . . . . . . . . . . . . . . . . . . . . . . . . .  17
+     13.1.  Normative References . . . . . . . . . . . . . . . . . .  17
+     13.2.  Informative References . . . . . . . . . . . . . . . . .  18
    Appendix A.  CDDL Specification for a simple CoAP Challenge/
-           Response Interaction  . . . . . . . . . . . . . . . . . .  11
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  12
+           Response Interaction  . . . . . . . . . . . . . . . . . .  18
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  19
+
+
+
+
+
+
+
+
+Birkholz & Eckel        Expires 26 December 2020                [Page 2]
+
+Internet-Draft                    REIM                         June 2020
+
 
 1.  Introduction
 
-   Remote ATtestation procedureS This document defines three [note: pub/
-   sub & time-based are still missing] reference interaction models that
-   describe the conveyance of evidence between Attester and Verifier in
-   order to provide the basis for reliable and believable appraisal of
-   evidence by a Verifier.[I-D.ietf-rats-architecture] are workflows
-   composed of roles and interactions, in which a Verifier creates
-   assessments based on evidence about the trustworthiness of an
-   Attester's system component characteristics.  The roles _Attester_
-   and _Verifier_, as well as the message _Evidence_ are terms defined
-   by the RATS Architecture.  The goal of this document is to enable the
-   design and adoption of secure conveyance methods for attestation
-   evidence from an Attester to a Verifier.
+   Remote ATtestation procedureS (RATS, [I-D.ietf-rats-architecture])
+   are workflows composed of roles and interactions, in which Verifiers
+   create Attestation Results about the trustworthiness of an Attester's
+   system component characteristics.  The Verifier's assessment in the
+   form of Attestation Results is created based on Attestation Policies
+   and Evidence - trustable and tamper-evident Claims Sets about an
+   Attester's system component characteristics - created by an Attester.
+   The roles _Attester_ and _Verifier_, as well as the Conceptual
+   Messages _Evidence_ and _Attestation Results_ are terms defined by
+   the RATS Architecture [I-D.ietf-rats-architecture].  This documents
+   captures interaction models that can be used in specific RATS-related
+   solution documents.  The primary focus of this document is the
+   conveyance of attestation Evidence.  Specific goals of this document
+   are to:
+
+   *  prevent inconsistencies in descriptions of these interaction
+      models in other documents (due to text cloning over time),
+
+   *  enable to highlight an exact delta/divergence between the core set
+      of characteristics captured here in this document and variants of
+      these interaction models used in other specifications or
+      solutions, and to
+
+   *  illustrate the application of Direct Anonymous Attestation (DAA)
+      for each of the interaction models described.
+
+   In summary, this document enables the specification and design of
+   trustworthy and privacy preserving conveyance methods for attestation
+   Evidence from an Attester to a Verifier.  While the conveyance of
+   other Conceptual Messages is out-of-scope the methods described can
+   also be applied to the conveyance of Endorsements or Attestation
+   Results.
+
+2.  Terminology
+
+   This document uses the terms, roles, and concepts defined in
+   [I-D.ietf-rats-architecture]:
+
+   Attester, Verifier, Relying Party, Conceptual Message, Evidence,
+   Endorsement, Attestation Result, Appraisal Policy, Attesting
+   Environment, Target Environment
 
 
 
 
-Birkholz & Eckel          Expires 10 July 2020                  [Page 2]
+
+
+
+
+Birkholz & Eckel        Expires 26 December 2020                [Page 3]
 
-Internet-Draft                    REIM                      January 2020
+Internet-Draft                    REIM                         June 2020
 
-
-1.1.  Requirements notation
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
@@ -122,255 +176,510 @@ Internet-Draft                    REIM                      January 2020
    BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
-2.  Disambiguation
+3.  Disambiguation
 
    The term "Remote Attestation" is a common expression and often
-   associated with certain properties.  The term "Remote" in this
-   context does not necessarily refer to a remote entity in the scope of
-   network topologies or the Internet.  It rather refers to a decoupled
-   system or different Types of Environments
-   [I-D.ietf-rats-architecture], which also can be present locally as
-   separate system components of a composite device (in a single RATS
-   Entity).  Examples include: a Trusted Execution Environment (TEE),
-   Baseboard Management Controllers (BMCs), as well as other physical or
-   logical protected/isolated/shielded Computing Environments.
+   associated or connotated with certain properties.  The term "Remote"
+   in this context does not necessarily refer to a remote entity in the
+   scope of network topologies or the Internet.  It rather refers to a
+   decoupled system or entities that exchange the payload of the
+   Conceptual Message type called Evidence [I-D.ietf-rats-architecture].
+   This conveyance can also be "local", if the Verifier is part of the
+   same entity as the Attester, e.g., separate system components of a
+   Composite Device (a single RATS Entity).  Examples of these types of
+   co-located environments include: a Trusted Execution Environment
+   (TEE), Baseboard Management Controllers (BMCs), as well as other
+   physical or logical protected/isolated/shielded Computing
+   Environments (e.g. embedded Secure Elements (eSE) or Trusted Platform
+   Modules (TPM)).
 
-3.  Scope
+4.  Scope and Intent
 
-   This document focuses on generic interaction models between Verifiers
-   and Attesters.  Complementary procedures, duties and functions that
-   are required for a complete semantic binding of RATS are not in
-   scope.  Examples include: identity establishment, key distribution
-   and enrollment, as well as certificate revocation.
+   This document focuses on generic interaction models between Attesters
+   and Verifiers in order to convey Evidence.  Complementary procedures,
+   functions, or services that are required for a complete semantic
+   binding of the concepts defined in [I-D.ietf-rats-architecture] are
+   out-of-scope of this document.  Examples include: identity
+   establishment, key distribution and enrollment, time synchronization,
+   as well as certificate revocation.
 
    Furthermore, any processes and duties that go beyond carrying out
    remote attestation procedures are out-of-scope.  For instance, using
    the results of a remote attestation that are created by the Verifier,
-   e.g., triggering remediation actions or recovery processes, as well
-   as the remediation actions and recovery processes themselves, is also
-   out-of-scope.
+   e.g., how to triggering remediation actions or recovery processes, as
+   well as such remediation actions and recovery processes themselves,
+   are also out-of-scope.
 
-   The definition of Reference Interaction Models for RATS uses the role
-   definitions of Attester and Verifier as defined in
-   [I-D.ietf-rats-architecture].
-
-4.  Normative Prerequisites
-
-   Attester Identity:  The provenance of Attestation Evidence with
-      respect to a distinguishable Attesting Environment MUST be correct
-      and unambiguous.
-
-      An Attester Identity MAY be a unique identity, or it MAY be
+   The information models illustrated in this document are intended to
+   provide a stable basis and reference for other solutions documents
+   inside or outside the IETF.  Solution documents of any kind can
+   reference the interaction models in order to avoid text clones and
+   avoid the danger of subtle discrepancies.  Analogously, deviations
+   from that rough descriptions of models in this document can be
+   highlighted in solutions documents.
 
 
 
 
-Birkholz & Eckel          Expires 10 July 2020                  [Page 3]
+Birkholz & Eckel        Expires 26 December 2020                [Page 4]
 
-Internet-Draft                    REIM                      January 2020
+Internet-Draft                    REIM                         June 2020
 
 
-      included in a zero-knowledge proof (ZKP), or it MAY be part of a
-      group signature.
+5.  Normative Prerequisites
 
-   Attestation Evidence:  Attestation Evidence MUST be a set of well-
-      formatted and well-protected Claims that an Attester can create
-      and convey to a Verifier.
+   In order to ensure an appropriate conveyance of Evidence, the
+   following set of prerequisites MUST be in place to support the
+   implementation of interaction models:
+
+   Attester Identity:  The provenance of Evidence with respect to a
+      distinguishable Attesting Environment MUST be correct and
+      unambiguous.
+
+      An Attester Identity MAY be a unique identity, it MAY be included
+      in a zero-knowledge proof (ZKP), or it MAY be part of a group
+      signature.
 
    Attestation Evidence Authenticity:  Attestation Evidence MUST be
       correct and authentic.
 
-      Attestation Evidence, in order to provide proof of authenticity,
+      Attestation Evidence, in order to provide proofs of authenticity,
       SHOULD be cryptographically associated with an identity document
-      (e.g. an X.509 certificate), or SHOULD include a correct and
-      unambiguous reference to an accessible identity document.
+      (e.g. an X.509 certificate or trusted key material), or SHOULD
+      include a correct and unambiguous and stable reference to an
+      accessible identity document.
 
    Authentication Secret:  An Authentication Secret MUST be available
-      exclusively to an Attester's Attesting Environment.  The Attester
-      MUST sign Claims with that Authentication Secret, thereby proving
-      the authenticity of the Claims included in the signed Attestation
+      exclusively to an Attester's Attesting Environment.
+
+      The Attester MUST protect Claims with that Authentication Secret,
+      thereby proving the authenticity of the Claims included in
       Evidence.  The Authentication Secret MUST be established before
-      RATS can take place.  How it is established is out-of-scope for
-      this document.
+      RATS can take place.
 
-5.  Remote Attestation Interaction Model
+   Evidence Freshness:  Evidence MUST include an indicator about its
+      Freshness that can be understood by a Verifier.  Analogously,
+      interaction models MUST support the conveyance of proofs of
+      freshness in a way that is useful to Verifiers and their appraisal
+      procedures.
 
-   This section defines the information elements that have to be
-   conveyed via a protocol, enabling the conveyance of Evidence between
-   Verifier and Attester, as well as the interaction model for a generic
-   challenge-response remote attestation scheme.
+   Evidence Protection:  Evidence MUST be a set of well-formatted and
+      well-protected Claims that an Attester can create and convey to a
+      Verifier in a tamper-evident manner.
 
-5.1.  Information Elements
+
+
+
+
+
+
+
+
+
+
+Birkholz & Eckel        Expires 26 December 2020                [Page 5]
+
+Internet-Draft                    REIM                         June 2020
+
+
+6.  Generic Information Elements
+
+   This section defines the information elements that are vital to all
+   kinds interaction models.  Varying from solution to solution, generic
+   information elements can be either included in the scope of protocol
+   messages or can be included in their payload.  Ultimately, the
+   following information elements are required by any kind of scalable
+   remote attestation procedure using one or more of the interaction
+   models provided.
 
    Attester Identity ('attesterIdentity'):  _mandatory_
 
-      A statement about a distinguishable Attester made by an entity
-      without accompanying evidence of its validity, used as proof of
-      identity.
+      A statement about a distinguishable Attester made by an Endorser
+      without accompanying evidence about its validity - used as proof
+      of identity.
 
-   Authentication Secret ID ('authSecID'):  _mandatory_
+   Authentication Secret IDs ('authSecID'):  _mandatory_
 
-      An identifier that MUST be associated with the Authentication
-      Secret which is used to sign evidence.
+      A statement representing an identifier list that MUST be
+      associated with corresponding Authentication Secrets used to
+      protect Evidence.
 
-   Nonce ('nonce'):  _mandatory_
+      Each Authentication Secrets is uniquely associated with a
+      distinguishable Attesting Environment.  Consequently, an
+      Authentication Secret ID also identifies an Attesting Environment.
 
-      The Nonce (number used once) is intended to be unique and
-      practically infeasible to guess.  In this reference interaction
-      model the Nonce MUST be provided by the Verifier and MUST be used
+   Handle ('handle'):  _mandatory_
 
+      A statement that is intended to uniquely distinguish received
+      Evidence and/or determine the Freshness of Evidence.
 
-
-Birkholz & Eckel          Expires 10 July 2020                  [Page 4]
-
-Internet-Draft                    REIM                      January 2020
-
-
-      as proof of freshness.  With respect to conveyed evidence, it
-      ensures the result of an attestation activity to be created
-      recently, e. g. sent or derived by the challenge from the
-      Verifier.  As such, the Nonce MUST be part of the signed
-      Attestation Evidence that is sent from the Attester to the
-      Verifier.
+      A Verifier can also use a Handle as an indicator for authenticity
+      or attestation provenance, as only Attesters and Verifiers that
+      are intended to exchange Evidence should have knowledge of the
+      corresponding Handles.  Examples include Nonces or signed
+      timestamps.
 
    Claims ('claims'):  _mandatory_
 
       Claims are assertions that represent characteristics of an
-      Attester.  Claims compose attestation evidence and are, for
-      example, used to appraise the integrity of an Attester.  Examples
-      are Claims about sensor data, policies that are active on the
-      entity, versions of composite firmware of a platform, running
-      software, routing tables, or information about a local time
-      source.
+      Attester's Target Environment.
+
+      Claims are part Conceptual Message and are, for example, used to
+      appraise the integrity of Attesters via a Verifiers.  The other
+      information elements in this section can be expressed as Claims in
+      any type of Conceptional Messages.
 
    Reference Claims ('refClaims')  _mandatory_
 
+
+
+Birkholz & Eckel        Expires 26 December 2020                [Page 6]
+
+Internet-Draft                    REIM                         June 2020
+
+
       Reference Claims are a specific subset of Appraisal Policies as
-      defined in [I-D.ietf-rats-architecture].  Reference Claims are
-      used to appraise the Claims received from an Attester via
-      appraisal by direct comparison.  For example, Reference Claims MAY
-      be Reference Integrity Measurements (RIMs) or assertions that are
-      implicitly trusted because they are signed by a trusted authority
-      (see Endorsements in [I-D.ietf-rats-architecture]).  RIMs
+      defined in [I-D.ietf-rats-architecture].
+
+      Reference Claims are used to appraise the Claims received from an
+      Attester via appraisal by direct comparison.  For example,
+      Reference Claims MAY be Reference Integrity Measurements (RIM) or
+      assertions that are implicitly trusted because they are signed by
+      a trusted authority (see Endorsements in
+      [I-D.ietf-rats-architecture]).  Reference Claims typically
       represent (trusted) Claim sets about an Attester's intended
       platform operational state.
 
    Claim Selection ('claimSelection'):  _optional_
 
-      An Attester MAY provide a selection of Claims in order to reduce
-      or increase retrieved assertions to those that are relevant to the
-      appraisal policies.  Usually, all available Claims that are
-      available to the Attester SHOULD be conveyed.  The Claim Selection
-      MAY be composed as complementary signed Claim sets or MAY be
-      encapsulated Claims in the signed Attestation Evidence.  An
-      Attester MAY decide whether or not to provide all requested Claims
-      or not.  An example of a Claim Selection is a Verifier requesting
-      (signed) RIMs from an Attester.
+      A statement that represents a (sub-)set of Claims that can be
+      created by an Attester.
 
-   (Signed) Attestation Evidence ('signedAttestationEvidence'):  _mandat
-      ory_
+      Claim Selections can act as filters that can specify the exact set
+      of Claims to be included in Evidence.  An Attester MAY decide
+      whether or not to provide all Claims as requested via a Claim
+      Selection.
 
-      Attestation Evidence consists of the Authentication Secret ID that
-      identifies an Authentication Secret, the Attester Identity, the
-      Claims, and the Verifier-provided Nonce.  Attestation Evidence
-      MUST cryptographically bind all of those elements.  The
+   Evidence ('signedAttestationEvidence'):  _mandatory_
 
-
-
-Birkholz & Eckel          Expires 10 July 2020                  [Page 5]
-
-Internet-Draft                    REIM                      January 2020
-
-
-      Attestation Evidence MUST be signed by the Authentication Secret.
-      The Authentication Secret MUST be trusted by the Verifier as
-      authoritative.
+      A set of Claims that consists of a list of Authentication Secret
+      IDs that identifies an Authentication Secret in a single Attesting
+      Environment, the Attester Identity, Claims, and a Handle.
+      Attestation Evidence MUST cryptographically bind all of these
+      information elements.  The Evidence MUST be protected via the
+      Authentication Secret.  The Authentication Secret MUST be trusted
+      by the Verifier as authoritative.
 
    Attestation Result ('attestationResult'):  _mandatory_
 
       An Attestation Result is produced by the Verifier as the output of
-      the appraisal of Attestation Evidence.  The Attestation Result
-      represents Claims about integrity and other characteristics of the
+      the appraisal of Evidence.  Attestation Results include condensed
+      assertions about integrity or other characteristics of the
       corresponding Attester.
 
-5.2.  Interaction Model
+7.  Interaction Models
 
-   The following sequence diagram illustrates the reference remote
-   attestation procedure defined by this document.
+   The following subsections introduce and illustrate the interaction
+   models:
 
-   [Attester]                                                      [Verifier]
-       |                                                               |
-   measureClaims(attestedEnvironment)                                  |
-       | => claims                                                     |
-       |                                                               |
-       | <---------- requestEvidence(nonce, authSecID, claimSelection) |
-       |                                                               |
-   collectClaims(claimSelection)                                       |
-       | => claims                                                     |
-       |                                                               |
-   signAttestationEvidence(authSecID, claims, nonce)                   |
-       | => signedAttestationEvidence                                  |
-       |                                                               |
-       | signedAttestationEvidence ----------------------------------> |
-       |                                                               |
-       |   appraiseAttestationEvidence(signedAttestationEvidence, refClaims)
-       |                                          attestationResult <= |
-       |                                                               |
+   1.  Challenge/Response Remote Attestation
 
-   The remote attestation procedure is initiated by the Verifier,
-   sending an attestation request to the Attester.  The attestation
-   request consists of a Nonce, a Authentication Secret ID, and a Claim
-   Selection.  The Nonce guarantees attestation freshness.  The
-   Authentication Secret ID selects the secret with which the Attester
-   is requested to sign the Attestation Evidence.  The Claim Selection
-   narrows down or increases the amount of received Claims, if required.
-   If the Claim Selection is empty, then by default all Claims that are
-   available on the Attester MUST be signed and returned as Attestation
-   Evidence.  For example, a Verifier may only be requesting a
-   particular subset of information about the Attester, such as evidence
-   about BIOS and firmware the Attester booted up with - and not include
-   information about all currently running software.
+   2.  Uni-Directional Remote Attestation
 
 
 
-Birkholz & Eckel          Expires 10 July 2020                  [Page 6]
+
+Birkholz & Eckel        Expires 26 December 2020                [Page 7]
 
-Internet-Draft                    REIM                      January 2020
+Internet-Draft                    REIM                         June 2020
 
 
-   The Attester, after receiving the attestation request, collects the
-   corresponding Claims that have been measured beforehand to compose
-   the Attestation Evidence that the Verifier requested.  In the case
-   that the Verifier did not provide a Claim Selection, the Attester
-   collects all information that can be used as complementary Claims in
-   the scope of the semantics of the remote attestation procedure.
-   Conclusively, the Attester creates Attestation Evidence by signing
-   the Attester Identity, the Claims, and the Nonce with the
-   Authentication Secret identified by the Authentication Secret ID.
-   The signed Attestation Evidence is transferred back to the Verifier.
+   3.  Streaming Remote Attestation
 
-   It is crucial at this point that Claims, the Nonce, as well as the
-   Attester Identity information MUST be cryptographically bound to the
-   signature of the Attestation Evidence.  It is not required for them
-   to be present in plain text, though.  Cryptographic blinding MAY be
-   used at this point.  For further reference see section Section 8.
+   Each section starts with a sequence diagram illustrating the
+   interactions between Attester and Verifier.  The other roles RATS
+   roles - mainly Relying Parties and Endorsers - are not covered in the
+   expositional texts that follows each model diagram.  While the
+   interaction models presented focus on the conveyance of Evidence,
+   effectively, they can also be applied to the conveyance of other
+   Conceptual Messages, namely Attestation Results, Endorsements, or
+   Appraisal Policies.  All interaction model have a strong focus on
+   uses a handle to incorporate a proof of freshness.  The ways these
+   handles are processed is the most prominent difference between the
+   three interaction models.
 
-   As soon as the Verifier receives the signed Attestation Evidence, it
-   verifies the signature, the Attester Identity, the Nonce, and
-   appraises the Claims.  This procedure is application-specific and can
-   be carried out by comparing the Claims with corresponding Reference
-   Claims, e.g., Reference Integrity Measurements (RIMs), or using other
-   appraisal policies.  The final output of the Verifier are Attestation
-   Results.  Attestation Results constitute new Claims about an
-   Attester's properties and characteristics that enables relying
-   parties, for example, to assess an Attester's trustworthiness.
+7.1.  Challenge/Response Remote Attestation
 
-6.  Further Context
+   .----------.                                                .----------.
+   | Attester |                                                | Verifier |
+   '----------'                                                '----------'
+        |                                                            |
+        |                                                            |
+   valueGeneration(targetEnvironment)                                |
+        | => claims                                                  |
+        |                                                            |
+        | <------requestEvidence(handle, authSecIDs, claimSelection) |
+        |                                                            |
+   claimsCollection(claimSelection)                                  |
+        | => collectedClaims                                         |
+        |                                                            |
+   evidenceGeneration(handle, authSecIDs, collectedClaims)           |
+        | => evidence                                                |
+        |                                                            |
+        | returnEvidence-------------------------------------------> |
+        | returnEventLog-------------------------------------------> |
+        |                                                            |
+        |                  evidenceAppraisal(evidence, eventLog, refClaims)
+        |                                       attestationResult <= |
+        |                                                            |
+
+   Challenge/Response Remote Attestation procedures are initiated by the
+   Verifier, sending a remote attestation request to the Attester.  A
+   request includes a Handle, a list of Authentication Secret IDs, and a
+   Claim Selection.  In the Challenge/Response model, the handle is
+   composed of qualifying data in the form of a nonce.  The Verifier-
+   generated (and therefore Verifier-known) nonce is intended to
+   guarantee Evidence freshness.  The list of Authentication Secret IDs
+   selects the attestation keys with which the Attester is requested to
+   sign the Attestation Evidence.  Each selected key is uniquely
+
+
+
+Birkholz & Eckel        Expires 26 December 2020                [Page 8]
+
+Internet-Draft                    REIM                         June 2020
+
+
+   associated with an Attesting Environment of the Attester.  As a
+   result, a single Authentication Secret ID identifies a single
+   Attesting Environment.  Analogously, a set of Evidence originating
+   from multiple Attesting Environments in a composite device can be
+   requested via multiple Authentication Secret IDs.  Methods to acquire
+   Authentication Secret IDs or mappings between Attesting Environments
+   to Authentication Secret IDs are out-of-scope of this document.  The
+   Claim Selection narrows down the set of Claims collected and used to
+   create Evidence, if required.  If the Claim Selection is omitted,
+   then by default all Claims that are known and available on the
+   Attester MUST be used to create corresponding Evidence.  For example,
+   a Verifier may only be requesting a particular subset of claims about
+   the Attester, such as Evidence about BIOS and firmware the Attester
+   booted up with (boot integrity Evidence) - and not include
+   information about all currently running software (run-time integrity
+   Evidence).
+
+   While it is crucial that Claims, the Handle, as well as the Attester
+   Identity information MUST be cryptographically bound to the signature
+   of Evidence, it is not required for them to be present in plain text.
+   Cryptographic blinding MAY be used at this point.  For further
+   reference see section Section 10.
+
+   As soon as the Verifier receives signed Evidence, it validates the
+   signature, the Attester Identity, as well as the Nonce, and appraises
+   the Claims.  Appraisal procedures are application-specific and can be
+   conducted via comparison of the Claims with corresponding Reference
+   Claims, such as Reference Integrity Measurements.  The final output
+   of the Verifier are Attestation Results.  Attestation Results
+   constitute new Claims Sets about an Attester's properties and
+   characteristics that enables Relying Parties, for example, to assess
+   an Attester's trustworthiness.
+
+7.2.  Uni-Directional Remote Attestation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Birkholz & Eckel        Expires 26 December 2020                [Page 9]
+
+Internet-Draft                    REIM                         June 2020
+
+
+   .----------.                                                .----------.
+   | Attester |                                                | Verifier |
+   '----------'                                                '----------'
+        |                                                            |
+   valueGeneration(targetEnvironment)                                |
+        | => claims                                                  |
+        |                                                            |
+        |                   .--------------------.                   |
+        | <----------handle |                    |                   |
+        |                   | Handle Distributor |                   |
+        |                   |                    | handle----------> |
+        |                   '--------------------'                   |
+        |                                                            |
+   evidenceGeneration(handle, authSecIDs, collectedClaims)           |
+        | => evidence                                                |
+        |                                                            |
+        | pushEventLog---------------------------------------------> |
+        | pushEvidence---------------------------------------------> |
+        |                                                            |
+        |                   appraiseEvidence(evidence, eventLog, refClaims)
+        |                            evidenceAppraisal(evidence, refClaims)
+        |                                       attestationResult <= |
+        ~                                                            ~
+        |                                                            |
+   valueGeneration(targetEnvironment)                                |
+        | => claimsDelta                                             |
+        |                                                            |
+   evidenceGeneration(handle, authSecIDs, collectedClaims)           |
+        | => evidence                                                |
+        |                                                            |
+        | pushEventLogDelta----------------------------------------> |
+        | pushEvidence---------------------------------------------> |
+        |                                                            |
+        |              appraiseEvidence(evidence, eventLogDelta, refClaims)
+        |                            evidenceAppraisal(evidence, refClaims)
+        |                                       attestationResult <= |
+        |                                                            |
+
+   Uni-Directional Remote Attestation procedures can be initiated both
+   by the Attester and by the Verifier.  Initiation by the Attester can
+   result in unsolicited pushes of Evidence to the Verifier.  Initiation
+   by the Verifier always results in solicited pushes to the Verifier.
+   The Uni-Directional model uses the same information elements as the
+   Challenge/Response model.  In the sequence diagram above, the
+   Attester initiates the conveyance of Evidence (comparable with a
+   RESTful POST operation or the emission of a beacon).  While a request
+   of evidence from the Verifier would result in a sequence diagram more
+   similar to the Challenge/Response model (comparable with a RESTful
+
+
+
+Birkholz & Eckel        Expires 26 December 2020               [Page 10]
+
+Internet-Draft                    REIM                         June 2020
+
+
+   GET operation), the specific manner how handles are created and used
+   always remains as the distinguishing quality of this model.  In the
+   Uni-Directional model, handles are composed of trustable signed
+   timestamps as shown in [I-D.birkholz-rats-tuda], potentially
+   including other qualifying data.  The handles are created by an
+   external 3rd entity - the Handle Distributor - that includes a
+   trustworthy source of time and takes on the role of a Time Stamping
+   Authority (TSA, as initially defined in [RFC3161]).  Timstamps
+   created from local clocks (absolute clocks using a global timescale,
+   as well as relative clocks, such as tick-counters) of Attesters and
+   Verifiers MUST be cryptographically bound to fresh Handles received
+   from the Handle Distributor.  This binding provides a proof of
+   synchronization that MUST be included in every evidence created.
+   Correspondingly, evidence created for conveyance via this model
+   provides a proof that it was fresh at a certain point in time.
+   Effectively, this allows for series of evidence to be pushed to
+   multiple Verifiers, simultaniously.  Methods to detect excessive time
+   drift that would mandate a fresh Handle to be received by the Handle
+   Distributor, as well as timing of handle distribution are out-of-
+   scope of this document.
+
+7.3.  Streaming Remote Attestation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Birkholz & Eckel        Expires 26 December 2020               [Page 11]
+
+Internet-Draft                    REIM                         June 2020
+
+
+   .----------.                                                .----------.
+   | Attester |                                                | Verifier |
+   '----------'                                                '----------'
+        |                                                            |
+   valueGeneration(targetEnvironment)                                |
+        | => claims                                                  |
+        |                                                            |
+        | <----subscribeEvidence(handle, authSecIDs, claimSelection) |
+        | subscriptionResult --------------------------------------> |
+        |                                                            |
+   evidenceGeneration(handle, authSecIDs, collectedClaims)           |
+        | => evidence                                                |
+        |                                                            |
+        | pushEventLog---------------------------------------------> |
+        | pushEvidence---------------------------------------------> |
+        |                                                            |
+        |                  evidenceAppraisal(evidence, eventLog, refClaims)
+        |                                       attestationResult <= |
+        ~                                                            ~
+        |                                                            |
+   valueGeneration(targetEnvironment)                                |
+        | => claimsDelta                                             |
+        |                                                            |
+   evidenceGeneration(handle, authSecIDs, collectedClaims)           |
+        | => evidence                                                |
+        |                                                            |
+        | pushEventLogDelta----------------------------------------> |
+        | pushEvidence---------------------------------------------> |
+        |                                                            |
+        |             evidenceAppraisal(evidence, eventLogDelta, refClaims)
+        |                                       attestationResult <= |
+        |                                                            |
+
+   Streaming Remote Attestation procedures require the setup of
+   subscription state.  Setting up subscription state between a Verifier
+   and an Attester is conducted via a subscribe operation.  This
+   subscribe operation is used to convey the handles required for
+   Evidence generation.  Effectively, this allows for series of evidence
+   to be pushed to a Verifier similar to the Uni-Directional model.
+   While a Handle Distributor is not required in this model, it is also
+   limited to bi-lateral subscription relationships, in which each
+   Verifier has to create and provide its individual handle.  Handles
+   provided by a specific subscribing Verifier MUST be used in Evidence
+   generation for that specific Verifier.  The Streaming model uses the
+   same information elements as the Challenge/Response and the Uni-
+   Directional model.  Methods to detect excessive time drift that would
+   mandate a refreshed Handle to be conveyed via another subscribe
+   operation are out-of-scope of this document.
+
+
+
+Birkholz & Eckel        Expires 26 December 2020               [Page 12]
+
+Internet-Draft                    REIM                         June 2020
+
+
+8.  Additional Application-Specific Requirements
 
    Depending on the use cases covered, there can be additional
    requirements.  An exemplary subset is illustrated in this section.
 
-6.1.  Confidentiality
+8.1.  Confidentiality
 
    Confidentiality of exchanged attestation information may be
    desirable.  This requirement usually is present when communication
@@ -380,33 +689,46 @@ Internet-Draft                    REIM                      January 2020
    management networks, it must be evaluated whether or not the
    transport medium is considered confidential.
 
-6.2.  Mutual Authentication
+8.2.  Mutual Authentication
 
    In particular use cases mutual authentication may be desirable in
    such a way that a Verifier also needs to prove its identity to the
    Attester, instead of only the Attester proving its identity to the
    Verifier.
 
+8.3.  Hardware-Enforcement/Support
 
+   Depending on given usage scenarios, hardware support for secure
+   storage of cryptographic keys, crypto accelerators, as well as
+   protected or isolated execution environments can be mandatory
+   requirements.  Well-known technologies in support of these
+   requirements are roots of trusts, such as Hardware Security Modules
+   (HSM), Physically Unclonable Functions (PUFs), Shielded Secrets, or
+   Trusted Executions Environments (TEEs).
 
-Birkholz & Eckel          Expires 10 July 2020                  [Page 7]
-
-Internet-Draft                    REIM                      January 2020
-
-
-6.3.  Hardware-Enforcement/Support
-
-   Depending on the requirements, hardware support for secure storage of
-   cryptographic keys, crypto accelerators, or protected or isolated
-   execution environments may be useful.  Well-known technologies are
-   roots of trusts, such as Hardware Security Modules (HSM), Physically
-   Unclonable Functions (PUFs), Shielded Secrets, or Trusted Executions
-   Environments (TEEs).
-
-7.  Implementation Status
+9.  Implementation Status
 
    Note to RFC Editor: Please remove this section as well as references
    to [BCP205] before AUTH48.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Birkholz & Eckel        Expires 26 December 2020               [Page 13]
+
+Internet-Draft                    REIM                         June 2020
+
 
    This section records the status of known implementations of the
    protocol defined by this specification at the time of posting of this
@@ -428,45 +750,49 @@ Internet-Draft                    REIM                      January 2020
    It is up to the individual working groups to use this information as
    they see fit".
 
-7.1.  Implementer
+9.1.  Implementer
 
    The open-source implementation was initiated and is maintained by the
    Fraunhofer Institute for Secure Information Technology - SIT.
 
-7.2.  Implementation Name
+9.2.  Implementation Name
 
    The open-source implementation is named "CHAllenge-Response based
    Remote Attestation" or in short: CHARRA.
 
-7.3.  Implementation URL
+9.3.  Implementation URL
 
    The open-source implementation project resource can be located via:
    https://github.com/Fraunhofer-SIT/charra
 
-
-
-Birkholz & Eckel          Expires 10 July 2020                  [Page 8]
-
-Internet-Draft                    REIM                      January 2020
-
-
-7.4.  Maturity
+9.4.  Maturity
 
    The code's level of maturity is considered to be "prototype".
 
-7.5.  Coverage and Version Compatibility
+9.5.  Coverage and Version Compatibility
 
    The current version (commit '847bcde') is aligned with the exemplary
    specification of the CoAP FETCH bodies defined in section Appendix A
    of this document.
 
-7.6.  License
+
+
+
+
+
+
+Birkholz & Eckel        Expires 26 December 2020               [Page 14]
+
+Internet-Draft                    REIM                         June 2020
+
+
+9.6.  License
 
    The CHARRA project and all corresponding code and data maintained on
    github are provided under the BSD 3-Clause "New" or "Revised"
    license.
 
-7.7.  Implementation Dependencies
+9.7.  Implementation Dependencies
 
    The implementation requires the use of the official Trusted Computing
    Group (TCG) open-source Trusted Software Stack (TSS) for the Trusted
@@ -478,11 +804,11 @@ Internet-Draft                    REIM                      January 2020
    [RFC7252] (http://coap.technology/) and the Concise Binary Object
    Representation [RFC7049] (https://cbor.io/).
 
-7.8.  Contact
+9.8.  Contact
 
    Michael Eckel (michael.eckel@sit.fraunhofer.de)
 
-8.  Security and Privacy Considerations
+10.  Security and Privacy Considerations
 
    In a remote attestation procedure the Verifier or the Attester MAY
    want to cryptographically blind several attributes.  For instance,
@@ -496,27 +822,25 @@ Internet-Draft                    REIM                      January 2020
    This extra information can be used to scramble the Nonce in order to
    counter certain types of relay attacks.
 
-
-
-
-
-
-Birkholz & Eckel          Expires 10 July 2020                  [Page 9]
-
-Internet-Draft                    REIM                      January 2020
-
-
-9.  Acknowledgments
+11.  Acknowledgments
 
    Olaf Bergmann and Ned Smith
 
-10.  Change Log
+12.  Change Log
 
    *  Initial draft -00
 
    *  Changes from version 00 to version 01:
 
       -  Added details to the flow diagram
+
+
+
+
+Birkholz & Eckel        Expires 26 December 2020               [Page 15]
+
+Internet-Draft                    REIM                         June 2020
+
 
       -  Integrated comments from Ned Smith (Intel)
 
@@ -541,9 +865,68 @@ Internet-Draft                    REIM                      January 2020
       -  Text revisions based on changes in [I-D.ietf-rats-architecture]
          and comments provided on rats@ietf.org.
 
-11.  References
+   *  Changes from version 02 to version 00 RATS related document
 
-11.1.  Normative References
+      -  update of the challenge/response diagram
+
+      -  minor rephrasing of Prerequisites section
+
+      -  rephrasing to information elements and interaction model
+         section
+
+   *  Changes from version 00 to version 01
+
+      -  added Attestation Authenticity, updated Identity and Secret
+
+      -  relabeled Secret ID to Authentication Secret ID + rephrasing
+
+      -  relabeled Claim Selection to Assertion Selection + rephrasing
+
+      -  relabeled Evidence to (Signed) Attestation Evidence
+
+      -  Added Attestation Result and Reference Assertions
+
+      -  update of the challenge/response diagram and expositional text
+
+      -  added CDDL spec for CoAP FETCH operation proof-of-concept
+
+
+
+
+Birkholz & Eckel        Expires 26 December 2020               [Page 16]
+
+Internet-Draft                    REIM                         June 2020
+
+
+   *  Changes from version 01 to version 02
+
+      -  prepared the inclusion of additional reference models
+
+      -  update to Introduction and Scope section
+
+      -  major update to (Normative) Prerequisites
+
+      -  relabeled Attestation Authenticity to Att. Evidence
+         Authenticity
+
+      -  relabeled Assertion term back to Claim terms
+
+      -  added BCP205 Implementation Status section related to
+         Appendix CDDL
+
+   *  Changes from version 02 to version 03
+
+      -  major refactoring to now accommodate three interaction modesl
+
+      -  updated existing and added two new diagrams
+
+      -  major refactoring and addition diagram description
+
+      -  prepared the inclusion of Direct Anonymous Attestation
+
+13.  References
+
+13.1.  Normative References
 
    [BCP205]   Sheffer, Y. and A. Farrel, "Improving Awareness of Running
               Code: The Implementation Status Section", BCP 205,
@@ -555,16 +938,21 @@ Internet-Draft                    REIM                      January 2020
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
-
-
-Birkholz & Eckel          Expires 10 July 2020                 [Page 10]
-
-Internet-Draft                    REIM                      January 2020
-
+   [RFC3161]  Adams, C., Cain, P., Pinkas, D., and R. Zuccherato,
+              "Internet X.509 Public Key Infrastructure Time-Stamp
+              Protocol (TSP)", RFC 3161, DOI 10.17487/RFC3161, August
+              2001, <https://www.rfc-editor.org/info/rfc3161>.
 
    [RFC7049]  Bormann, C. and P. Hoffman, "Concise Binary Object
               Representation (CBOR)", RFC 7049, DOI 10.17487/RFC7049,
               October 2013, <https://www.rfc-editor.org/info/rfc7049>.
+
+
+
+Birkholz & Eckel        Expires 26 December 2020               [Page 17]
+
+Internet-Draft                    REIM                         June 2020
+
 
    [RFC7252]  Shelby, Z., Hartke, K., and C. Bormann, "The Constrained
               Application Protocol (CoAP)", RFC 7252,
@@ -581,30 +969,35 @@ Internet-Draft                    REIM                      January 2020
               JSON Data Structures", RFC 8610, DOI 10.17487/RFC8610,
               June 2019, <https://www.rfc-editor.org/info/rfc8610>.
 
-11.2.  Informative References
+13.2.  Informative References
+
+   [I-D.birkholz-rats-tuda]
+              Fuchs, A., Birkholz, H., McDonald, I., and C. Bormann,
+              "Time-Based Uni-Directional Attestation", Work in
+              Progress, Internet-Draft, draft-birkholz-rats-tuda-02, 9
+              March 2020, <http://www.ietf.org/internet-drafts/draft-
+              birkholz-rats-tuda-02.txt>.
 
    [I-D.ietf-rats-architecture]
-              Birkholz, H., Thaler, D., Richardson, M., and N. Smith,
-              "Remote Attestation Procedures Architecture", Work in
-              Progress, Internet-Draft, draft-ietf-rats-architecture-00,
-              17 December 2019, <http://www.ietf.org/internet-drafts/
-              draft-ietf-rats-architecture-00.txt>.
+              Birkholz, H., Thaler, D., Richardson, M., Smith, N., and
+              W. Pan, "Remote Attestation Procedures Architecture", Work
+              in Progress, Internet-Draft, draft-ietf-rats-architecture-
+              04, 21 May 2020, <http://www.ietf.org/internet-drafts/
+              draft-ietf-rats-architecture-04.txt>.
 
 Appendix A.  CDDL Specification for a simple CoAP Challenge/Response
              Interaction
 
-   The following CDDL specification is an examplary proof-of-concept to
-   illustrate a potential implementation of the Reference Interaction
-   Model.  The transfer protocol used is CoAP using the FETCH operation.
-   The actual resource operated on can be empty.  Both the Challenge
-   Message and the Response Message are exchanged via the FETCH Request
-   and FETCH Response body.
+   The following CDDL specification is an exemplary proof-of-concept to
+   illustrate a potential implementation of the Challenge/Response
+   Interaction Model.  The transfer protocol used is CoAP using the
+   FETCH operation.  The actual resource operated on can be empty.  Both
+   the Challenge Message and the Response Message are exchanged via the
+   FETCH operation and corresponding FETCH Request and FETCH Response
+   body.
 
-   In this example, the root-of-trust for reporting primitive operation
-   "quote" is provided by a TPM 2.0.
-
-
-
+   In this example, evidence is created via the root-of-trust for
+   reporting primitive operation "quote" that is provided by a TPM 2.0.
 
 
 
@@ -612,10 +1005,9 @@ Appendix A.  CDDL Specification for a simple CoAP Challenge/Response
 
 
 
-
-Birkholz & Eckel          Expires 10 July 2020                 [Page 11]
+Birkholz & Eckel        Expires 26 December 2020               [Page 18]
 
-Internet-Draft                    REIM                      January 2020
+Internet-Draft                    REIM                         June 2020
 
 
    RAIM-Bodies = CoAP-FETCH-Body / CoAP-FETCH-Response-Body
@@ -662,18 +1054,22 @@ Authors' Addresses
    Email: henk.birkholz@sit.fraunhofer.de
 
 
+
+
+
+
+
+
+
+Birkholz & Eckel        Expires 26 December 2020               [Page 19]
+
+Internet-Draft                    REIM                         June 2020
+
+
    Michael Eckel
    Fraunhofer SIT
    Rheinstrasse 75
    64295 Darmstadt
-
-
-
-Birkholz & Eckel          Expires 10 July 2020                 [Page 12]
-
-Internet-Draft                    REIM                      January 2020
-
-
    Germany
 
    Email: michael.eckel@sit.fraunhofer.de
@@ -721,8 +1117,4 @@ Internet-Draft                    REIM                      January 2020
 
 
 
-
-
-
-
-Birkholz & Eckel          Expires 10 July 2020                 [Page 13]
+Birkholz & Eckel        Expires 26 December 2020               [Page 20]
