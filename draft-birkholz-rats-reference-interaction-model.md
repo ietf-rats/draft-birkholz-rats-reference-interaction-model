@@ -7,7 +7,7 @@ stand_alone: true
 ipr: trust200902
 area: Security
 kw: Internet-Draft
-cat: std 
+cat: info
 pi:
   toc: yes
   sortrefs: yes
