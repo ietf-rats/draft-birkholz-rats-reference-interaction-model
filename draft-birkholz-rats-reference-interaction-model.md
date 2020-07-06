@@ -125,25 +125,25 @@ Analogously, deviations from that rough descriptions of models in this document 
 
 DAA is a signature scheme used in RATS that allows to preserve the privacy of users that are associated with an Attester (e.g. its owner).
 Essentially, "DAA can be seen as a group signature without the feature that a signature can be opened, i.e., the anonymity is not revocable" {{DAA}}.
-An essential approach that supports these group signatures is to use a DAA Issuer that provides an alternate series of group certificates for each group of Attesters instead of an unique Attester Identity documents (e.g. traditional X.509 certificates).
+An approach essential for the support of these group signatures is to use a DAA Issuer that provides an alternate series of group certificates for each group of Attesters (instead of unique Attester Identity documents, e.g. traditional X.509 certificates).
 This documents extends the duties of the Endorser role as defined by the RATS architecture with respect to the provision of these Attester Identity documents to Attesters.
 The existing duties of the Endorser role and the duties of an DAA Issuer required for DAA are quite similar as illustrated in the following subsections.
 
-## Endorser
+## Endorsers
 
 Via its Attesting Environments, an Attester can only create Evidence about its Target Environments.
 After being appraised to be trustworthy, a Target Environment may become a new Attesting Environment in charge of creating Evidence for further Target Environments.
 This procedure is called Layered Attestation.
-Layered Attestation has to start with an initial Attesting Environment (i.e. there cannot be turtles all the way down).
+Layered Attestation has to start with an initial Attesting Environment (i.e., there cannot be turtles all the way down).
 At this rock bottom of Layered Attestation, the Attesting Environments are called Roots of Trusts (RoT).
 An Attester cannot create Evidence about its own RoTs by design.
-In consequence, a Verifier requires trustable statements about this subset of Attesting Environments from another source than the Attester itself.
-The corresponding trustable statements are called Endorsements and origin from trustable outside entities that take on the role of an Endorser.
+In consequence, a Verifier requires trustable statements about this subset of Attesting Environments from a different source than the Attester itself.
+The corresponding trustable statements are called Endorsements and origin from external, trustable entities that take on the role of an Endorser(e.g., supply chain entities).
 
 ## Endorsers for Direct Anonymous Attestation
 
 In order to enable DAA, an Endorser role takes on the duties of a DAA Issuer in addition to its already defined duties.
-DAA Issuer offer zero-knowledge proofs based on pub-key certificates used by a group of Attesters {{DAA}}.
+DAA Issuers offer zero-knowledge proofs based on pub-key certificates used by a group of Attesters {{DAA}}.
 Effectively, these certificates share the semantics of Endorsements. The two differences are:
 
 * the method of generation (as summarized on a high level above and described in {{DAA}} in detail), and
