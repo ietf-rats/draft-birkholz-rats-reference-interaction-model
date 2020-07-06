@@ -67,7 +67,13 @@ informative:
         Proceedings of the 11rd ACM conference on Computer and Communications Security
       page: 132-145
     date: 2004
-
+  turtles:
+    title: "Turrles all the way down"
+    target: https://en.wikipedia.org/wiki/Turtles_all_the_way_down
+    author:
+      org: Wikipedia
+    date: 2020-07-06
+    
 --- abstract
 
 This document describes interaction models for remote attestation procedures (RATS).
@@ -98,6 +104,8 @@ This document uses the terms, roles, and concepts defined in {{-RATS}}:
 
 Attester, Verifier, Relying Party, Conceptual Message, Evidence, Endorsement, Attestation Result, Appraisal Policy, Attesting Environment, Target Environment
 
+A PKIX Certificate is an X.509v3 format certificate as specified by {{RFC5280}}.
+
 {::boilerplate bcp14}
 
 # Disambiguation
@@ -123,9 +131,10 @@ Analogously, deviations from that rough descriptions of models in this document 
 
 # Direct Anonymous Attestation
 
-DAA is a signature scheme used in RATS that allows to preserve the privacy of users that are associated with an Attester (e.g. its owner).
+DAA is a signature scheme used in RATS that allows preservation of the privacy of users that are associated with an Attester (e.g. its owner).
 Essentially, "DAA can be seen as a group signature without the feature that a signature can be opened, i.e., the anonymity is not revocable" {{DAA}}.
-An approach essential for the support of these group signatures is to use a DAA Issuer that provides an alternate series of group certificates for each group of Attesters (instead of unique Attester Identity documents, e.g. traditional X.509 certificates).
+The essential element of this approach is to use a DAA Issuer that provides an alternate series of group certificates for each group of Attesters. 
+This is in contrast to intuition that there has to be a unique Attester Identity per device.
 This documents extends the duties of the Endorser role as defined by the RATS architecture with respect to the provision of these Attester Identity documents to Attesters.
 The existing duties of the Endorser role and the duties of an DAA Issuer required for DAA are quite similar as illustrated in the following subsections.
 
@@ -133,8 +142,8 @@ The existing duties of the Endorser role and the duties of an DAA Issuer require
 
 Via its Attesting Environments, an Attester can only create Evidence about its Target Environments.
 After being appraised to be trustworthy, a Target Environment may become a new Attesting Environment in charge of creating Evidence for further Target Environments.
-This procedure is called Layered Attestation.
-Layered Attestation has to start with an initial Attesting Environment (i.e., there cannot be turtles all the way down).
+{{-RATS}} explains this as Layered Attestation.
+Layered Attestation has to start with an initial Attesting Environment (i.e., there cannot be turtles all the way down {{-turtles}}).
 At this rock bottom of Layered Attestation, the Attesting Environments are called Roots of Trusts (RoT).
 An Attester cannot create Evidence about its own RoTs by design.
 In consequence, a Verifier requires trustable statements about this subset of Attesting Environments from a different source than the Attester itself.
@@ -150,7 +159,7 @@ Effectively, these certificates share the semantics of Endorsements. The two dif
 * the conveyance from Endorser to Attester instead of Endorser to Verifier.
 
 The zero-knowledge proofs required cannot be created by an Attester alone -- like the Endorsements of RoTs -- and have to be created by a trustable third entity -- like an Endorser.
-Due to that vast semantic overlap, an Endorser in this document can convey trustable third party statements both to a Verifier and an Attester.
+Due to that vast semantic overlap (XXX-mcr:explain), an Endorser in this document can convey trustable third party statements both to a Verifier and an Attester.
 
 # Normative Prerequisites
 
@@ -166,7 +175,7 @@ Attestation Evidence Authenticity:
 
 : Attestation Evidence MUST be correct and authentic.
 
-In order to provide proofs of authenticity, Attestation Evidence SHOULD be cryptographically associated with an identity document (e.g. an X.509certificate or trusted key material, or a randomised DAA credential), or SHOULD include a correct and unambiguous and stable reference to an accessible identity document.
+In order to provide proofs of authenticity, Attestation Evidence SHOULD be cryptographically associated with an identity document (e.g. an PKIX certificate or trusted key material, or a randomised DAA credential), or SHOULD include a correct and unambiguous and stable reference to an accessible identity document.
 
 Authentication Secret:
 
@@ -263,9 +272,10 @@ The following subsections introduce and illustrate the interaction models:
 3. Streaming Remote Attestation
 
 Each section starts with a sequence diagram illustrating the interactions between Attester and Verifier.
-The other roles RATS roles -- mainly Relying Parties and Endorsers -- are not covered in the expositional texts that follows each model diagram.
-While the interaction models presented focus on the conveyance of Evidence, effectively, they can also be applied to the conveyance of other Conceptual Messages, namely Attestation Results, Endorsements, or Appraisal Policies.
-All interaction model have a strong focus on uses a handle to incorporate a proof of freshness.
+The other roles RATS roles -- mainly Relying Parties and Endorsers -- are not relevant for this interaction model.
+While the interaction models presented focus on the conveyance of Evidence, future work could apply this to the conveyance of other Conceptual Messages, namely Attestation Results, Endorsements, or Appraisal Policies.
+
+All interaction model have a strong focus on the use of a handle to incorporate a proof of freshness.
 The ways these handles are processed is the most prominent difference between the three interaction models.
 
 ## Challenge/Response Remote Attestation
@@ -295,20 +305,26 @@ evidenceGeneration(handle, authSecIDs, collectedClaims)           |
      |                                                            |
 ~~~~
 
-Challenge/Response Remote Attestation procedures are initiated by the Verifier, sending a remote attestation request to the Attester.
+This Challenge/Response Remote Attestation procedure is initiated by the Verifier, by sending a remote attestation request to the Attester.
 A request includes a Handle, a list of Authentication Secret IDs, and a Claim Selection.
-In the Challenge/Response model, the handle is composed of qualifying data in the form of a nonce.
-The Verifier-generated (and therefore Verifier-known) nonce is intended to guarantee Evidence freshness.
+
+In the Challenge/Response model, the handle is composed of qualifying data in the form of a cryptographically strongly randomly generated, and therefore unpredictable, nonce.
+The Verifier-generated nonce is intended to guarantee Evidence freshness.
+
 The list of Authentication Secret IDs selects the attestation keys with which the Attester is requested to sign the Attestation Evidence.
 Each selected key is uniquely associated with an Attesting Environment of the Attester.
 As a result, a single Authentication Secret ID identifies a single Attesting Environment.
-Analogously, a set of Evidence originating from multiple Attesting Environments in a composite device can be requested via multiple Authentication Secret IDs.
-Methods to acquire Authentication Secret IDs or mappings between Attesting Environments to Authentication Secret IDs are out-of-scope of this document.
-The Claim Selection narrows down the set of Claims collected and used to create Evidence, if required.
-If the Claim Selection is omitted, then by default all Claims that are known and available on the Attester MUST be used to create corresponding Evidence.
-For example, a Verifier may only be requesting a particular subset of claims about the Attester, such as Evidence about BIOS and firmware the Attester booted up with (boot integrity Evidence) - and not include information about all currently running software (run-time integrity Evidence).
 
-While it is crucial that Claims, the Handle, as well as the Attester Identity information MUST be cryptographically bound to the signature of Evidence, it is not required for them to be present in plain text.
+Analogously, a particular set of Evidence originating from a particular Attesting Environments in a composite device can be requested via multiple Authentication Secret IDs.
+Methods to acquire Authentication Secret IDs or mappings between Attesting Environments to Authentication Secret IDs are out-of-scope of this document.
+(MCR: okay, but what document will specify this?)
+
+The Claim Selection narrows down the set of Claims collected and used to create Evidence to those that the Verifier requires.
+If the Claim Selection is omitted, then by default all Claims that are known and available on the Attester MUST be used to create corresponding Evidence.
+For example when performing a boot integrity evaluation, a Verifier may only be requesting a particular subset of claims about the Attester, such as Evidence about BIOS and firmware the Attester booted up, and not include information about all currently running software.
+
+While it is crucial that Claims, the Handle, as well as the Attester Identity information MUST be cryptographically bound to the signature of Evidence, they may be presented in an encrypted form.
+
 Cryptographic blinding MAY be used at this point. For further reference see section {{security-and-privacy-considerations}}.
 
 As soon as the Verifier receives signed Evidence, it validates the signature, the Attester Identity, as well as the Nonce, and appraises the Claims.
