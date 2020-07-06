@@ -32,6 +32,14 @@ author:
   code: '64295'
   city: Darmstadt
   country: Germany
+- ins: C. Newton
+  name: Christopher Newton
+  org: University of Surrey
+  email: cn0016@surrey.ac.uk
+- ins: L. Chen
+  name: Liqun Chen
+  org: University of Surrey
+  email: liqun.chen@surrey.ac.uk
 
 normative:
   RFC2119:
@@ -45,6 +53,21 @@ normative:
 informative:
   I-D.ietf-rats-architecture: RATS
   I-D.birkholz-rats-tuda: TUDA
+  DAA:
+    title: Direct Anonymous Attestation
+    author:
+    - ins: E. Brickell
+      name: Ernie Brickell
+    - ins: J. Camenisch
+      name: Jan Camenisch
+    - ins: L. Chen
+      name: Liqun Chen
+    seriesinfo:
+      ACM: >
+        Proceedings of the 11rd ACM conference on Computer and Communications Security
+      page: 132-145
+    date: 2004
+
 --- abstract
 
 This document describes interaction models for remote attestation procedures (RATS).
@@ -98,6 +121,37 @@ The information models illustrated in this document are intended to provide a st
 Solution documents of any kind can reference the interaction models in order to avoid text clones and avoid the danger of subtle discrepancies.
 Analogously, deviations from that rough descriptions of models in this document can be highlighted in solutions documents.
 
+# Direct Anonymous Attestation
+
+DAA is a signature scheme used in RATS that allows to preserve the privacy of users that are associated with an Attester (e.g. its owner).
+Essentially, "DAA can be seen as a group signature without the feature that a signature can be opened, i.e., the anonymity is not revocable" {{DAA}}.
+An essential approach that supports these group signatures is to use a DAA Issuer that provides an alternate series of group certificates for each group of Attesters instead of an unique Attester Identity documents (e.g. traditional X.509 certificates).
+This documents extends the duties of the Endorser role as defined by the RATS architecture with respect to the provision of these Attester Identity documents to Attesters.
+The existing duties of the Endorser role and the duties of an DAA Issuer required for DAA are quite similar as illustrated in the following subsections.
+
+## Endorser
+
+Via its Attesting Environments, an Attester can only create Evidence about its Target Environments.
+After being appraised to be trustworthy, a Target Environment may become a new Attesting Environment in charge of creating Evidence for further Target Environments.
+This procedure is called Layered Attestation.
+Layered Attestation has to start with an initial Attesting Environment (i.e. there cannot be turtles all the way down).
+At this rock bottom of Layered Attestation, the Attesting Environments are called Roots of Trusts (RoT).
+An Attester cannot create Evidence about its own RoTs by design.
+In consequence, a Verifier requires trustable statements about this subset of Attesting Environments from another source than the Attester itself.
+The corresponding trustable statements are called Endorsements and origin from trustable outside entities that take on the role of an Endorser.
+
+## Endorsers for Direct Anonymous Attestation
+
+In order to enable DAA, an Endorser role takes on the duties of a DAA Issuer in addition to its already defined duties.
+DAA Issuer offer zero-knowledge proofs based on pub-key certificates used by a group of Attesters {{DAA}}.
+Effectively, these certificates share the semantics of Endorsements. The two differences are:
+
+* the method of generation (as summarized on a high level above and described in {{DAA}} in detail), and
+* the conveyance from Endorser to Attester instead of Endorser to Verifier.
+
+The zero-knowledge proofs required cannot be created by an Attester alone -- like the Endorsements of RoTs -- and have to be created by a trustable third entity -- like an Endorser.
+Due to that vast semantic overlap, an Endorser in this document can convey trustable third party statements both to a Verifier and an Attester.
+
 # Normative Prerequisites
 
 In order to ensure an appropriate conveyance of Evidence, the following set of prerequisites MUST be in place to support the implementation of interaction models:
@@ -106,13 +160,13 @@ Attester Identity:
 
 : The provenance of Evidence with respect to a distinguishable Attesting Environment MUST be correct and unambiguous.
 
-: An Attester Identity MAY be a unique identity, it MAY be included in a zero-knowledge proof (ZKP), or it MAY be part of a group signature.
+: An Attester Identity MAY be a unique identity, it MAY be included in a zero-knowledge proof (ZKP), or it MAY be part of a group signature, or it MAY be a randomised DAA credential.
 
 Attestation Evidence Authenticity:
 
 : Attestation Evidence MUST be correct and authentic.
 
-: Attestation Evidence, in order to provide proofs of authenticity, SHOULD be cryptographically associated with an identity document (e.g. an X.509 certificate or trusted key material), or SHOULD include a correct and unambiguous and stable reference to an accessible identity document.
+In order to provide proofs of authenticity, Attestation Evidence SHOULD be cryptographically associated with an identity document (e.g. an X.509certificate or trusted key material, or a randomised DAA credential), or SHOULD include a correct and unambiguous and stable reference to an accessible identity document.
 
 Authentication Secret:
 
@@ -141,13 +195,20 @@ Attester Identity ('attesterIdentity'):
 
 : A statement about a distinguishable Attester made by an Endorser without accompanying evidence about its validity - used as proof of identity.
 
+: In DAA the Attester's identity is not revealed to the verifier.
+The Attester is issued with a credential by the Endorser that is randomised and then used to anonymously confirm the validity of their evidence.
+The evidence is verified using the Endorser’s public key.
+
 Authentication Secret IDs ('authSecID'):
 
 : *mandatory*
 
 : A statement representing an identifier list that MUST be associated with corresponding Authentication Secrets used to protect Evidence.
+In DAA, Authentication Secret IDs are represented by the Endorser (DAA issuer)’s public key that MUST be used to create DAA credentials for the corresponding Authentication Secrets used to protect Evidence.
 
-: Each Authentication Secrets is uniquely associated with a distinguishable Attesting Environment. Consequently, an Authentication Secret ID also identifies an Attesting Environment.
+: Each Authentication Secret is uniquely associated with a distinguishable Attesting Environment. Consequently, an Authentication Secret ID also identifies an Attesting Environment.
+In DAA an Authentication Secret ID does not identify a unique Attesting Environment but associated with a group of Attesting Environments.
+This is because an Attesting Environment should not be distinguishable and the DAA credential which represents the Attesting Environment is randomised each time it used.
 
 Handle ('handle'):
 
@@ -185,7 +246,7 @@ Evidence ('signedAttestationEvidence'):
 
 : *mandatory*
 
-: A set of Claims that consists of a list of Authentication Secret IDs that identifies an Authentication Secret in a single Attesting Environment, the Attester Identity, Claims, and a Handle. Attestation Evidence MUST cryptographically bind all of these information elements. The Evidence MUST be protected via the Authentication Secret. The Authentication Secret MUST be trusted by the Verifier as authoritative.
+: A set of Claims that consists of a list of Authentication Secret IDs that each identifies an Authentication Secret in a single Attesting Environment, the Attester Identity, Claims, and a Handle. Attestation Evidence MUST cryptographically bind all of these information elements. The Evidence MUST be protected via the Authentication Secret. The Authentication Secret MUST be trusted by the Verifier as authoritative.
 
 Attestation Result ('attestationResult'):
 
@@ -477,7 +538,7 @@ Olaf Bergmann and Ned Smith
   - updated existing and added two new diagrams
   - major refactoring and addition diagram description
   - prepared the inclusion of Direct Anonymous Attestation
-		 	
+
 --- back
 
 {: #coap-fetch-bodies}
