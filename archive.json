@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2020-06-24T13:44:19.177010+00:00",
+  "timestamp": "2020-07-06T10:25:23.438398+00:00",
   "repo": "ietf-rats/draft-birkholz-rats-reference-interaction-model",
   "labels": [
     {
@@ -45,5 +45,34 @@
     }
   ],
   "issues": [],
-  "pulls": []
+  "pulls": [
+    {
+      "number": 1,
+      "id": "MDExOlB1bGxSZXF1ZXN0NDM5MzM2NDY1",
+      "title": "Multiple interaction models",
+      "url": "https://github.com/ietf-rats/draft-birkholz-rats-reference-interaction-model/pull/1",
+      "state": "MERGED",
+      "author": "henkbirkholz",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "update for -03",
+      "createdAt": "2020-06-24T17:07:46Z",
+      "updatedAt": "2020-06-24T17:08:11Z",
+      "baseRepository": "ietf-rats/draft-birkholz-rats-reference-interaction-model",
+      "baseRefName": "master",
+      "baseRefOid": "28c376d4d45fd6c643b2972fafd0d8ec5616013f",
+      "headRepository": "ietf-rats/draft-birkholz-rats-reference-interaction-model",
+      "headRefName": "multiple-interaction-models",
+      "headRefOid": "d319f88cd62f25e2c1c79fea3408e8576d1a7e41",
+      "closedAt": "2020-06-24T17:08:11Z",
+      "mergedAt": "2020-06-24T17:08:10Z",
+      "mergedBy": "henkbirkholz",
+      "mergeCommit": {
+        "oid": "77ac00caba8f34c5bb1319843a37ba20ef9e27a4"
+      },
+      "comments": [],
+      "reviews": []
+    }
+  ]
 }
