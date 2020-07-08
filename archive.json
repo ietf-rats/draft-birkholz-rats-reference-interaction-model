@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2020-07-06T10:25:23.438398+00:00",
+  "timestamp": "2020-07-08T05:53:44.056445+00:00",
   "repo": "ietf-rats/draft-birkholz-rats-reference-interaction-model",
   "labels": [
     {
@@ -44,7 +44,40 @@
       "color": "ffffff"
     }
   ],
-  "issues": [],
+  "issues": [
+    {
+      "number": 3,
+      "id": "MDU6SXNzdWU2NTI5NzMwNjQ=",
+      "title": "Elaborate on semantic overlap between DAA Issuer and current Endorser",
+      "url": "https://github.com/ietf-rats/draft-birkholz-rats-reference-interaction-model/issues/3",
+      "state": "OPEN",
+      "author": "henkbirkholz",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The old text might not be sufficient here:\r\n\r\n> Due to that vast semantic overlap (XXX-mcr:explain), an Endorser in this document can\r\n> convey trustable third party statements both to a Verifier and an Attester.",
+      "createdAt": "2020-07-08T05:16:28Z",
+      "updatedAt": "2020-07-08T05:16:28Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 4,
+      "id": "MDU6SXNzdWU2NTI5NzQ1NDg=",
+      "title": "Where will Auth Sec ID mapping to Attesting Environment be defined?",
+      "url": "https://github.com/ietf-rats/draft-birkholz-rats-reference-interaction-model/issues/4",
+      "state": "OPEN",
+      "author": "henkbirkholz",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The text says:\r\n\r\n> Methods to acquire Authentication Secret IDs or mappings between Attesting Environments to Authentication Secret IDs are out-of-scope of this document.\r\n\r\nhttps://datatracker.ietf.org/doc/draft-ietf-rats-yang-tpm-charra/ presents a solution specific to YANG & TPM. Not sure, if there can be a generic solution.",
+      "createdAt": "2020-07-08T05:19:41Z",
+      "updatedAt": "2020-07-08T05:19:41Z",
+      "closedAt": null,
+      "comments": []
+    }
+  ],
   "pulls": [
     {
       "number": 1,
@@ -73,6 +106,56 @@
       },
       "comments": [],
       "reviews": []
+    },
+    {
+      "number": 2,
+      "id": "MDExOlB1bGxSZXF1ZXN0NDQ0ODgxMTQ0",
+      "title": "review and edits of Challenge/Response RemoteA",
+      "url": "https://github.com/ietf-rats/draft-birkholz-rats-reference-interaction-model/pull/2",
+      "state": "MERGED",
+      "author": "mcr",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "I split up the text into multiple paragraphs.\r\nThere are a few edits leading up to this part which helped me to understand the context better.\r\nThe DAA changes could be split off.",
+      "createdAt": "2020-07-06T16:30:15Z",
+      "updatedAt": "2020-07-08T05:20:58Z",
+      "baseRepository": "ietf-rats/draft-birkholz-rats-reference-interaction-model",
+      "baseRefName": "multiple-interaction-models",
+      "baseRefOid": "761f7d589e75dccf364357260af83ab15a1692b1",
+      "headRepository": "mcr/draft-birkholz-rats-reference-interaction-model",
+      "headRefName": "patch-1",
+      "headRefOid": "d433ee3c77470cba89ccd7a40a2e11e799a689d7",
+      "closedAt": "2020-07-08T05:20:58Z",
+      "mergedAt": "2020-07-08T05:20:58Z",
+      "mergedBy": "henkbirkholz",
+      "mergeCommit": {
+        "oid": "ecd2e332b9033052ef61f77e5d163a377b9f4bad"
+      },
+      "comments": [
+        {
+          "author": "henkbirkholz",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Thx!",
+          "createdAt": "2020-07-08T05:20:51Z",
+          "updatedAt": "2020-07-08T05:20:51Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3NDQ0NDIwMjE5",
+          "commit": {
+            "abbreviatedOid": "d433ee3"
+          },
+          "author": "henkbirkholz",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2020-07-08T05:20:31Z",
+          "updatedAt": "2020-07-08T05:20:31Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
