@@ -325,7 +325,6 @@ As a result, a single Authentication Secret ID identifies a single Attesting Env
 
 Analogously, a particular set of Evidence originating from a particular Attesting Environments in a composite device can be requested via multiple Authentication Secret IDs.
 Methods to acquire Authentication Secret IDs or mappings between Attesting Environments to Authentication Secret IDs are out-of-scope of this document.
-(MCR: okay, but what document will specify this?)
 
 The Claim Selection narrows down the set of Claims collected and used to create Evidence to those that the Verifier requires.
 If the Claim Selection is omitted, then by default all Claims that are known and available on the Attester MUST be used to create corresponding Evidence.
