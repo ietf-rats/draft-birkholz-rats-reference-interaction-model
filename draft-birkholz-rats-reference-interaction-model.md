@@ -183,7 +183,7 @@ Attestation Evidence Authenticity:
 
 : Attestation Evidence MUST be correct and authentic.
 
-In order to provide proofs of authenticity, Attestation Evidence SHOULD be cryptographically associated with an identity document (e.g. an PKIX certificate or trusted key material, or a randomised DAA credential), or SHOULD include a correct and unambiguous and stable reference to an accessible identity document.
+: In order to provide proofs of authenticity, Attestation Evidence SHOULD be cryptographically associated with an identity document (e.g. an PKIX certificate or trusted key material, or a randomised DAA credential), or SHOULD include a correct and unambiguous and stable reference to an accessible identity document.
 
 Authentication Secret:
 
