@@ -132,7 +132,6 @@ Analogously, deviations from the generic model descriptions in this document can
 
 # Direct Anonymous Attestation
 
-5. Direct Anonymous Attestation
 DAA {{DAA}} is a signature scheme used in RATS that allows preservation of the privacy of users that are associated with an Attester (e.g. its owner).
 Essentially, DAA can be seen as a group signature scheme with the feature that given a DAA signature no-one can find out who the signer is, i.e., the anonymity is not revocable.
 To be able to sign anonymously an Attester has to obtain a credential from a DAA Issuer.
