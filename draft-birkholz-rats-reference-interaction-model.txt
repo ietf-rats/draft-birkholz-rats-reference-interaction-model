@@ -179,8 +179,8 @@ Internet-Draft                    REIM                         July 2020
 3.  Disambiguation
 
    The term "Remote Attestation" is a common expression and often
-   associated or connotated with certain properties.  The term "Remote"
-   in this context does not necessarily refer to a remote entity in the
+   associated or connoted with certain properties.  The term "Remote" in
+   this context does not necessarily refer to a remote entity in the
    scope of network topologies or the Internet.  It rather refers to a
    decoupled system or entities that exchange the payload of the
    Conceptual Message type called Evidence [I-D.ietf-rats-architecture].
@@ -210,14 +210,14 @@ Internet-Draft                    REIM                         July 2020
    well as such remediation actions and recovery processes themselves,
    are also out-of-scope.
 
-   The information models illustrated in this document are intended to
+   The interaction models illustrated in this document are intended to
    provide a stable basis and reference for other solutions documents
    inside or outside the IETF.  Solution documents of any kind can
-   reference the interaction models in order to avoid text clones and
+   reference the interaction models in order to avoid text clones and to
    avoid the danger of subtle discrepancies.  Analogously, deviations
-   from that rough descriptions of models in this document can be
-   highlighted in solutions documents.
-
+   from the generic model descriptions in this document can be
+   illustrated in solutions documents to highlight distinct
+   contributions.
 
 
 
@@ -936,7 +936,7 @@ Internet-Draft                    REIM                         July 2020
 
 12.  Acknowledgments
 
-   Olaf Bergmann and Ned Smith
+   Olaf Bergmann, Michael Richardson, and Ned Smith
 
 13.  Change Log
 
@@ -1028,13 +1028,18 @@ Internet-Draft                    REIM                         July 2020
 
    *  Changes from version 02 to version 03
 
-      -  major refactoring to now accommodate three interaction modesl
+      -  major refactoring to now accommodate three interaction models
 
-      -  updated existing and added two new diagrams
+      -  updated existing and added two new diagrams for models
 
-      -  major refactoring and addition diagram description
+      -  major refactoring of existing and adding of new diagram
+         description
 
-      -  prepared the inclusion of Direct Anonymous Attestation
+      -  incorporated content about Direct Anonymous Attestation
+
+      -  integrated comments from Michael Richardson
+
+      -  updated roster
 
 14.  References
 
@@ -1050,11 +1055,6 @@ Internet-Draft                    REIM                         July 2020
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
-   [RFC3161]  Adams, C., Cain, P., Pinkas, D., and R. Zuccherato,
-              "Internet X.509 Public Key Infrastructure Time-Stamp
-              Protocol (TSP)", RFC 3161, DOI 10.17487/RFC3161, August
-              2001, <https://www.rfc-editor.org/info/rfc3161>.
-
 
 
 
@@ -1065,6 +1065,11 @@ Birkholz, et al.         Expires 9 January 2021                [Page 19]
 
 Internet-Draft                    REIM                         July 2020
 
+
+   [RFC3161]  Adams, C., Cain, P., Pinkas, D., and R. Zuccherato,
+              "Internet X.509 Public Key Infrastructure Time-Stamp
+              Protocol (TSP)", RFC 3161, DOI 10.17487/RFC3161, August
+              2001, <https://www.rfc-editor.org/info/rfc3161>.
 
    [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
               Housley, R., and W. Polk, "Internet X.509 Public Key
@@ -1105,6 +1110,18 @@ Internet-Draft                    REIM                         July 2020
               March 2020, <http://www.ietf.org/internet-drafts/draft-
               birkholz-rats-tuda-02.txt>.
 
+
+
+
+
+
+
+
+Birkholz, et al.         Expires 9 January 2021                [Page 20]
+
+Internet-Draft                    REIM                         July 2020
+
+
    [I-D.ietf-rats-architecture]
               Birkholz, H., Thaler, D., Richardson, M., Smith, N., and
               W. Pan, "Remote Attestation Procedures Architecture", Work
@@ -1114,13 +1131,6 @@ Internet-Draft                    REIM                         July 2020
 
    [turtles]  Wikipedia, "Turrles all the way down", 6 July 2020,
               <https://en.wikipedia.org/wiki/Turtles_all_the_way_down>.
-
-
-
-Birkholz, et al.         Expires 9 January 2021                [Page 20]
-
-Internet-Draft                    REIM                         July 2020
-
 
 Appendix A.  CDDL Specification for a simple CoAP Challenge/Response
              Interaction
@@ -1135,6 +1145,38 @@ Appendix A.  CDDL Specification for a simple CoAP Challenge/Response
 
    In this example, evidence is created via the root-of-trust for
    reporting primitive operation "quote" that is provided by a TPM 2.0.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Birkholz, et al.         Expires 9 January 2021                [Page 21]
+
+Internet-Draft                    REIM                         July 2020
+
 
    RAIM-Bodies = CoAP-FETCH-Body / CoAP-FETCH-Response-Body
 
@@ -1169,15 +1211,6 @@ Appendix A.  CDDL Specification for a simple CoAP Challenge/Response
                        save: bool,
                      ]
 
-
-
-
-
-Birkholz, et al.         Expires 9 January 2021                [Page 21]
-
-Internet-Draft                    REIM                         July 2020
-
-
 Authors' Addresses
 
    Henk Birkholz
@@ -1187,6 +1220,18 @@ Authors' Addresses
    Germany
 
    Email: henk.birkholz@sit.fraunhofer.de
+
+
+
+
+
+
+
+
+
+Birkholz, et al.         Expires 9 January 2021                [Page 22]
+
+Internet-Draft                    REIM                         July 2020
 
 
    Michael Eckel
@@ -1229,4 +1274,15 @@ Authors' Addresses
 
 
 
-Birkholz, et al.         Expires 9 January 2021                [Page 22]
+
+
+
+
+
+
+
+
+
+
+
+Birkholz, et al.         Expires 9 January 2021                [Page 23]
