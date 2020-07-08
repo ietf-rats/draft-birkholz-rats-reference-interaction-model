@@ -111,7 +111,7 @@ A PKIX Certificate is an X.509v3 format certificate as specified by {{RFC5280}}.
 
 # Disambiguation
 
-The term "Remote Attestation" is a common expression and often associated or connotated with certain properties.
+The term "Remote Attestation" is a common expression and often associated or connoted with certain properties.
 The term "Remote" in this context does not necessarily refer to a remote entity in the scope of network topologies or the Internet.
 It rather refers to a decoupled system or entities that exchange the payload of the Conceptual Message type called Evidence {{-RATS}}.
 This conveyance can also be "local", if the Verifier is part of the same entity as the Attester, e.g., separate system components of a Composite Device (a single RATS Entity).
@@ -126,9 +126,9 @@ Examples include: identity establishment, key distribution and enrollment, time 
 Furthermore, any processes and duties that go beyond carrying out remote attestation procedures are out-of-scope.
 For instance, using the results of a remote attestation that are created by the Verifier, e.g., how to triggering remediation actions or recovery processes, as well as such remediation actions and recovery processes themselves, are also out-of-scope.
 
-The information models illustrated in this document are intended to provide a stable basis and reference for other solutions documents inside or outside the IETF.
-Solution documents of any kind can reference the interaction models in order to avoid text clones and avoid the danger of subtle discrepancies.
-Analogously, deviations from that rough descriptions of models in this document can be highlighted in solutions documents.
+The interaction models illustrated in this document are intended to provide a stable basis and reference for other solutions documents inside or outside the IETF.
+Solution documents of any kind can reference the interaction models in order to avoid text clones and to avoid the danger of subtle discrepancies.
+Analogously, deviations from the generic model descriptions in this document can be illustrated in solutions documents to highlight distinct contributions.
 
 # Direct Anonymous Attestation
 
@@ -516,7 +516,7 @@ There is also a possibility to scramble the Nonce or Attester Identity with othe
 
 # Acknowledgments
 
-Olaf Bergmann and Ned Smith
+Olaf Bergmann, Michael Richardson, and Ned Smith
 
 # Change Log
 
@@ -559,10 +559,12 @@ Olaf Bergmann and Ned Smith
   - added BCP205 Implementation Status section related to Appendix CDDL
 
 - Changes from version 02 to version 03
-  - major refactoring to now accommodate three interaction modesl
-  - updated existing and added two new diagrams
-  - major refactoring and addition diagram description
-  - prepared the inclusion of Direct Anonymous Attestation
+  - major refactoring to now accommodate three interaction models
+  - updated existing and added two new diagrams for models
+  - major refactoring of existing and adding of new diagram description
+  - incorporated content about Direct Anonymous Attestation
+  - integrated comments from Michael Richardson
+  - updated roster
 
 --- back
 
