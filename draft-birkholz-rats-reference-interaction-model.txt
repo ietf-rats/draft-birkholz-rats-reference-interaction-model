@@ -228,18 +228,16 @@ Internet-Draft                    REIM                         July 2020
 
 5.  Direct Anonymous Attestation
 
-   1.  Direct Anonymous Attestation DAA [DAA] is a signature scheme used
-       in RATS that allows preservation of the privacy of users that are
-       associated with an Attester (e.g. its owner).  Essentially, DAA
-       can be seen as a group signature scheme with the feature that
-       given a DAA signature no-one can find out who the signer is,
-       i.e., the anonymity is not revocable.  To be able to sign
-       anonymously an Attester has to obtain a credential from a DAA
-       Issuer.  The DAA Issuer uses a private/public key pair to
-       generate a credential for an Attester and makes the public key
-       (in the form of a public key certificate) available to the
-       verifier to enable them to validate the DAA signature obtained as
-       part of the Evidence.
+   DAA [DAA] is a signature scheme used in RATS that allows preservation
+   of the privacy of users that are associated with an Attester (e.g.
+   its owner).  Essentially, DAA can be seen as a group signature scheme
+   with the feature that given a DAA signature no-one can find out who
+   the signer is, i.e., the anonymity is not revocable.  To be able to
+   sign anonymously an Attester has to obtain a credential from a DAA
+   Issuer.  The DAA Issuer uses a private/public key pair to generate a
+   credential for an Attester and makes the public key (in the form of a
+   public key certificate) available to the verifier to enable them to
+   validate the DAA signature obtained as part of the Evidence.
 
    In order to support these DAA signatures, the DAA Issuer MUST
    associate a single key pair with each group of Attesters and use the
@@ -273,6 +271,8 @@ Internet-Draft                    REIM                         July 2020
    Attester itself.  The corresponding trustable statements are called
    Endorsements and originate from external, trustable entities that
    take on the role of an Endorser (e.g., supply chain entities).
+
+
 
 
 
