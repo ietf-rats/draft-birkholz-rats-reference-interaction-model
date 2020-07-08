@@ -5,10 +5,10 @@
 RATS Working Group                                           H. Birkholz
 Internet-Draft                                                  M. Eckel
 Intended status: Informational                            Fraunhofer SIT
-Expires: 7 January 2021                                        C. Newton
+Expires: 9 January 2021                                        C. Newton
                                                                  L. Chen
                                                     University of Surrey
-                                                             6 July 2020
+                                                             8 July 2020
 
 
      Reference Interaction Models for Remote Attestation Procedures
@@ -40,7 +40,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 January 2021.
+   This Internet-Draft will expire on 9 January 2021.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Birkholz, et al.         Expires 7 January 2021                 [Page 1]
+Birkholz, et al.         Expires 9 January 2021                 [Page 1]
 
 Internet-Draft                    REIM                         July 2020
 
@@ -72,11 +72,11 @@ Table of Contents
    4.  Scope and Intent  . . . . . . . . . . . . . . . . . . . . . .   4
    5.  Direct Anonymous Attestation  . . . . . . . . . . . . . . . .   5
      5.1.  Endorsers . . . . . . . . . . . . . . . . . . . . . . . .   5
-     5.2.  Endorsers for Direct Anonymous Attestation  . . . . . . .   5
+     5.2.  Endorsers for Direct Anonymous Attestation  . . . . . . .   6
    6.  Normative Prerequisites . . . . . . . . . . . . . . . . . . .   6
    7.  Generic Information Elements  . . . . . . . . . . . . . . . .   7
    8.  Interaction Models  . . . . . . . . . . . . . . . . . . . . .   9
-     8.1.  Challenge/Response Remote Attestation . . . . . . . . . .   9
+     8.1.  Challenge/Response Remote Attestation . . . . . . . . . .  10
      8.2.  Uni-Directional Remote Attestation  . . . . . . . . . . .  11
      8.3.  Streaming Remote Attestation  . . . . . . . . . . . . . .  13
    9.  Additional Application-Specific Requirements  . . . . . . . .  15
@@ -99,8 +99,8 @@ Table of Contents
      14.1.  Normative References . . . . . . . . . . . . . . . . . .  19
      14.2.  Informative References . . . . . . . . . . . . . . . . .  20
    Appendix A.  CDDL Specification for a simple CoAP Challenge/
-           Response Interaction  . . . . . . . . . . . . . . . . . .  20
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  21
+           Response Interaction  . . . . . . . . . . . . . . . . . .  21
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  22
 
 
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Birkholz, et al.         Expires 7 January 2021                 [Page 2]
+Birkholz, et al.         Expires 9 January 2021                 [Page 2]
 
 Internet-Draft                    REIM                         July 2020
 
@@ -158,14 +158,14 @@ Internet-Draft                    REIM                         July 2020
    Endorsement, Attestation Result, Appraisal Policy, Attesting
    Environment, Target Environment
 
+   A PKIX Certificate is an X.509v3 format certificate as specified by
+   [RFC5280].
 
 
 
 
 
-
-
-Birkholz, et al.         Expires 7 January 2021                 [Page 3]
+Birkholz, et al.         Expires 9 January 2021                 [Page 3]
 
 Internet-Draft                    REIM                         July 2020
 
@@ -221,27 +221,40 @@ Internet-Draft                    REIM                         July 2020
 
 
 
-Birkholz, et al.         Expires 7 January 2021                 [Page 4]
+Birkholz, et al.         Expires 9 January 2021                 [Page 4]
 
 Internet-Draft                    REIM                         July 2020
 
 
 5.  Direct Anonymous Attestation
 
-   DAA is a signature scheme used in RATS that allows to preserve the
-   privacy of users that are associated with an Attester (e.g. its
-   owner).  Essentially, "DAA can be seen as a group signature without
-   the feature that a signature can be opened, i.e., the anonymity is
-   not revocable" [DAA].  An approach essential for the support of these
-   group signatures is to use a DAA Issuer that provides an alternate
-   series of group certificates for each group of Attesters (instead of
-   unique Attester Identity documents, e.g. traditional X.509
-   certificates).  This documents extends the duties of the Endorser
-   role as defined by the RATS architecture with respect to the
-   provision of these Attester Identity documents to Attesters.  The
-   existing duties of the Endorser role and the duties of an DAA Issuer
-   required for DAA are quite similar as illustrated in the following
-   subsections.
+   1.  Direct Anonymous Attestation DAA [DAA] is a signature scheme used
+       in RATS that allows preservation of the privacy of users that are
+       associated with an Attester (e.g. its owner).  Essentially, DAA
+       can be seen as a group signature scheme with the feature that
+       given a DAA signature no-one can find out who the signer is,
+       i.e., the anonymity is not revocable.  To be able to sign
+       anonymously an Attester has to obtain a credential from a DAA
+       Issuer.  The DAA Issuer uses a private/public key pair to
+       generate a credential for an Attester and makes the public key
+       (in the form of a public key certificate) available to the
+       verifier to enable them to validate the DAA signature obtained as
+       part of the Evidence.
+
+   In order to support these DAA signatures, the DAA Issuer MUST
+   associate a single key pair with each group of Attesters and use the
+   same key pair when creating the credentials for all of the Attesters
+   in this group.  The DAA Issuer's public key certificate for the group
+   replaces the Attester Identity documents in the verification of the
+   Evidence (instead of unique Attester Identity documents).  This is in
+   contrast to intuition that there has to be a unique Attester Identity
+   per device.
+
+   This document extends the duties of the Endorser role as defined by
+   the RATS architecture with respect to the provision of these Attester
+   Identity documents to Attesters.  The existing duties of the Endorser
+   role and the duties of a DAA Issuer are quite similar as illustrated
+   in the following subsections.
 
 5.1.  Endorsers
 
@@ -249,44 +262,53 @@ Internet-Draft                    REIM                         July 2020
    about its Target Environments.  After being appraised to be
    trustworthy, a Target Environment may become a new Attesting
    Environment in charge of creating Evidence for further Target
-   Environments.  This procedure is called Layered Attestation.  Layered
-   Attestation has to start with an initial Attesting Environment (i.e.,
-   there cannot be turtles all the way down).  At this rock bottom of
-   Layered Attestation, the Attesting Environments are called Roots of
-   Trusts (RoT).  An Attester cannot create Evidence about its own RoTs
-   by design.  In consequence, a Verifier requires trustable statements
-   about this subset of Attesting Environments from a different source
-   than the Attester itself.  The corresponding trustable statements are
-   called Endorsements and origin from external, trustable entities that
-   take on the role of an Endorser(e.g., supply chain entities).
-
-5.2.  Endorsers for Direct Anonymous Attestation
-
-   In order to enable DAA, an Endorser role takes on the duties of a DAA
-   Issuer in addition to its already defined duties.  DAA Issuers offer
-   zero-knowledge proofs based on pub-key certificates used by a group
-   of Attesters [DAA].  Effectively, these certificates share the
-   semantics of Endorsements.  The two differences are:
-
-   *  the method of generation (as summarized on a high level above and
-      described in [DAA] in detail), and
-
-   *  the conveyance from Endorser to Attester instead of Endorser to
-      Verifier.
+   Environments.  [I-D.ietf-rats-architecture] explains this as Layered
+   Attestation.  Layered Attestation has to start with an initial
+   Attesting Environment (i.e., there cannot be turtles all the way down
+   [turtles]).  At this rock bottom of Layered Attestation, the
+   Attesting Environments are called Roots of Trust (RoT).  An Attester
+   cannot create Evidence about its own RoTs by design.  As a
+   consequence, a Verifier requires trustable statements about this
+   subset of Attesting Environments from a different source than the
+   Attester itself.  The corresponding trustable statements are called
+   Endorsements and originate from external, trustable entities that
+   take on the role of an Endorser (e.g., supply chain entities).
 
 
 
 
-Birkholz, et al.         Expires 7 January 2021                 [Page 5]
+Birkholz, et al.         Expires 9 January 2021                 [Page 5]
 
 Internet-Draft                    REIM                         July 2020
 
 
+5.2.  Endorsers for Direct Anonymous Attestation
+
+   In order to enable DAA to be used, an Endorser role takes on the
+   duties of a DAA Issuer in addition to its already defined duties.
+   DAA Issuers offer zero-knowledge proofs based on public key
+   certificates used for a group of Attesters [DAA].  Effectively, these
+   certificates share the semantics of Endorsements.  The differences
+   are:
+
+   *  The associated private keys are used by the DAA Issuer to provide
+      an Attester with a credential that it can use to convince the
+      Verifier that its Evidence is valid.  To keep their anonymity the
+      Attester randomises this credential each time that it is used.
+
+   *  The Verifier can use the DAA Issuer's public key certificate,
+      together with the randomised credential from the Attester, to
+      confirm that the Evidence comes from a valid Attester.
+
+   *  A credential is conveyed from an Endorser to an Attester together
+      with the transfer of the public key certificates from Endorser to
+      Verifier.
+
    The zero-knowledge proofs required cannot be created by an Attester
    alone - like the Endorsements of RoTs - and have to be created by a
    trustable third entity - like an Endorser.  Due to that vast semantic
-   overlap, an Endorser in this document can convey trustable third
-   party statements both to a Verifier and an Attester.
+   overlap (XXX-mcr:explain), an Endorser in this document can convey
+   trustable third party statements both to a Verifier and an Attester.
 
 6.  Normative Prerequisites
 
@@ -305,9 +327,20 @@ Internet-Draft                    REIM                         July 2020
    Attestation Evidence Authenticity:  Attestation Evidence MUST be
       correct and authentic.
 
+
+
+
+
+
+
+Birkholz, et al.         Expires 9 January 2021                 [Page 6]
+
+Internet-Draft                    REIM                         July 2020
+
+
    In order to provide proofs of authenticity, Attestation Evidence
    SHOULD be cryptographically associated with an identity document
-   (e.g. an X.509certificate or trusted key material, or a randomised
+   (e.g. an PKIX certificate or trusted key material, or a randomised
    DAA credential), or SHOULD include a correct and unambiguous and
    stable reference to an accessible identity document.
 
@@ -328,15 +361,6 @@ Internet-Draft                    REIM                         July 2020
    Evidence Protection:  Evidence MUST be a set of well-formatted and
       well-protected Claims that an Attester can create and convey to a
       Verifier in a tamper-evident manner.
-
-
-
-
-
-Birkholz, et al.         Expires 7 January 2021                 [Page 6]
-
-Internet-Draft                    REIM                         July 2020
-
 
 7.  Generic Information Elements
 
@@ -362,6 +386,14 @@ Internet-Draft                    REIM                         July 2020
 
    Authentication Secret IDs ('authSecID'):  _mandatory_
 
+
+
+
+Birkholz, et al.         Expires 9 January 2021                 [Page 7]
+
+Internet-Draft                    REIM                         July 2020
+
+
       A statement representing an identifier list that MUST be
       associated with corresponding Authentication Secrets used to
       protect Evidence.  In DAA, Authentication Secret IDs are
@@ -384,16 +416,6 @@ Internet-Draft                    REIM                         July 2020
       Evidence and/or determine the Freshness of Evidence.
 
       A Verifier can also use a Handle as an indicator for authenticity
-
-
-
-
-
-Birkholz, et al.         Expires 7 January 2021                 [Page 7]
-
-Internet-Draft                    REIM                         July 2020
-
-
       or attestation provenance, as only Attesters and Verifiers that
       are intended to exchange Evidence should have knowledge of the
       corresponding Handles.  Examples include Nonces or signed
@@ -415,6 +437,19 @@ Internet-Draft                    REIM                         July 2020
       defined in [I-D.ietf-rats-architecture].
 
       Reference Claims are used to appraise the Claims received from an
+
+
+
+
+
+
+
+
+Birkholz, et al.         Expires 9 January 2021                 [Page 8]
+
+Internet-Draft                    REIM                         July 2020
+
+
       Attester via appraisal by direct comparison.  For example,
       Reference Claims MAY be Reference Integrity Measurements (RIM) or
       assertions that are implicitly trusted because they are signed by
@@ -443,13 +478,6 @@ Internet-Draft                    REIM                         July 2020
       the Authentication Secret.  The Authentication Secret MUST be
       trusted by the Verifier as authoritative.
 
-
-
-Birkholz, et al.         Expires 7 January 2021                 [Page 8]
-
-Internet-Draft                    REIM                         July 2020
-
-
    Attestation Result ('attestationResult'):  _mandatory_
 
       An Attestation Result is produced by the Verifier as the output of
@@ -468,43 +496,30 @@ Internet-Draft                    REIM                         July 2020
 
    3.  Streaming Remote Attestation
 
-   Each section starts with a sequence diagram illustrating the
-   interactions between Attester and Verifier.  The other roles RATS
-   roles - mainly Relying Parties and Endorsers - are not covered in the
-   expositional texts that follows each model diagram.  While the
-   interaction models presented focus on the conveyance of Evidence,
-   effectively, they can also be applied to the conveyance of other
-   Conceptual Messages, namely Attestation Results, Endorsements, or
-   Appraisal Policies.  All interaction model have a strong focus on
-   uses a handle to incorporate a proof of freshness.  The ways these
-   handles are processed is the most prominent difference between the
-   three interaction models.
-
-8.1.  Challenge/Response Remote Attestation
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Birkholz, et al.         Expires 7 January 2021                 [Page 9]
+Birkholz, et al.         Expires 9 January 2021                 [Page 9]
 
 Internet-Draft                    REIM                         July 2020
 
+
+   Each section starts with a sequence diagram illustrating the
+   interactions between Attester and Verifier.  The other roles RATS
+   roles - mainly Relying Parties and Endorsers - are not relevant for
+   this interaction model.  While the interaction models presented focus
+   on the conveyance of Evidence, future work could apply this to the
+   conveyance of other Conceptual Messages, namely Attestation Results,
+   Endorsements, or Appraisal Policies.
+
+   All interaction model have a strong focus on the use of a handle to
+   incorporate a proof of freshness.  The ways these handles are
+   processed is the most prominent difference between the three
+   interaction models.
+
+8.1.  Challenge/Response Remote Attestation
 
    .----------.                                                .----------.
    | Attester |                                                | Verifier |
@@ -529,42 +544,51 @@ Internet-Draft                    REIM                         July 2020
         |                                       attestationResult <= |
         |                                                            |
 
-   Challenge/Response Remote Attestation procedures are initiated by the
-   Verifier, sending a remote attestation request to the Attester.  A
-   request includes a Handle, a list of Authentication Secret IDs, and a
-   Claim Selection.  In the Challenge/Response model, the handle is
-   composed of qualifying data in the form of a nonce.  The Verifier-
-   generated (and therefore Verifier-known) nonce is intended to
-   guarantee Evidence freshness.  The list of Authentication Secret IDs
-   selects the attestation keys with which the Attester is requested to
-   sign the Attestation Evidence.  Each selected key is uniquely
-   associated with an Attesting Environment of the Attester.  As a
-   result, a single Authentication Secret ID identifies a single
-   Attesting Environment.  Analogously, a set of Evidence originating
-   from multiple Attesting Environments in a composite device can be
-   requested via multiple Authentication Secret IDs.  Methods to acquire
-   Authentication Secret IDs or mappings between Attesting Environments
-   to Authentication Secret IDs are out-of-scope of this document.  The
-   Claim Selection narrows down the set of Claims collected and used to
-   create Evidence, if required.  If the Claim Selection is omitted,
-   then by default all Claims that are known and available on the
-   Attester MUST be used to create corresponding Evidence.  For example,
-   a Verifier may only be requesting a particular subset of claims about
-   the Attester, such as Evidence about BIOS and firmware the Attester
-   booted up with (boot integrity Evidence) - and not include
-   information about all currently running software (run-time integrity
-   Evidence).
+   This Challenge/Response Remote Attestation procedure is initiated by
+   the Verifier, by sending a remote attestation request to the
+   Attester.  A request includes a Handle, a list of Authentication
+   Secret IDs, and a Claim Selection.
+
+   In the Challenge/Response model, the handle is composed of qualifying
+   data in the form of a cryptographically strongly randomly generated,
+   and therefore unpredictable, nonce.  The Verifier-generated nonce is
+   intended to guarantee Evidence freshness.
 
 
 
-Birkholz, et al.         Expires 7 January 2021                [Page 10]
+
+Birkholz, et al.         Expires 9 January 2021                [Page 10]
 
 Internet-Draft                    REIM                         July 2020
 
 
+   The list of Authentication Secret IDs selects the attestation keys
+   with which the Attester is requested to sign the Attestation
+   Evidence.  Each selected key is uniquely associated with an Attesting
+   Environment of the Attester.  As a result, a single Authentication
+   Secret ID identifies a single Attesting Environment.
+
+   Analogously, a particular set of Evidence originating from a
+   particular Attesting Environments in a composite device can be
+   requested via multiple Authentication Secret IDs.  Methods to acquire
+   Authentication Secret IDs or mappings between Attesting Environments
+   to Authentication Secret IDs are out-of-scope of this document.
+   (MCR: okay, but what document will specify this?)
+
+   The Claim Selection narrows down the set of Claims collected and used
+   to create Evidence to those that the Verifier requires.  If the Claim
+   Selection is omitted, then by default all Claims that are known and
+   available on the Attester MUST be used to create corresponding
+   Evidence.  For example when performing a boot integrity evaluation, a
+   Verifier may only be requesting a particular subset of claims about
+   the Attester, such as Evidence about BIOS and firmware the Attester
+   booted up, and not include information about all currently running
+   software.
+
    While it is crucial that Claims, the Handle, as well as the Attester
    Identity information MUST be cryptographically bound to the signature
-   of Evidence, it is not required for them to be present in plain text.
+   of Evidence, they may be presented in an encrypted form.
+
    Cryptographic blinding MAY be used at this point.  For further
    reference see section Section 11.
 
@@ -589,31 +613,7 @@ Internet-Draft                    REIM                         July 2020
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Birkholz, et al.         Expires 7 January 2021                [Page 11]
+Birkholz, et al.         Expires 9 January 2021                [Page 11]
 
 Internet-Draft                    REIM                         July 2020
 
@@ -669,7 +669,7 @@ Internet-Draft                    REIM                         July 2020
 
 
 
-Birkholz, et al.         Expires 7 January 2021                [Page 12]
+Birkholz, et al.         Expires 9 January 2021                [Page 12]
 
 Internet-Draft                    REIM                         July 2020
 
@@ -725,7 +725,7 @@ Internet-Draft                    REIM                         July 2020
 
 
 
-Birkholz, et al.         Expires 7 January 2021                [Page 13]
+Birkholz, et al.         Expires 9 January 2021                [Page 13]
 
 Internet-Draft                    REIM                         July 2020
 
@@ -781,7 +781,7 @@ Internet-Draft                    REIM                         July 2020
 
 
 
-Birkholz, et al.         Expires 7 January 2021                [Page 14]
+Birkholz, et al.         Expires 9 January 2021                [Page 14]
 
 Internet-Draft                    REIM                         July 2020
 
@@ -837,7 +837,7 @@ Internet-Draft                    REIM                         July 2020
 
 
 
-Birkholz, et al.         Expires 7 January 2021                [Page 15]
+Birkholz, et al.         Expires 9 January 2021                [Page 15]
 
 Internet-Draft                    REIM                         July 2020
 
@@ -893,7 +893,7 @@ Internet-Draft                    REIM                         July 2020
 
 
 
-Birkholz, et al.         Expires 7 January 2021                [Page 16]
+Birkholz, et al.         Expires 9 January 2021                [Page 16]
 
 Internet-Draft                    REIM                         July 2020
 
@@ -949,7 +949,7 @@ Internet-Draft                    REIM                         July 2020
 
 
 
-Birkholz, et al.         Expires 7 January 2021                [Page 17]
+Birkholz, et al.         Expires 9 January 2021                [Page 17]
 
 Internet-Draft                    REIM                         July 2020
 
@@ -1005,7 +1005,7 @@ Internet-Draft                    REIM                         July 2020
 
 
 
-Birkholz, et al.         Expires 7 January 2021                [Page 18]
+Birkholz, et al.         Expires 9 January 2021                [Page 18]
 
 Internet-Draft                    REIM                         July 2020
 
@@ -1055,16 +1055,26 @@ Internet-Draft                    REIM                         July 2020
               Protocol (TSP)", RFC 3161, DOI 10.17487/RFC3161, August
               2001, <https://www.rfc-editor.org/info/rfc3161>.
 
-   [RFC7049]  Bormann, C. and P. Hoffman, "Concise Binary Object
-              Representation (CBOR)", RFC 7049, DOI 10.17487/RFC7049,
-              October 2013, <https://www.rfc-editor.org/info/rfc7049>.
 
 
 
-Birkholz, et al.         Expires 7 January 2021                [Page 19]
+
+
+
+Birkholz, et al.         Expires 9 January 2021                [Page 19]
 
 Internet-Draft                    REIM                         July 2020
 
+
+   [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
+              Housley, R., and W. Polk, "Internet X.509 Public Key
+              Infrastructure Certificate and Certificate Revocation List
+              (CRL) Profile", RFC 5280, DOI 10.17487/RFC5280, May 2008,
+              <https://www.rfc-editor.org/info/rfc5280>.
+
+   [RFC7049]  Bormann, C. and P. Hoffman, "Concise Binary Object
+              Representation (CBOR)", RFC 7049, DOI 10.17487/RFC7049,
+              October 2013, <https://www.rfc-editor.org/info/rfc7049>.
 
    [RFC7252]  Shelby, Z., Hartke, K., and C. Bormann, "The Constrained
               Application Protocol (CoAP)", RFC 7252,
@@ -1102,6 +1112,16 @@ Internet-Draft                    REIM                         July 2020
               04, 21 May 2020, <http://www.ietf.org/internet-drafts/
               draft-ietf-rats-architecture-04.txt>.
 
+   [turtles]  Wikipedia, "Turrles all the way down", 6 July 2020,
+              <https://en.wikipedia.org/wiki/Turtles_all_the_way_down>.
+
+
+
+Birkholz, et al.         Expires 9 January 2021                [Page 20]
+
+Internet-Draft                    REIM                         July 2020
+
+
 Appendix A.  CDDL Specification for a simple CoAP Challenge/Response
              Interaction
 
@@ -1112,15 +1132,6 @@ Appendix A.  CDDL Specification for a simple CoAP Challenge/Response
    the Challenge Message and the Response Message are exchanged via the
    FETCH operation and corresponding FETCH Request and FETCH Response
    body.
-
-
-
-
-
-Birkholz, et al.         Expires 7 January 2021                [Page 20]
-
-Internet-Draft                    REIM                         July 2020
-
 
    In this example, evidence is created via the root-of-trust for
    reporting primitive operation "quote" that is provided by a TPM 2.0.
@@ -1158,6 +1169,15 @@ Internet-Draft                    REIM                         July 2020
                        save: bool,
                      ]
 
+
+
+
+
+Birkholz, et al.         Expires 9 January 2021                [Page 21]
+
+Internet-Draft                    REIM                         July 2020
+
+
 Authors' Addresses
 
    Henk Birkholz
@@ -1167,15 +1187,6 @@ Authors' Addresses
    Germany
 
    Email: henk.birkholz@sit.fraunhofer.de
-
-
-
-
-
-
-Birkholz, et al.         Expires 7 January 2021                [Page 21]
-
-Internet-Draft                    REIM                         July 2020
 
 
    Michael Eckel
@@ -1218,15 +1229,4 @@ Internet-Draft                    REIM                         July 2020
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-Birkholz, et al.         Expires 7 January 2021                [Page 22]
+Birkholz, et al.         Expires 9 January 2021                [Page 22]
