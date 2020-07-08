@@ -1169,27 +1169,28 @@ Due to that vast semantic overlap (XXX-mcr:explain), an Endorser in this documen
   Attestation Evidence MUST be correct and authentic.<a href="#section-6-2.6" class="pilcrow">¶</a>
 </dd>
 <dd class="break"></dd>
-</dl>
-<p id="section-6-3">In order to provide proofs of authenticity, Attestation Evidence SHOULD be cryptographically associated with an identity document (e.g. an PKIX certificate or trusted key material, or a randomised DAA credential), or SHOULD include a correct and unambiguous and stable reference to an accessible identity document.<a href="#section-6-3" class="pilcrow">¶</a></p>
-<dl class="dlParallel" id="section-6-4">
-        <dt id="section-6-4.1">Authentication Secret:</dt>
-<dd id="section-6-4.2">
-  An Authentication Secret MUST be available exclusively to an Attester's Attesting Environment.<a href="#section-6-4.2" class="pilcrow">¶</a>
+<dt id="section-6-2.7"></dt>
+<dd id="section-6-2.8">In order to provide proofs of authenticity, Attestation Evidence SHOULD be cryptographically associated with an identity document (e.g. an PKIX certificate or trusted key material, or a randomised DAA credential), or SHOULD include a correct and unambiguous and stable reference to an accessible identity document.<a href="#section-6-2.8" class="pilcrow">¶</a>
 </dd>
 <dd class="break"></dd>
-<dt id="section-6-4.3"></dt>
-<dd id="section-6-4.4">The Attester MUST protect Claims with that Authentication Secret, thereby proving the authenticity of the Claims included in Evidence.
-The Authentication Secret MUST be established before RATS can take place.<a href="#section-6-4.4" class="pilcrow">¶</a>
+<dt id="section-6-2.9">Authentication Secret:</dt>
+<dd id="section-6-2.10">
+  An Authentication Secret MUST be available exclusively to an Attester's Attesting Environment.<a href="#section-6-2.10" class="pilcrow">¶</a>
 </dd>
 <dd class="break"></dd>
-<dt id="section-6-4.5">Evidence Freshness:</dt>
-<dd id="section-6-4.6">
-  Evidence MUST include an indicator about its Freshness that can be understood by a Verifier. Analogously, interaction models MUST support the conveyance of proofs of freshness in a way that is useful to Verifiers and their appraisal procedures.<a href="#section-6-4.6" class="pilcrow">¶</a>
+<dt id="section-6-2.11"></dt>
+<dd id="section-6-2.12">The Attester MUST protect Claims with that Authentication Secret, thereby proving the authenticity of the Claims included in Evidence.
+The Authentication Secret MUST be established before RATS can take place.<a href="#section-6-2.12" class="pilcrow">¶</a>
 </dd>
 <dd class="break"></dd>
-<dt id="section-6-4.7">Evidence Protection:</dt>
-<dd id="section-6-4.8">
-  Evidence MUST be a set of well-formatted and well-protected Claims that an Attester can create and convey to a Verifier in a tamper-evident manner.<a href="#section-6-4.8" class="pilcrow">¶</a>
+<dt id="section-6-2.13">Evidence Freshness:</dt>
+<dd id="section-6-2.14">
+  Evidence MUST include an indicator about its Freshness that can be understood by a Verifier. Analogously, interaction models MUST support the conveyance of proofs of freshness in a way that is useful to Verifiers and their appraisal procedures.<a href="#section-6-2.14" class="pilcrow">¶</a>
+</dd>
+<dd class="break"></dd>
+<dt id="section-6-2.15">Evidence Protection:</dt>
+<dd id="section-6-2.16">
+  Evidence MUST be a set of well-formatted and well-protected Claims that an Attester can create and convey to a Verifier in a tamper-evident manner.<a href="#section-6-2.16" class="pilcrow">¶</a>
 </dd>
 <dd class="break"></dd>
 </dl>

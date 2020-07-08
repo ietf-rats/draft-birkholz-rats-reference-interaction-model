@@ -327,7 +327,7 @@ Internet-Draft                    REIM                         July 2020
    Attestation Evidence Authenticity:  Attestation Evidence MUST be
       correct and authentic.
 
-
+      In order to provide proofs of authenticity, Attestation Evidence
 
 
 
@@ -338,11 +338,10 @@ Birkholz, et al.         Expires 9 January 2021                 [Page 6]
 Internet-Draft                    REIM                         July 2020
 
 
-   In order to provide proofs of authenticity, Attestation Evidence
-   SHOULD be cryptographically associated with an identity document
-   (e.g. an PKIX certificate or trusted key material, or a randomised
-   DAA credential), or SHOULD include a correct and unambiguous and
-   stable reference to an accessible identity document.
+      SHOULD be cryptographically associated with an identity document
+      (e.g. an PKIX certificate or trusted key material, or a randomised
+      DAA credential), or SHOULD include a correct and unambiguous and
+      stable reference to an accessible identity document.
 
    Authentication Secret:  An Authentication Secret MUST be available
       exclusively to an Attester's Attesting Environment.
@@ -386,6 +385,7 @@ Internet-Draft                    REIM                         July 2020
 
    Authentication Secret IDs ('authSecID'):  _mandatory_
 
+      A statement representing an identifier list that MUST be
 
 
 
@@ -394,7 +394,6 @@ Birkholz, et al.         Expires 9 January 2021                 [Page 7]
 Internet-Draft                    REIM                         July 2020
 
 
-      A statement representing an identifier list that MUST be
       associated with corresponding Authentication Secrets used to
       protect Evidence.  In DAA, Authentication Secret IDs are
       represented by the Endorser (DAA issuer)'s public key that MUST be
@@ -437,6 +436,7 @@ Internet-Draft                    REIM                         July 2020
       defined in [I-D.ietf-rats-architecture].
 
       Reference Claims are used to appraise the Claims received from an
+
 
 
 
