@@ -573,7 +573,6 @@ Internet-Draft                    REIM                         July 2020
    requested via multiple Authentication Secret IDs.  Methods to acquire
    Authentication Secret IDs or mappings between Attesting Environments
    to Authentication Secret IDs are out-of-scope of this document.
-   (MCR: okay, but what document will specify this?)
 
    The Claim Selection narrows down the set of Claims collected and used
    to create Evidence to those that the Verifier requires.  If the Claim
@@ -603,6 +602,7 @@ Internet-Draft                    REIM                         July 2020
    an Attester's trustworthiness.
 
 8.2.  Uni-Directional Remote Attestation
+
 
 
 
